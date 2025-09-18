@@ -1,7 +1,18 @@
+import json
 from src.models.compliance import ComplianceReport
 
 class ComplianceService:
     """Service for checking aircraft compliance."""
+
+    def __init__(self):
+        with open("src/data/regulations.json") as f:
+            self.regulations = json.load(f)
+        self.authority_map = {
+            "USA": "FAA",
+            "BRAZIL": "ANAC",
+            "EUROPE": "EASA",
+        }
+
     def check_compliance(self, model: str, country: str) -> ComplianceReport:
         """Checks the compliance of an aircraft model in a given country.
 
@@ -12,18 +23,20 @@ class ComplianceService:
         Returns:
             A compliance report.
         """
-        # Mock implementation for now
-        if model == "E190" and country == "USA":
-            return ComplianceReport(
-                aircraft_model="E190",
-                country="USA",
-                status="PENDING",
-                pending_requirements=["AD-2025-12: Wing inspection required"],
-            )
-        else:
-            return ComplianceReport(
-                aircraft_model=model,
-                country=country,
-                status="OK",
-                pending_requirements=[],
-            )
+        pending_requirements = []
+        status = "OK"
+        authority = self.authority_map.get(country.upper())
+
+        if authority:
+            for reg in self.regulations:
+                if authority == reg["authority"] and model in reg["applicability"]:
+                    if "AD-" in reg["description"]:
+                        pending_requirements.append(reg["description"])
+                        status = "PENDING"
+
+        return ComplianceReport(
+            aircraft_model=model,
+            country=country,
+            status=status,
+            pending_requirements=pending_requirements,
+        )
