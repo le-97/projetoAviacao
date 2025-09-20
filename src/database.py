@@ -3,10 +3,11 @@ Database connection and session management for SQLite with async support.
 """
 
 import os
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Generator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
+from sqlalchemy import create_engine
 
 from src.config import settings
 
@@ -24,11 +25,25 @@ engine = create_async_engine(
     pool_pre_ping=True
 )
 
+# Create sync engine for analytics
+sync_engine = create_engine(
+    "sqlite:///./compliance.db",
+    echo=settings.debug,
+    pool_pre_ping=True
+)
+
 # Create async session factory
 AsyncSessionLocal = async_sessionmaker(
     engine,
     class_=AsyncSession,
     expire_on_commit=False
+)
+
+# Create sync session factory for analytics
+SessionLocal = sessionmaker(
+    sync_engine,
+    autocommit=False,
+    autoflush=False
 )
 
 
@@ -48,6 +63,20 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
+
+
+def get_db() -> Generator[Session, None, None]:
+    """
+    Dependency function that yields sync database sessions for analytics.
+    
+    Yields:
+        Session: Database session
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 async def create_tables():

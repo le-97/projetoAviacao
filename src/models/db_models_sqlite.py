@@ -5,10 +5,49 @@ Database models for compliance application using SQLAlchemy 2.0 - SQLite compati
 from datetime import datetime
 from typing import List, Optional
 from uuid import uuid4
-from sqlalchemy import String, DateTime, Text, Boolean, JSON, ForeignKey, Index, Table, Column, Integer, Float
+from sqlalchemy import String, DateTime, Text, Boolean, JSON, ForeignKey, Index, Table, Column, Integer, Float, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from enum import Enum as PyEnum
 
 from src.database import Base
+
+
+class PriorityEnum(PyEnum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class Aircraft(Base):
+    """Aircraft instances - individual aircraft in the fleet."""
+    
+    __tablename__ = "aircraft"
+    
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    aircraft_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    registration: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
+    current_hours: Mapped[float] = mapped_column(Float, default=0.0)
+    last_inspection: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class ComplianceRequirement(Base):
+    """Compliance requirements that aircraft must meet."""
+    
+    __tablename__ = "compliance_requirements"
+    
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    authority: Mapped[str] = mapped_column(String(100), nullable=False)
+    frequency_hours: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    aircraft_types: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # JSON string
+    priority: Mapped[str] = mapped_column(String(20), default="MEDIUM")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 # Association table for many-to-many relationship between regulations and aircraft models

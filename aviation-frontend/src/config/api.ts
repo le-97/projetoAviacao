@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-// API base URL - Change this to your Azure VM's IP address
-export const API_BASE_URL = 'http://172.173.225.32:8000';
+// API base URL - Development: local backend, Production: Azure VM
+export const API_BASE_URL = process.env.NODE_ENV === 'development' 
+  ? 'http://127.0.0.1:8001'
+  : 'http://172.173.225.32:8000';
 
 // Create axios instance with default config
 export const apiClient = axios.create({

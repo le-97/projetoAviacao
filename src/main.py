@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api import compliance
 from src.api import metrics
 from src.api import cache
+from src.api import analytics
 from src.database import create_tables
 from src.middleware import PerformanceMiddleware, create_rate_limit_middleware
 from src.logger import RequestLoggingMiddleware, setup_logging
@@ -128,6 +129,11 @@ async def health_check():
             "authorities": "/compliance/authorities",
             "aircraft": "/compliance/aircraft",
             "compliance_health": "/compliance/health",
+            "analytics_fleet_metrics": "/analytics/fleet-metrics",
+            "analytics_compliance_trends": "/analytics/compliance-trends",
+            "analytics_alerts": "/analytics/alerts",
+            "analytics_performance_metrics": "/analytics/performance-metrics",
+            "analytics_requirements_summary": "/analytics/requirements-summary",
             "metrics": "/metrics",
             "performance_health": "/metrics/health",
             "documentation": "/docs",
@@ -138,3 +144,4 @@ async def health_check():
 app.include_router(compliance.router, tags=["Compliance"])
 app.include_router(metrics.router, tags=["Monitoring"])
 app.include_router(cache.router, tags=["Cache Management"])
+app.include_router(analytics.router, tags=["Analytics"])

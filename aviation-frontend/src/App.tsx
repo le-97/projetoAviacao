@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import AircraftList from './components/AircraftList';
 import ComplianceChecker from './components/ComplianceChecker';
+import AnalyticsDashboard from './components/analytics/AnalyticsDashboard';
 import Navigation from './components/Navigation';
 
 // Create a client
@@ -23,6 +24,8 @@ function App() {
     switch (currentPage) {
       case 'dashboard':
         return <Dashboard />;
+      case 'analytics':
+        return <AnalyticsDashboard />;
       case 'aircraft':
         return <AircraftList />;
       case 'compliance':

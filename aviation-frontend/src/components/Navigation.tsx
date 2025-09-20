@@ -3,7 +3,8 @@ import {
   Plane, 
   Shield, 
   FileText,
-  Settings
+  Settings,
+  BarChart3
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -14,6 +15,7 @@ interface NavigationProps {
 const Navigation = ({ currentPage, onPageChange }: NavigationProps) => {
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'aircraft', label: 'Aeronaves', icon: Plane },
     { id: 'compliance', label: 'Compliance', icon: Shield },
     { id: 'requirements', label: 'Requisitos', icon: FileText },

@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "task-master-ai": {
+      "command": "npx",
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "OPENAI_API_BASE_URL": "${OPENAI_API_BASE_URL}"
+      },
+      "type": "stdio"
+    },
+    "deepwiki": {
+      "command": "npx",
+      "args": ["deepwiki-mcp"],
+      "type": "stdio"
+    }
+  }
+}
