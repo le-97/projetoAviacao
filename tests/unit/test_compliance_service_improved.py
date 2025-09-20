@@ -201,7 +201,7 @@ class TestComplianceServiceCaching:
             "pending_requirements": ["AD-2025-12: Wing inspection required"]
         }
         
-        with patch.object(cache_service, '_is_connected', True), \
+        with patch.object(cache_service, 'is_connected', True), \
              patch.object(cache_service, 'get_compliance_result', new_callable=AsyncMock) as mock_get, \
              patch('src.config.settings.cache_enabled', True):
             

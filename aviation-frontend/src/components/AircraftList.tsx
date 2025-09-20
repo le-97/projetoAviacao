@@ -1,187 +1,184 @@
-import { 
-  Plane, 
-  Calendar, 
-  Clock, 
-  Settings,
-  Plus,
-  Search
-} from 'lucide-react';
-import { useAircraft, useDeleteAircraft } from '../hooks/useApi';
+import { useState } from 'react';
+import { Plus, Search, Filter, Plane } from 'lucide-react';
+import { useAircraft } from '../hooks/useApi';
+import AircraftCard from './AircraftCard';
+import AddAircraftForm from './AddAircraftForm';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorDisplay from './ErrorDisplay';
+import type { Aircraft } from '../types/api';
 
 const AircraftList = () => {
-  const { data: aircraft, isLoading, isError, error, refetch } = useAircraft();
-  const deleteMutation = useDeleteAircraft();
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingAircraft, setEditingAircraft] = useState<Aircraft | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('');
+  
+  const { data: aircraftList, isLoading, error } = useAircraft();
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja remover esta aeronave?')) {
-      try {
-        await deleteMutation.mutateAsync(id);
-      } catch (error) {
-        console.error('Erro ao deletar aeronave:', error);
-      }
-    }
+  // Filtrar aeronaves baseado na busca e filtro
+  const filteredAircraft = aircraftList?.filter(aircraft => {
+    const matchesSearch = aircraft.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         aircraft.registration.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = !filterType || aircraft.aircraft_type === filterType;
+    return matchesSearch && matchesFilter;
+  }) || [];
+
+  // Obter tipos únicos de aeronaves para o filtro
+  const aircraftTypes = [...new Set(aircraftList?.map(a => a.aircraft_type) || [])];
+
+  const handleEdit = (aircraft: Aircraft) => {
+    setEditingAircraft(aircraft);
+    setShowAddForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowAddForm(false);
+    setEditingAircraft(null);
   };
 
   if (isLoading) {
     return (
-      <div className="p-8">
-        <LoadingSpinner size="lg" text="Carregando aeronaves..." />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-600">Carregando aeronaves...</p>
+        </div>
       </div>
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
-      <div className="p-8">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <ErrorDisplay 
-          error={error instanceof Error ? error.message : 'Erro ao carregar aeronaves'}
-          onRetry={refetch}
-          title="Falha ao carregar frota"
+          error="Erro ao carregar a lista de aeronaves"
+          title="Falha ao carregar aeronaves"
         />
       </div>
     );
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-
-  const getAircraftStatus = (lastInspection: string, currentHours: number) => {
-    const lastInspectionDate = new Date(lastInspection);
-    const daysSinceInspection = Math.floor(
-      (Date.now() - lastInspectionDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    if (daysSinceInspection > 365 || currentHours > 8000) {
-      return { status: 'critical', text: 'Inspeção Vencida', color: 'bg-red-100 text-red-800' };
-    } else if (daysSinceInspection > 300 || currentHours > 7000) {
-      return { status: 'warning', text: 'Atenção', color: 'bg-yellow-100 text-yellow-800' };
-    } else {
-      return { status: 'good', text: 'Em Dia', color: 'bg-green-100 text-green-800' };
-    }
-  };
-
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Frota de Aeronaves</h1>
-          <p className="text-gray-600">
-            {aircraft?.length || 0} aeronaves registradas
-          </p>
-        </div>
-        <div className="flex space-x-3">
-          <button className="btn-secondary flex items-center space-x-2">
-            <Search className="h-4 w-4" />
-            <span>Buscar</span>
-          </button>
-          <button className="btn-primary flex items-center space-x-2">
-            <Plus className="h-4 w-4" />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div className="mb-4 sm:mb-0">
+            <h1 className="text-3xl font-bold text-gray-900">Gerenciar Aeronaves</h1>
+            <p className="text-gray-600 mt-1">
+              {aircraftList?.length || 0} aeronave{(aircraftList?.length || 0) !== 1 ? 's' : ''} cadastrada{(aircraftList?.length || 0) !== 1 ? 's' : ''}
+            </p>
+          </div>
+          
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="btn-primary flex items-center space-x-2"
+          >
+            <Plus className="h-5 w-5" />
             <span>Nova Aeronave</span>
           </button>
         </div>
-      </div>
 
-      {/* Aircraft Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {aircraft?.map((plane) => {
-          const statusInfo = getAircraftStatus(plane.last_inspection, plane.current_hours);
-          
-          return (
-            <div key={plane.id} className="card hover:shadow-lg transition-shadow">
-              {/* Aircraft Header */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="flex items-center justify-center w-12 h-12 bg-aviation-100 rounded-lg">
-                    <Plane className="h-6 w-6 text-aviation-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{plane.name}</h3>
-                    <p className="text-sm text-gray-500">{plane.aircraft_type}</p>
-                  </div>
-                </div>
-                
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusInfo.color}`}>
-                  {statusInfo.text}
-                </span>
-              </div>
+        {/* Filtros e Busca */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Busca */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Buscar por nome ou registro..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-aviation-500 focus:border-aviation-500"
+              />
+            </div>
 
-              {/* Aircraft Details */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Registro:</span>
-                  <span className="font-medium text-gray-900">{plane.registration}</span>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span>Horas de Voo:</span>
-                  </span>
-                  <span className="font-medium text-gray-900">
-                    {plane.current_hours.toLocaleString()} h
-                  </span>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>Última Inspeção:</span>
-                  </span>
-                  <span className="font-medium text-gray-900">
-                    {formatDate(plane.last_inspection)}
-                  </span>
-                </div>
-              </div>
+            {/* Filtro por Tipo */}
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-aviation-500 focus:border-aviation-500 appearance-none"
+              >
+                <option value="">Todos os tipos</option>
+                {aircraftTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
 
-              {/* Actions */}
-              <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
-                <button className="text-aviation-600 hover:text-aviation-700 text-sm font-medium">
-                  Ver Compliance
-                </button>
-                
-                <div className="flex space-x-2">
-                  <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
-                    <Settings className="h-4 w-4" />
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(plane.id)}
-                    className="p-2 text-red-400 hover:text-red-600 rounded-lg hover:bg-red-50"
-                    disabled={deleteMutation.isPending}
-                  >
-                    {deleteMutation.isPending ? (
-                      <LoadingSpinner size="sm" />
-                    ) : (
-                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
+        {/* Lista de Aeronaves */}
+        {filteredAircraft.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full">
+                <Plane className="h-8 w-8 text-gray-400" />
               </div>
             </div>
-          );
-        })}
-      </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {searchTerm || filterType ? 'Nenhuma aeronave encontrada' : 'Nenhuma aeronave cadastrada'}
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {searchTerm || filterType 
+                ? 'Tente ajustar os filtros de busca para encontrar outras aeronaves.'
+                : 'Comece adicionando sua primeira aeronave ao sistema.'
+              }
+            </p>
+            {!searchTerm && !filterType && (
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="btn-primary flex items-center space-x-2 mx-auto"
+              >
+                <Plus className="h-5 w-5" />
+                <span>Adicionar Primeira Aeronave</span>
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAircraft.map(aircraft => (
+              <AircraftCard
+                key={aircraft.id}
+                aircraft={aircraft}
+                onEdit={handleEdit}
+              />
+            ))}
+          </div>
+        )}
 
-      {/* Empty State */}
-      {aircraft?.length === 0 && (
-        <div className="text-center py-12">
-          <Plane className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Nenhuma aeronave registrada
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Comece adicionando sua primeira aeronave à frota.
-          </p>
-          <button className="btn-primary">
-            Adicionar Primeira Aeronave
-          </button>
-        </div>
-      )}
+        {/* Modal do Formulário */}
+        {showAddForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {editingAircraft ? 'Editar Aeronave' : 'Nova Aeronave'}
+                  </h2>
+                  <button
+                    onClick={handleCloseForm}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <AddAircraftForm
+                  aircraft={editingAircraft}
+                  onSuccess={handleCloseForm}
+                  onCancel={handleCloseForm}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
