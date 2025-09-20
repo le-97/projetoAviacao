@@ -1,5 +1,20 @@
 fastapi
 pydantic
+pydantic-settings
+redis
 uvicorn
 pytest
 httpx
+locust
+pytest-benchmark
+py-spy
+coverage
+memory-profiler
+line-profiler
+
+# PostgreSQL and SQLAlchemy async dependencies
+sqlalchemy[asyncio]
+asyncpg
+alembic
+psycopg2-binary
+pytest-asyncio

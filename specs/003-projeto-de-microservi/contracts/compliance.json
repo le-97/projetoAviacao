@@ -2,27 +2,33 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Compliance Microservice API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "Microservice for validating Embraer aircraft compliance with international regulations"
   },
   "paths": {
     "/check-compliance": {
       "get": {
         "summary": "Check aircraft compliance",
+        "description": "Validates the regulatory compliance of an Embraer aircraft model for a specific country",
         "parameters": [
           {
             "name": "model",
             "in": "query",
             "required": true,
+            "description": "Aircraft model (E190, E195)",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["E190", "E195"]
             }
           },
           {
             "name": "country",
             "in": "query",
             "required": true,
+            "description": "Country code (USA, BRAZIL, EUROPE)",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": ["USA", "BRAZIL", "EUROPE"]
             }
           }
         ],
@@ -36,6 +42,36 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unsupported aircraft model or country",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Missing required parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
           }
         }
       }
@@ -45,20 +81,69 @@
     "schemas": {
       "ComplianceReport": {
         "type": "object",
+        "required": ["aircraft_model", "country", "status", "pending_requirements"],
         "properties": {
           "aircraft_model": {
-            "type": "string"
+            "type": "string",
+            "description": "The aircraft model that was checked"
           },
           "country": {
-            "type": "string"
+            "type": "string", 
+            "description": "The country for which compliance was checked"
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "enum": ["OK", "PENDING", "NON-COMPLIANT"],
+            "description": "Overall compliance status"
           },
           "pending_requirements": {
             "type": "array",
             "items": {
               "type": "string"
+            },
+            "description": "List of pending regulatory requirements"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type identifier"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional error details"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "loc": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "msg": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
             }
           }
         }

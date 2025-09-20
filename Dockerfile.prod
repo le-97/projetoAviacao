@@ -1,0 +1,87 @@
+# Multi-stage Docker build for production deployment
+FROM python:3.11-slim as builder
+
+# Set build arguments
+ARG BUILD_DATE
+ARG VERSION
+ARG VCS_REF
+
+# Set labels
+LABEL maintainer="Aviation Compliance Team"
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.name="aviation-compliance-api"
+LABEL org.label-schema.description="Production-ready aviation compliance checking microservice"
+LABEL org.label-schema.version=$VERSION
+LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.label-schema.schema-version="1.0"
+
+# Set build environment
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements-prod.txt .
+RUN pip install --no-cache-dir -r requirements-prod.txt
+
+# Production stage
+FROM python:3.11-slim as production
+
+# Set production environment
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV ENVIRONMENT=production
+ENV API_HOST=0.0.0.0
+ENV API_PORT=8000
+
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y \
+    libpq5 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -d /app appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python dependencies from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY --chown=appuser:appuser src/ ./src/
+COPY --chown=appuser:appuser projetoAviacao/ ./projetoAviacao/
+COPY --chown=appuser:appuser data/ ./data/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/monitoring && \
+    chown -R appuser:appuser /app
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
+EXPOSE 8000
+
+# Start command
+CMD ["python", "-m", "uvicorn", "src.main_production:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
