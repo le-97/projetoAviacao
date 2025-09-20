@@ -52,11 +52,17 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 async def create_tables():
     """Create all database tables."""
+    # Import models to register them with Base.metadata
+    from src.models import db_models_sqlite
+    
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
 async def drop_tables():
     """Drop all database tables."""
+    # Import models to register them with Base.metadata
+    from src.models import db_models_sqlite
+    
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

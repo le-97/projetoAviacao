@@ -8,7 +8,7 @@ from uuid import uuid4
 from sqlalchemy import String, DateTime, Text, Boolean, JSON, ForeignKey, Index, Table, Column, Integer, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.db.session import Base
+from src.database import Base
 
 
 # Association table for many-to-many relationship between regulations and aircraft models
