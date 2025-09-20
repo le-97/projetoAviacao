@@ -28,9 +28,9 @@ async def lifespan(app: FastAPI):
 
 # API metadata for documentation
 app = FastAPI(
-    title=settings.api_title,
+    title=settings.app_name,
     description=f"""
-    🛩️ **Enhanced {settings.api_title}**
+    🛩️ **Enhanced {settings.app_name}**
     
     This microservice validates the regulatory compliance of aircraft models 
     against international aviation regulations (ANAC, FAA, EASA).
@@ -59,7 +59,7 @@ app = FastAPI(
     - ✅ Structured JSON logging with request correlation
     - ✅ Rate limiting protection with configurable limits
     """,
-    version=settings.api_version,
+    version=settings.app_version,
     contact={
         "name": "Projeto Aviacao Team",
         "url": "https://github.com/le-97/projetoAviacao",
@@ -95,7 +95,7 @@ def read_root():
     return {
         "service": "Enhanced Aviation Compliance Microservice",
         "status": "healthy",
-        "version": settings.api_version,
+        "version": settings.app_version,
         "docs": "/docs",
         "redoc": "/redoc"
     }
@@ -109,7 +109,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "enhanced-compliance-microservice",
-        "version": settings.api_version,
+        "version": settings.app_version,
         "supported_models": ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"],
         "supported_countries": ["BRAZIL", "USA", "EUROPE"],
         "database": "sqlite",

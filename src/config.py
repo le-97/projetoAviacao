@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     app_name: str = "Compliance Microservice"
     app_version: str = "1.0.0"
     debug: bool = False
+    cors_origins: list = ["*"]  # CORS allowed origins
     
     # Performance Configuration
     max_cache_size: int = 1000  # Maximum number of cached items
