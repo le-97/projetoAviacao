@@ -58,6 +58,7 @@ async def check_compliance(
     except ValidationError as e:
         log_security_event(
             "compliance_validation_error",
+            "WARNING",
             {"model": model, "country": country, "error": e.message}
         )
         raise HTTPException(status_code=400, detail=e.message)
@@ -65,6 +66,7 @@ async def check_compliance(
     except Exception as e:
         log_security_event(
             "compliance_check_error",
+            "ERROR",
             {"model": model, "country": country, "error": str(e)}
         )
         raise HTTPException(status_code=500, detail="Internal server error")
