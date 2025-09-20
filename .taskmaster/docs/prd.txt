@@ -1,0 +1,311 @@
+# Sistema de Controle de Aviação - Microserviços de Compliance Aeronáutica
+
+## Overview  
+O Sistema de Controle de Aviação é uma plataforma completa para gerenciamento de operações aeronáuticas com foco em compliance e controle regulatório. O sistema permite monitoramento em tempo real de aeronaves, gerenciamento de voos, controle de manutenção, comunicações, clima, tripulação, agendamento, segurança, alertas e análises operacionais.
+
+A plataforma é projetada para companhias aéreas, operadores de aeronaves, controladores de tráfego aéreo e autoridades de aviação civil que precisam garantir conformidade com regulamentações internacionais de aviação e otimizar operações de voo.
+
+## Core Features  
+
+### 1. Dashboard de Controle Central
+- Painel de métricas em tempo real com dados de aeronaves ativas, voos em andamento, status da tripulação e alertas críticos
+- Visualização de dados operacionais consolidados
+- Quick stats cards com informações essenciais para tomada de decisão
+
+### 2. Gerenciamento de Aeronaves
+- Cadastro completo de aeronaves com informações técnicas, status operacional, combustível e manutenção
+- Sistema de filtros por status (ativo, manutenção, indisponível)
+- Cards expandíveis com detalhes técnicos e histórico de manutenção
+- Métricas de utilização e performance por aeronave
+
+### 3. Sistema de Compliance
+- API REST para verificação de compliance com regulamentações aeronáuticas
+- Validação automatizada de documentos e certificações
+- Endpoints para consulta de status de compliance
+- Integração com regulamentações ICAO, FAA e ANAC
+
+### 4. Monitoramento de Voos
+- Acompanhamento de voos ativos em tempo real
+- Informações de origem, destino, horários e status
+- Sistema de alertas para atrasos ou problemas operacionais
+- Integração com dados meteorológicos
+
+### 5. Sistema de Manutenção
+- Agendamento e controle de manutenção preventiva e corretiva
+- Histórico completo de intervenções por aeronave
+- Alertas automáticos para manutenções próximas do vencimento
+- Gestão de peças e componentes
+
+### 6. Comunicações Operacionais
+- Sistema de mensageria para comunicação entre equipes
+- Notificações automáticas para eventos críticos
+- Log de comunicações para auditoria
+- Integração com sistemas de comunicação aeronáutica
+
+### 7. Dados Meteorológicos
+- Integração com serviços meteorológicos para múltiplos aeroportos
+- Visualização de condições climáticas por localização
+- Alertas meteorológicos para operações de voo
+- Histórico e previsões meteorológicas
+
+### 8. Gerenciamento de Tripulação
+- Cadastro e controle de disponibilidade da tripulação
+- Verificação de qualificações e certificações
+- Sistemas de escala e rodízio
+- Controle de horas de voo e tempo de descanso
+
+### 9. Sistema de Agendamento
+- Planejamento de voos e operações
+- Agendamento de recursos (aeronaves, tripulação, slots)
+- Otimização de rotas e horários
+- Gestão de conflitos de agendamento
+
+### 10. Controle de Segurança
+- Monitoramento de incidentes e não-conformidades
+- Sistema de relatórios de segurança
+- Análise de riscos operacionais
+- Planos de contingência e emergência
+
+### 11. Sistema de Alertas
+- Alertas em tempo real para situações críticas
+- Classificação por prioridade e tipo
+- Sistema de escalation automático
+- Histórico de alertas e resoluções
+
+### 12. Analytics e Relatórios
+- Dashboards analíticos com KPIs operacionais
+- Relatórios de performance e eficiência
+- Análise de tendências e padrões
+- Exportação de dados para análise externa
+
+## User Experience  
+
+### User Personas
+- **Controladores de Operações**: Precisam de visão consolidada e controle centralizado
+- **Pilotos e Tripulação**: Necessitam acesso rápido a informações de voo e agendamento
+- **Técnicos de Manutenção**: Requerem detalhes técnicos e histórico de manutenção
+- **Gestores de Compliance**: Precisam de relatórios e validações regulatórias
+- **Analistas Operacionais**: Necessitam de dados para análise e otimização
+
+### Key User Flows
+1. **Login e Seleção de Variant**: Sistema de autenticação seguido de seleção do tema visual (militar, moderno, futurista)
+2. **Dashboard Principal**: Acesso imediato às informações críticas e navegação para módulos específicos
+3. **Navegação por Módulos**: Sistema de sidebar com acesso direto a todas as funcionalidades
+4. **Gerenciamento de Aeronaves**: Filtros, visualização de cards e expansão para detalhes
+5. **Análise de Compliance**: Consultas à API e visualização de status regulatório
+6. **Monitoramento de Alertas**: Visualização, classificação e resolução de alertas
+
+### UI/UX Considerations
+- Design responsivo para uso em diferentes dispositivos
+- Interface darkmode apropriada para ambientes de controle 24/7
+- Três variantes visuais: militar/aeronáutica, comercial moderna, futurista sci-fi
+- Navegação intuitiva com ícones padronizados da aviação
+- Cores e indicadores visuais para status críticos
+- Fontes monospace para dados técnicos e identificações
+
+## Technical Architecture  
+
+### Frontend Stack
+- **React 18** com TypeScript para type safety
+- **Vite** para build tool e desenvolvimento rápido
+- **Tailwind CSS** para styling responsivo
+- **shadcn/ui** para componentes UI padronizados
+- **Framer Motion** para animações e transições
+- **Lucide React** para ícones consistentes
+- **React Router** para navegação SPA
+
+### Backend Stack
+- **Python FastAPI** para APIs REST de alta performance
+- **Pydantic** para validação de dados
+- **SQLAlchemy** ou similar para ORM
+- **PostgreSQL** para banco de dados principal
+- **Redis** para cache e sessions
+
+### Component Architecture
+- Sistema de Design System aeronáutico
+- Componentes UI reutilizáveis (botões, cards, modais)
+- Layout components (sidebar, topbar, containers)
+- Page components para cada módulo
+- Variant system para múltiplos temas visuais
+
+### Data Models
+- **Aircraft**: informações técnicas, status, manutenção
+- **Flight**: dados de voo, rotas, horários
+- **Crew**: tripulação, qualificações, disponibilidade
+- **Compliance**: regulamentações, status, documentos
+- **Maintenance**: histórico, agendamentos, peças
+- **Weather**: dados meteorológicos, alertas
+- **Alert**: notificações, prioridades, status
+
+### APIs and Integrations
+- REST API para compliance aeronáutica
+- Integração com serviços meteorológicos
+- APIs de dados de voo em tempo real
+- Sistema de notificações push
+- Integração com sistemas externos de manutenção
+
+### Infrastructure Requirements
+- Containerização com Docker
+- Deploy em cloud (Azure/AWS)
+- Load balancing para alta disponibilidade
+- Monitoramento e logging
+- Backup e disaster recovery
+
+## Development Roadmap  
+
+### Phase 1: MVP Foundation (Core UI Framework)
+**Objetivo**: Estabelecer a base visual e estrutural do sistema
+- ✅ Setup inicial do projeto React + TypeScript + Vite
+- ✅ Configuração do Tailwind CSS e shadcn/ui
+- ✅ Sistema de Design aeronáutico com componentes base
+- ✅ Implementação do sistema de variants (militar, moderno, futurista)
+- ✅ Layout principal com sidebar navigation e topbar
+- ✅ Componente VariantSelector para escolha de temas
+- ✅ Integração com Magic MCP para geração de componentes
+
+### Phase 2: Core Dashboard e Navigation
+**Objetivo**: Dashboard funcional com navegação completa
+- Implementação completa do Dashboard com dados reais
+- Sistema de roteamento entre todas as páginas
+- TopBar funcional com search e indicadores de status
+- Sidebar com navegação ativa e badges de notificação
+- Integração com shadcn/ui components (Button, Card, Dialog, etc.)
+- Sistema de estado global para dados da aplicação
+
+### Phase 3: Módulo de Aeronaves
+**Objetivo**: Gerenciamento completo de aeronaves
+- Página de Aircraft com filtros funcionais
+- Sistema de cards expandíveis com dados detalhados
+- Modal de detalhes de aeronave
+- CRUD completo para aeronaves
+- Sistema de status e métricas
+- Integração com API de dados de aeronaves
+
+### Phase 4: Backend Compliance API
+**Objetivo**: API funcional para compliance aeronáutica
+- Implementação da API FastAPI
+- Endpoints de compliance do contrato existente
+- Integração com dados de regulamentações
+- Sistema de validação e verificação
+- Documentação da API com OpenAPI
+- Testes automatizados da API
+
+### Phase 5: Sistema de Voos e Operações
+**Objetivo**: Monitoramento de voos em tempo real
+- Página de Flights com dados em tempo real
+- Sistema de tracking de voos ativos
+- Integração com dados meteorológicos
+- Alertas operacionais automáticos
+- Visualização de rotas e status
+
+### Phase 6: Módulos de Manutenção e Crew
+**Objetivo**: Gestão de manutenção e tripulação
+- Sistema completo de manutenção preventiva/corretiva
+- Gerenciamento de tripulação e escalas
+- Controle de qualificações e certificações
+- Agendamento integrado de recursos
+- Relatórios de utilização
+
+### Phase 7: Analytics e Relatórios
+**Objetivo**: Business intelligence e análises
+- Dashboard analítico com KPIs
+- Sistema de relatórios customizáveis
+- Gráficos e visualizações de dados
+- Exportação de relatórios
+- Análise de tendências operacionais
+
+### Phase 8: Sistema de Alertas e Notificações
+**Objetivo**: Monitoramento proativo e alertas
+- Sistema de alertas em tempo real
+- Classificação por prioridade e tipo
+- Notificações push e email
+- Escalation automático
+- Dashboard de alertas ativos
+
+### Phase 9: Segurança e Autenticação
+**Objetivo**: Sistema seguro e controlado
+- Autenticação e autorização robusta
+- Controle de acesso baseado em roles
+- Auditoria de ações do usuário
+- Criptografia de dados sensíveis
+- Compliance com padrões de segurança
+
+### Phase 10: Performance e Produção
+**Objetivo**: Sistema otimizado para produção
+- Otimização de performance frontend
+- Caching estratégico
+- Monitoring e observabilidade
+- Deploy automatizado
+- Documentação completa do usuário
+
+## Logical Dependency Chain
+
+### Foundation Layer (Deve ser construído primeiro)
+1. **Setup de Projeto e Tooling** - Base técnica para todo desenvolvimento
+2. **Design System e Componentes UI** - Componentes reutilizáveis para todas as telas
+3. **Layout Principal e Navegação** - Estrutura base para acessar funcionalidades
+
+### Core Application Layer (Funcionalidades essenciais)
+4. **Dashboard Central** - Ponto de entrada e visão geral do sistema
+5. **Sistema de Variants** - Personalização visual para diferentes usuários
+6. **Roteamento e Estado Global** - Navegação e gestão de dados da aplicação
+
+### Business Logic Layer (Módulos de negócio)
+7. **Módulo de Aeronaves** - Gestão do recurso principal (aeronaves)
+8. **API de Compliance** - Backend para validações regulatórias
+9. **Sistema de Voos** - Operações principais de voo
+
+### Advanced Features Layer (Funcionalidades avançadas)
+10. **Manutenção e Crew** - Gestão de recursos operacionais
+11. **Analytics e Relatórios** - Inteligência de negócio
+12. **Alertas e Notificações** - Monitoramento proativo
+
+### Production Ready Layer (Finalização)
+13. **Segurança e Autenticação** - Controle de acesso
+14. **Performance e Deploy** - Otimização para produção
+
+## Risks and Mitigations  
+
+### Technical Challenges
+- **Risco**: Complexidade da integração entre múltiplos MCPs (Taskmaster, shadcn, Magic)
+- **Mitigação**: Desenvolvimento incremental com testes de integração em cada fase
+
+- **Risco**: Performance com grandes volumes de dados de voo em tempo real
+- **Mitigação**: Implementação de caching, pagination e lazy loading
+
+- **Risco**: Compatibilidade entre shadcn/ui e sistema de variants customizado
+- **Mitigação**: Teste extensivo de componentes em todos os temas visuais
+
+### MVP Definition
+- **Risco**: Scope creep e perda de foco no MVP
+- **Mitigação**: Definição clara de funcionalidades essenciais vs. nice-to-have
+
+- **Risco**: Expectativas altas vs. tempo de desenvolvimento
+- **Mitigação**: Entrega incremental com demos frequentes
+
+### Resource Constraints
+- **Risco**: Dependência de APIs externas para dados reais
+- **Mitigação**: Mock data completo para desenvolvimento e testes
+
+- **Risco**: Complexidade do domínio aeronáutico
+- **Mitigação**: Foco inicial em funcionalidades core com expansão gradual
+
+## Appendix  
+
+### Research Findings
+- Análise de sistemas existentes de controle aeronáutico
+- Requisitos de compliance ICAO/FAA/ANAC
+- Padrões de UI/UX para sistemas críticos 24/7
+- Benchmarks de performance para aplicações em tempo real
+
+### Technical Specifications
+- Especificações de API REST para compliance
+- Modelos de dados para entidades aeronáuticas
+- Requisitos de segurança e auditoria
+- Padrões de integração com sistemas externos
+
+### Integration Points
+- Magic MCP para geração rápida de componentes UI
+- shadcn/ui para componentes padronizados e acessíveis
+- Taskmaster MCP para gestão de desenvolvimento e tarefas
+- APIs externas para dados meteorológicos e regulatórios

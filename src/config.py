@@ -32,7 +32,13 @@ class Settings(BaseSettings):
     app_name: str = "Compliance Microservice"
     app_version: str = "1.0.0"
     debug: bool = False
-    cors_origins: list = ["*"]  # CORS allowed origins
+    cors_origins: list = [
+        "*",  # Allow all origins for development
+        "https://proud-sky-09399eb0f.2.azurestaticapps.net",  # Production frontend
+        "https://proud-sky-09399eb0f-preview.eastus2.2.azurestaticapps.net",  # Preview frontend
+        "http://localhost:5173",  # Local development
+        "http://127.0.0.1:5173"   # Local development alternative
+    ]
     
     # Performance Configuration
     max_cache_size: int = 1000  # Maximum number of cached items

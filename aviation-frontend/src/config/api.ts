@@ -1,14 +1,15 @@
 import axios from 'axios';
 
-// API base URL - Development: local backend, Production: Azure VM
-export const API_BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://127.0.0.1:8001'
-  : 'http://172.173.225.32:8000';
+// API base URL - Development: local backend, Production: Azure Container Apps
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+  (process.env.NODE_ENV === 'development' 
+    ? 'http://127.0.0.1:8001'
+    : 'https://aviation-backend.greensand-8aeaae63.brazilsouth.azurecontainerapps.io');
 
 // Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 30000,
   headers: {
     'Content-Type': 'application/json',
   },

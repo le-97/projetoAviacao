@@ -1,0 +1,27 @@
+[
+  {
+    "authority": "ANAC",
+    "description": "RBAC 21 - Certificação de Produto Aeronáutico",
+    "applicability": ["E190", "E195"]
+  },
+  {
+    "authority": "ANAC",
+    "description": "RBAC 91 - Requisitos Gerais de Operação para Aeronaves Civis",
+    "applicability": ["E190", "E195"]
+  },
+  {
+    "authority": "FAA",
+    "description": "TCDS A57NM - Embraer ERJ 190",
+    "applicability": ["E190", "E195"]
+  },
+  {
+    "authority": "FAA",
+    "description": "AD-2025-12: Wing inspection required",
+    "applicability": ["E190"]
+  },
+  {
+    "authority": "EASA",
+    "description": "TCDS EASA.IM.A.071 - ERJ 190",
+    "applicability": ["E190", "E195"]
+  }
+]

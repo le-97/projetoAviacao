@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorDisplay from './ErrorDisplay';
+import { apiClient } from '@/config/api';
 
 interface ComplianceRequirement {
   id: string;
@@ -39,14 +40,9 @@ const ComplianceChecker = () => {
   const fetchComplianceRequirements = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://172.173.225.32:8000/compliance/requirements');
+      const response = await apiClient.get('/compliance/requirements');
       
-      if (!response.ok) {
-        throw new Error(`Erro ao carregar requisitos: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setRequirements(data.requirements || []);
+      setRequirements(response.data.requirements || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
