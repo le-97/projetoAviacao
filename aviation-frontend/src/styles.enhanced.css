@@ -1,0 +1,409 @@
+/* Aviation Control System - Enhanced CSS with Aviation Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+@plugin "tailwindcss-animate";
+@custom-variant dark (&:is(.dark *));
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Aviation Blue Spectrum - Professional Grade */
+    --aviation-blue-50: 219 234 254;
+    --aviation-blue-100: 191 219 254;
+    --aviation-blue-200: 147 197 253;
+    --aviation-blue-300: 96 165 250;
+    --aviation-blue-400: 59 130 246;
+    --aviation-blue-500: 37 99 235;
+    --aviation-blue-600: 30 64 175;
+    --aviation-blue-700: 30 58 138;
+    --aviation-blue-800: 30 64 175;
+    --aviation-blue-900: 23 37 84;
+    --aviation-blue-950: 15 23 42;
+
+    /* NASA Orange Accents */
+    --nasa-orange-50: 255 247 237;
+    --nasa-orange-100: 255 237 213;
+    --nasa-orange-200: 254 215 170;
+    --nasa-orange-300: 253 186 116;
+    --nasa-orange-400: 251 146 60;
+    --nasa-orange-500: 249 115 22;
+    --nasa-orange-600: 234 88 12;
+    --nasa-orange-700: 194 65 12;
+    --nasa-orange-800: 154 52 18;
+    --nasa-orange-900: 124 45 18;
+    --nasa-orange-950: 67 20 7;
+
+    /* Technical Grays */
+    --tech-gray-50: 248 250 252;
+    --tech-gray-100: 241 245 249;
+    --tech-gray-200: 226 232 240;
+    --tech-gray-300: 203 213 225;
+    --tech-gray-400: 148 163 184;
+    --tech-gray-500: 100 116 139;
+    --tech-gray-600: 71 85 105;
+    --tech-gray-700: 51 65 85;
+    --tech-gray-800: 30 41 59;
+    --tech-gray-900: 15 23 42;
+    --tech-gray-950: 2 6 23;
+
+    /* Status Colors for Compliance */
+    --status-compliant: 34 197 94;
+    --status-pending: 251 146 60;
+    --status-non-compliant: 239 68 68;
+    --status-critical: 220 38 38;
+    --status-warning: 245 158 11;
+    --status-info: 59 130 246;
+    --status-success: 34 197 94;
+
+    /* Enhanced shadcn/ui variables with aviation colors */
+    --background: 0 0% 100%;
+    --foreground: var(--tech-gray-950);
+    --card: 0 0% 100%;
+    --card-foreground: var(--tech-gray-950);
+    --popover: 0 0% 100%;
+    --popover-foreground: var(--tech-gray-950);
+    --primary: var(--aviation-blue-600);
+    --primary-foreground: 0 0% 98%;
+    --secondary: var(--tech-gray-100);
+    --secondary-foreground: var(--tech-gray-900);
+    --muted: var(--tech-gray-100);
+    --muted-foreground: var(--tech-gray-500);
+    --accent: var(--nasa-orange-100);
+    --accent-foreground: var(--tech-gray-900);
+    --destructive: var(--status-non-compliant);
+    --destructive-foreground: 0 0% 98%;
+    --border: var(--tech-gray-200);
+    --input: var(--tech-gray-200);
+    --ring: var(--aviation-blue-600);
+    --chart-1: var(--aviation-blue-500);
+    --chart-2: var(--nasa-orange-500);
+    --chart-3: var(--tech-gray-500);
+    --chart-4: var(--status-compliant);
+    --chart-5: var(--status-warning);
+    --radius: 0.5rem;
+    
+    /* Sidebar variables for consistency */
+    --sidebar: var(--tech-gray-50);
+    --sidebar-foreground: var(--tech-gray-900);
+    --sidebar-primary: var(--aviation-blue-600);
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: var(--tech-gray-100);
+    --sidebar-accent-foreground: var(--tech-gray-900);
+    --sidebar-border: var(--tech-gray-200);
+    --sidebar-ring: var(--aviation-blue-600);
+  }
+
+  .dark {
+    --background: var(--tech-gray-950);
+    --foreground: var(--tech-gray-50);
+    --card: var(--tech-gray-900);
+    --card-foreground: var(--tech-gray-50);
+    --popover: var(--tech-gray-900);
+    --popover-foreground: var(--tech-gray-50);
+    --primary: var(--aviation-blue-400);
+    --primary-foreground: var(--tech-gray-900);
+    --secondary: var(--tech-gray-800);
+    --secondary-foreground: var(--tech-gray-50);
+    --muted: var(--tech-gray-800);
+    --muted-foreground: var(--tech-gray-400);
+    --accent: var(--nasa-orange-800);
+    --accent-foreground: var(--tech-gray-50);
+    --destructive: var(--status-critical);
+    --destructive-foreground: var(--tech-gray-50);
+    --border: var(--tech-gray-800);
+    --input: var(--tech-gray-800);
+    --ring: var(--aviation-blue-400);
+    --chart-1: var(--aviation-blue-400);
+    --chart-2: var(--nasa-orange-400);
+    --chart-3: var(--tech-gray-400);
+    --chart-4: var(--status-compliant);
+    --chart-5: var(--status-warning);
+    
+    --sidebar: var(--tech-gray-900);
+    --sidebar-foreground: var(--tech-gray-50);
+    --sidebar-primary: var(--aviation-blue-400);
+    --sidebar-primary-foreground: var(--tech-gray-900);
+    --sidebar-accent: var(--tech-gray-800);
+    --sidebar-accent-foreground: var(--tech-gray-50);
+    --sidebar-border: var(--tech-gray-800);
+    --sidebar-ring: var(--aviation-blue-400);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  }
+}
+
+/* Aviation-specific utility classes */
+@layer components {
+  .aviation-gradient {
+    @apply bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50;
+  }
+  
+  .aviation-card {
+    @apply border-2 shadow-xl bg-white/95 backdrop-blur-sm;
+  }
+  
+  .aviation-header {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white;
+  }
+  
+  .aviation-button {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-200;
+  }
+  
+  /* Compliance Status Variants */
+  .compliance-status-compliant {
+    @apply bg-green-100 text-green-800 border-green-200;
+  }
+  
+  .compliance-status-pending {
+    @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+  }
+  
+  .compliance-status-non-compliant {
+    @apply bg-red-100 text-red-800 border-red-200;
+  }
+  
+  /* Risk Level Variants */
+  .risk-level-low {
+    @apply bg-green-100 text-green-800 border-green-200;
+  }
+  
+  .risk-level-medium {
+    @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+  }
+  
+  .risk-level-high {
+    @apply bg-red-100 text-red-800 border-red-200;
+  }
+  
+  /* Authority-specific styling */
+  .authority-anac {
+    @apply bg-green-50 border-green-200 text-green-900;
+  }
+  
+  .authority-faa {
+    @apply bg-blue-50 border-blue-200 text-blue-900;
+  }
+  
+  .authority-easa {
+    @apply bg-purple-50 border-purple-200 text-purple-900;
+  }
+  
+  .authority-transport-canada {
+    @apply bg-red-50 border-red-200 text-red-900;
+  }
+  
+  /* Technical form styling */
+  .technical-form {
+    @apply space-y-6 p-8;
+  }
+  
+  .technical-label {
+    @apply text-sm font-semibold text-gray-700 flex items-center space-x-2;
+  }
+  
+  .technical-input {
+    @apply border-2 h-12 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-blue-500;
+  }
+  
+  .technical-card {
+    @apply border-2 shadow-lg rounded-xl overflow-hidden;
+  }
+  
+  .technical-table {
+    @apply w-full border-collapse;
+  }
+  
+  .technical-table th {
+    @apply bg-gray-50 border-b-2 border-gray-200 p-4 text-left font-semibold text-gray-700;
+  }
+  
+  .technical-table td {
+    @apply border-b border-gray-200 p-4;
+  }
+}
+
+/* Enhanced aviation button with improved styling */
+.aviation-button {
+  background: linear-gradient(135deg, rgb(37 99 235) 0%, rgb(30 64 175) 100%);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.35);
+}
+
+.aviation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+}
+
+.aviation-button:active {
+  transform: translateY(0);
+}
+
+.aviation-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Navigation item styling with aviation theme */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: rgb(30 64 175);
+}
+
+.nav-item.active {
+  background-color: rgb(37 99 235);
+  color: white;
+  border: 1px solid rgb(30 64 175);
+  border-left: 4px solid rgb(249 115 22);
+}
+
+/* Animation utilities for critical statuses */
+@keyframes pulse-critical {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-critical {
+  animation: pulse-critical 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Status indicator animations */
+@keyframes status-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.status-critical {
+  animation: status-blink 1.5s infinite;
+}
+
+/* Enhanced progress bars for compliance */
+.compliance-progress {
+  @apply h-3 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.compliance-progress-bar {
+  @apply h-full transition-all duration-300 ease-out rounded-full;
+}
+
+.compliance-progress-bar.compliant {
+  @apply bg-green-500;
+}
+
+.compliance-progress-bar.pending {
+  @apply bg-yellow-500;
+}
+
+.compliance-progress-bar.non-compliant {
+  @apply bg-red-500;
+}
+
+/* Technical typography hierarchy */
+.technical-heading-1 {
+  @apply text-4xl font-bold text-gray-900 mb-4;
+}
+
+.technical-heading-2 {
+  @apply text-2xl font-bold text-gray-800 mb-3;
+}
+
+.technical-heading-3 {
+  @apply text-xl font-semibold text-gray-700 mb-2;
+}
+
+.technical-body {
+  @apply text-base text-gray-600 leading-relaxed;
+}
+
+.technical-caption {
+  @apply text-sm text-gray-500;
+}
+
+.technical-code {
+  @apply font-mono text-sm bg-gray-100 px-2 py-1 rounded;
+}
+
+/* Enhanced card variants for different authority types */
+.authority-card {
+  @apply rounded-xl overflow-hidden transition-all duration-200 hover:shadow-lg;
+}
+
+.authority-card.anac {
+  @apply border-l-4 border-l-green-500 bg-green-50;
+}
+
+.authority-card.faa {
+  @apply border-l-4 border-l-blue-500 bg-blue-50;
+}
+
+.authority-card.easa {
+  @apply border-l-4 border-l-purple-500 bg-purple-50;
+}
+
+.authority-card.transport-canada {
+  @apply border-l-4 border-l-red-500 bg-red-50;
+}
+
+/* Responsive utilities for aviation interfaces */
+@media (max-width: 768px) {
+  .aviation-card {
+    @apply mx-2 shadow-lg;
+  }
+  
+  .technical-form {
+    @apply p-4 space-y-4;
+  }
+  
+  .technical-table {
+    @apply text-sm;
+  }
+  
+  .technical-table th,
+  .technical-table td {
+    @apply p-2;
+  }
+}

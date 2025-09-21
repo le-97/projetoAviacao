@@ -2,26 +2,96 @@
   {
     "authority": "ANAC",
     "description": "RBAC 21 - Certificação de Produto Aeronáutico",
-    "applicability": ["E190", "E195"]
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600", "C-390", "KC-390", "A-29", "EMB-203"]
   },
   {
     "authority": "ANAC",
     "description": "RBAC 91 - Requisitos Gerais de Operação para Aeronaves Civis",
-    "applicability": ["E190", "E195"]
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600"]
+  },
+  {
+    "authority": "ANAC",
+    "description": "RBAC 135 - Operações Complementares e por Demanda",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600"]
+  },
+  {
+    "authority": "ANAC",
+    "description": "RBAC 23 - Aviões de Categoria Normal, Utilitário, Acrobático e Transporte Especial",
+    "applicability": ["Phenom-100EX", "Phenom-300E", "A-29", "EMB-203"]
+  },
+  {
+    "authority": "ANAC",
+    "description": "RBAC 137 - Operação Aeroagrícola",
+    "applicability": ["EMB-203"]
+  },
+  {
+    "authority": "ANAC",
+    "description": "RBAC 145 - Organizações de Manutenção de Produtos Aeronáuticos",
+    "applicability": ["C-390", "KC-390", "A-29"]
   },
   {
     "authority": "FAA",
-    "description": "TCDS A57NM - Embraer ERJ 190",
-    "applicability": ["E190", "E195"]
+    "description": "TCDS A57NM - Embraer ERJ Series",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2"]
   },
   {
     "authority": "FAA",
-    "description": "AD-2025-12: Wing inspection required",
-    "applicability": ["E190"]
+    "description": "Part 25 - Airworthiness Standards Transport Category Airplanes",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "C-390", "KC-390"]
+  },
+  {
+    "authority": "FAA",
+    "description": "Part 121 - Operating Requirements: Domestic, Flag, and Supplemental Operations",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2"]
+  },
+  {
+    "authority": "FAA",
+    "description": "Part 23 - Airworthiness Standards: Normal Category Airplanes",
+    "applicability": ["Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600", "A-29", "EMB-203"]
+  },
+  {
+    "authority": "FAA",
+    "description": "Part 91 - General Operating and Flight Rules",
+    "applicability": ["Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600", "A-29", "EMB-203"]
+  },
+  {
+    "authority": "FAA",
+    "description": "Part 137 - Agricultural Aircraft Operations",
+    "applicability": ["EMB-203"]
+  },
+  {
+    "authority": "FAA",
+    "description": "ITAR - International Traffic in Arms Regulations",
+    "applicability": ["C-390", "KC-390", "A-29"]
   },
   {
     "authority": "EASA",
-    "description": "TCDS EASA.IM.A.071 - ERJ 190",
-    "applicability": ["E190", "E195"]
+    "description": "TCDS EASA.IM.A.071 - ERJ Series",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2"]
+  },
+  {
+    "authority": "EASA",
+    "description": "Part-25 - Large Aeroplanes",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "C-390", "KC-390"]
+  },
+  {
+    "authority": "EASA",
+    "description": "Part-CAT - Commercial Air Transport",
+    "applicability": ["E170", "E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2"]
+  },
+  {
+    "authority": "EASA",
+    "description": "CS-23 - Certification Specifications for Normal-Category Aeroplanes",
+    "applicability": ["Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600", "A-29", "EMB-203"]
+  },
+  {
+    "authority": "EASA",
+    "description": "Part-NCC - Non-Commercial Complex Motor-Powered Aircraft",
+    "applicability": ["Phenom-100EX", "Phenom-300E", "Praetor-500", "Praetor-600"]
+  },
+  {
+    "authority": "EASA",
+    "description": "Part-SPO - Specialized Operations",
+    "applicability": ["A-29", "EMB-203"]
   }
 ]

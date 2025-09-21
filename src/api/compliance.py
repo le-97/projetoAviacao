@@ -79,8 +79,8 @@ async def check_compliance(
 async def check_compliance_legacy(
     model: Annotated[str, Query(
         description="Aircraft model to check compliance for",
-        examples=["E175", "E175-E2", "E190", "E195"],
-        pattern="^(E175|E175-E1|E175-E2|E190|E190-E1|E190-E2|E195|E195-E1|E195-E2|737|A320)$"
+        examples=["E175", "E175-E2", "E190", "E195", "Phenom-300E", "C-390"],
+        pattern="^(E170|E175|E175-E1|E175-E2|E190|E190-E1|E190-E2|E195|E195-E1|E195-E2|Phenom-100EX|Phenom-300E|Praetor-500|Praetor-600|C-390|KC-390|A-29|EMB-203|737|A320)$"
     )],
     country: Annotated[str, Query(
         description="Country/region to check compliance against", 
@@ -285,27 +285,130 @@ async def health_check(
         }
 
 
+@router.get("/ai-analysis/{model}/{country}")
+async def ai_enhanced_compliance_analysis(
+    model: str,
+    country: str,
+    compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
+):
+    """
+    AI-enhanced compliance analysis using Hugging Face models.
+    
+    Provides intelligent analysis beyond basic rule-based compliance checking,
+    including contextual insights, risk assessment, and recommendations.
+    
+    Args:
+        model: Aircraft model (e.g., "e190", "phenom300", "kc390")
+        country: Target country (e.g., "US", "EU", "UK", "CA")
+        
+    Returns:
+        Enhanced compliance report with AI insights and recommendations
+    """
+    try:
+        log_business_event(
+            "ai_compliance_analysis_request",
+            {"model": model, "country": country}
+        )
+        
+        # Import AI service (lazy loading to handle missing dependencies)
+        try:
+            from src.services.aviation_ai_service import aviation_ai_analyzer
+            
+            # Run AI-enhanced analysis
+            result = await aviation_ai_analyzer.analyze_compliance_with_ai(model, country)
+            
+            log_business_event(
+                "ai_compliance_analysis_completed",
+                {
+                    "model": model, 
+                    "country": country,
+                    "status": result.get('overallStatus', 'unknown'),
+                    "ai_enhanced": result.get('aiEnhanced', False),
+                    "fallback_used": result.get('aiAnalysis', {}).get('fallback_used', False)
+                }
+            )
+            
+            return result
+            
+        except ImportError as e:
+            log_security_event(
+                "ai_dependencies_missing",
+                "WARNING",
+                {"error": str(e), "model": model, "country": country}
+            )
+            
+            # Fallback to regular compliance check
+            regular_result = await compliance_service.check_compliance(model, country)
+            
+            # Convert to AI-style response format
+            fallback_result = {
+                "aircraft": model,
+                "originCountry": "Brasil (ANAC)",
+                "targetCountry": country,
+                "overallStatus": regular_result.overall_status,
+                "riskLevel": "medium",
+                "estimatedTimeline": "6-12 months",
+                "successProbability": 0.75,
+                "generatedAt": regular_result.generated_at,
+                "aiEnhanced": False,
+                "error": "AI dependencies not available, using fallback analysis",
+                "fallback": True,
+                "regularComplianceResult": regular_result.dict()
+            }
+            
+            return fallback_result
+        
+    except ValidationError as e:
+        log_security_event(
+            "ai_compliance_validation_error",
+            "WARNING",
+            {"model": model, "country": country, "error": e.message}
+        )
+        raise HTTPException(status_code=400, detail=e.message)
+    
+    except Exception as e:
+        log_security_event(
+            "ai_compliance_analysis_error",
+            "ERROR",
+            {"model": model, "country": country, "error": str(e)}
+        )
+        raise HTTPException(status_code=500, detail=f"AI analysis failed: {str(e)}")
+
+
 @router.get("/")
 async def compliance_root():
     """Root endpoint with API information."""
     return {
         "service": "Enhanced Aviation Compliance API",
-        "version": "2.0.0",
-        "description": "Database-backed compliance checking for aviation regulations",
+        "version": "2.1.0",
+        "description": "Database-backed compliance checking with AI-enhanced analysis",
         "features": [
             "Database-driven aircraft model validation",
             "Authority-specific regulation retrieval", 
             "Enhanced E175 and E-Jets E2 support",
             "Model-specific compliance validation",
-            "Comprehensive reporting and recommendations"
+            "Comprehensive reporting and recommendations",
+            "🤖 AI-enhanced analysis with Hugging Face models",
+            "🧠 Intelligent risk assessment and insights",
+            "🎯 Contextual recommendations and timeline estimation"
         ],
         "endpoints": {
             "check": "/compliance/check/{model}/{country}",
             "check_legacy": "/compliance/check-compliance",
+            "ai_analysis": "/compliance/ai-analysis/{model}/{country}",
             "models": "/compliance/models",
             "regulations": "/compliance/regulations/{model}/{country}",
             "authorities": "/compliance/authorities",
             "aircraft": "/compliance/aircraft",
             "health": "/compliance/health"
+        },
+        "ai_capabilities": {
+            "models": [
+                "Legal document classification",
+                "Regulatory similarity analysis", 
+                "Contextual insight generation",
+                "Risk factor identification"
+            ],
+            "fallback": "Graceful degradation to rule-based analysis if AI unavailable"
         }
     }

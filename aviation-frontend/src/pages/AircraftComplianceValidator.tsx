@@ -7,111 +7,111 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, XCircle, AlertTriangle, Plane, Globe, FileText, Shield, Clock } from 'lucide-react';
-
-interface ComplianceReport {
-  aircraft: string;
-  originCountry: string;
-  targetCountry: string;
-  regulations: {
-    authority: string;
-    status: 'compliant' | 'non-compliant' | 'pending';
-    requirements: string[];
-    pendingItems?: string[];
-    completionPercentage: number;
-  }[];
-  overallStatus: 'compliant' | 'non-compliant' | 'pending';
-  riskLevel: 'low' | 'medium' | 'high';
-  estimatedCompletionDays?: number;
-  generatedAt: string;
-}
+import { CheckCircle, XCircle, AlertTriangle, Plane, Globe, FileText, Shield, Clock, Brain, Sparkles } from 'lucide-react';
+import { ComplianceService, type ComplianceReport, type AIComplianceReport } from '@/services/ComplianceService';
+import { AIInsightsDisplay } from '@/components/AIInsightsDisplay';
 
 export default function AircraftComplianceValidator() {
   const [selectedAircraft, setSelectedAircraft] = useState<string>('');
   const [targetCountry, setTargetCountry] = useState<string>('');
   const [complianceReport, setComplianceReport] = useState<ComplianceReport | null>(null);
+  const [aiComplianceReport, setAiComplianceReport] = useState<AIComplianceReport | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [useAI, setUseAI] = useState(true);
 
   const aircraftModels = [
-    { value: 'E190', label: 'Embraer E190', description: 'Regional jet, 96-114 passageiros' },
-    { value: 'E195', label: 'Embraer E195', description: 'Regional jet, 124-146 passageiros' },
-    { value: 'E175', label: 'Embraer E175', description: 'Regional jet, 76-88 passageiros' },
-    { value: 'E170', label: 'Embraer E170', description: 'Regional jet, 70-80 passageiros' }
+    { value: 'e190', label: 'Embraer E190', description: 'Regional jet, 96-114 passageiros' },
+    { value: 'e195', label: 'Embraer E195', description: 'Regional jet, 124-146 passageiros' },
+    { value: 'phenom300', label: 'Phenom 300', description: 'Business jet, até 11 passageiros' },
+    { value: 'legacy500', label: 'Legacy 500', description: 'Business jet, até 12 passageiros' },
+    { value: 'kc390', label: 'KC-390 Millennium', description: 'Transporte militar/civil, até 80 passageiros' }
   ];
 
   const targetCountries = [
-    { value: 'USA', label: 'Estados Unidos', authority: 'FAA', flag: '🇺🇸' },
-    { value: 'EU', label: 'União Europeia', authority: 'EASA', flag: '🇪🇺' },
-    { value: 'CA', label: 'Canadá', authority: 'Transport Canada', flag: '🇨🇦' },
-    { value: 'UK', label: 'Reino Unido', authority: 'CAA', flag: '🇬🇧' }
+    // Américas - América do Norte
+    { value: 'USA', label: 'Estados Unidos', authority: 'FAA', flag: '🇺🇸', region: 'América do Norte' },
+    { value: 'CA', label: 'Canadá', authority: 'Transport Canada', flag: '🇨🇦', region: 'América do Norte' },
+    { value: 'MX', label: 'México', authority: 'AFAC', flag: '🇲🇽', region: 'América do Norte' },
+    
+    // Américas - América do Sul
+    { value: 'BR', label: 'Brasil', authority: 'ANAC', flag: '🇧🇷', region: 'América do Sul' },
+    { value: 'CO', label: 'Colômbia', authority: 'UAEAC', flag: '🇨🇴', region: 'América do Sul' },
+    { value: 'AR', label: 'Argentina', authority: 'ANAC', flag: '🇦🇷', region: 'América do Sul' },
+    { value: 'CL', label: 'Chile', authority: 'DGAC', flag: '🇨🇱', region: 'América do Sul' },
+    { value: 'EC', label: 'Equador', authority: 'DAC', flag: '🇪🇨', region: 'América do Sul' },
+    { value: 'GY', label: 'Guiana', authority: 'GCAA', flag: '🇬🇾', region: 'América do Sul' },
+    { value: 'PY', label: 'Paraguai', authority: 'DINAC', flag: '🇵🇾', region: 'América do Sul' },
+    { value: 'UY', label: 'Uruguai', authority: 'DINACIA', flag: '🇺🇾', region: 'América do Sul' },
+    { value: 'BO', label: 'Bolívia', authority: 'DGAC', flag: '🇧🇴', region: 'América do Sul' },
+    
+    // Américas - América Central e Caribe
+    { value: 'PA', label: 'Panamá', authority: 'AAC', flag: '🇵🇦', region: 'América Central' },
+    { value: 'TT', label: 'Trinidad e Tobago', authority: 'TTCAA', flag: '🇹🇹', region: 'Caribe' },
+    
+    // Europa
+    { value: 'EU', label: 'União Europeia', authority: 'EASA', flag: '🇪🇺', region: 'Europa' },
+    { value: 'PT', label: 'Portugal', authority: 'ANAC', flag: '🇵🇹', region: 'Europa' },
+    { value: 'NL', label: 'Holanda', authority: 'ILT', flag: '🇳🇱', region: 'Europa' },
+    { value: 'UK', label: 'Reino Unido', authority: 'CAA', flag: '�🇧', region: 'Europa' },
+    { value: 'HU', label: 'Hungria', authority: 'NKH', flag: '🇭�🇺', region: 'Europa' },
+    { value: 'AT', label: 'Áustria', authority: 'ACG', flag: '🇦🇹', region: 'Europa' },
+    { value: 'CZ', label: 'República Tcheca', authority: 'CAA', flag: '🇨🇿', region: 'Europa' },
+    { value: 'CH', label: 'Suíça', authority: 'FOCA', flag: '🇨🇭', region: 'Europa' },
+    { value: 'PL', label: 'Polônia', authority: 'CAA', flag: '🇵🇱', region: 'Europa' },
+    { value: 'DE', label: 'Alemanha', authority: 'LBA', flag: '🇩🇪', region: 'Europa' },
+    { value: 'ES', label: 'Espanha', authority: 'AESA', flag: '🇪🇸', region: 'Europa' },
+    { value: 'FI', label: 'Finlândia', authority: 'Traficom', flag: '🇫🇮', region: 'Europa' },
+    { value: 'FR', label: 'França', authority: 'DGAC', flag: '🇫🇷', region: 'Europa' },
+    { value: 'IE', label: 'Irlanda', authority: 'IAA', flag: '🇮🇪', region: 'Europa' },
+    { value: 'NO', label: 'Noruega', authority: 'CAA', flag: '🇳🇴', region: 'Europa' },
+    { value: 'BE', label: 'Bélgica', authority: 'BCAA', flag: '🇧🇪', region: 'Europa' },
+    
+    // Ásia
+    { value: 'KR', label: 'Coreia do Sul', authority: 'MOLIT', flag: '🇰🇷', region: 'Ásia' },
+    { value: 'CN', label: 'China', authority: 'CAAC', flag: '🇨🇳', region: 'Ásia' },
+    { value: 'JP', label: 'Japão', authority: 'JCAB', flag: '🇯🇵', region: 'Ásia' },
+    { value: 'KZ', label: 'Cazaquistão', authority: 'CAC', flag: '🇰🇿', region: 'Ásia' },
+    { value: 'PH', label: 'Filipinas', authority: 'CAAP', flag: '🇵🇭', region: 'Ásia' },
+    { value: 'IN', label: 'Índia', authority: 'DGCA', flag: '🇮🇳', region: 'Ásia' },
+    { value: 'ID', label: 'Indonésia', authority: 'DGCA', flag: '🇮🇩', region: 'Ásia' },
+    { value: 'LB', label: 'Líbano', authority: 'DGCA', flag: '🇱🇧', region: 'Oriente Médio' },
+    { value: 'SA', label: 'Arábia Saudita', authority: 'GACA', flag: '�🇦', region: 'Oriente Médio' },
+    { value: 'AE', label: 'Emirados Árabes Unidos', authority: 'GCAA', flag: '🇦🇪', region: 'Oriente Médio' },
+    { value: 'VN', label: 'Vietnã', authority: 'CAAV', flag: '🇻🇳', region: 'Ásia' },
+    
+    // África
+    { value: 'NG', label: 'Nigéria', authority: 'NCAA', flag: '🇳🇬', region: 'África' },
+    { value: 'AO', label: 'Angola', authority: 'INCA', flag: '🇦🇴', region: 'África' },
+    { value: 'KE', label: 'Quênia', authority: 'KCAA', flag: '🇰🇪', region: 'África' },
+    { value: 'EG', label: 'Egito', authority: 'ECAA', flag: '🇪🇬', region: 'África' },
+    { value: 'GH', label: 'Gana', authority: 'GCAA', flag: '🇬🇭', region: 'África' },
+    { value: 'MZ', label: 'Moçambique', authority: 'IACM', flag: '🇲🇿', region: 'África' },
+    { value: 'ZA', label: 'África do Sul', authority: 'SACAA', flag: '🇿🇦', region: 'África' },
+    
+    // Oceania
+    { value: 'AU', label: 'Austrália', authority: 'CASA', flag: '🇦🇺', region: 'Oceania' },
+    { value: 'PG', label: 'Papua-Nova Guiné', authority: 'CAA', flag: '🇵🇬', region: 'Oceania' }
   ];
-
-  const mockComplianceCheck = async (): Promise<ComplianceReport> => {
-    // Simulação de chamada à API de validação de conformidade
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    const targetCountryData = targetCountries.find(c => c.value === targetCountry);
-    const aircraftData = aircraftModels.find(a => a.value === selectedAircraft);
-    
-    // Simulação de dados baseados na seleção
-    const mockData: ComplianceReport = {
-      aircraft: aircraftData?.label || selectedAircraft,
-      originCountry: 'Brasil (ANAC)',
-      targetCountry: `${targetCountryData?.label} (${targetCountryData?.authority})`,
-      regulations: [
-        {
-          authority: 'ANAC (Brasil)',
-          status: 'compliant',
-          completionPercentage: 100,
-          requirements: [
-            'Certificado de Aeronavegabilidade (CA)',
-            'Registro Nacional de Aeronaves (RNA)',
-            'Certificado de Matrícula (CM)',
-            'Certificado de Homologação de Tipo (CHT)',
-            'Manual de Operações aprovado'
-          ]
-        },
-        {
-          authority: targetCountryData?.authority || 'FAA',
-          status: targetCountry === 'EU' ? 'pending' : targetCountry === 'UK' ? 'non-compliant' : 'compliant',
-          completionPercentage: targetCountry === 'EU' ? 65 : targetCountry === 'UK' ? 30 : 95,
-          requirements: [
-            'Type Certificate Validation',
-            'Standard Airworthiness Certificate',
-            'Registration Certificate',
-            'Operational Specifications',
-            'Maintenance Program Approval'
-          ],
-          pendingItems: targetCountry === 'EU' ? [
-            'EASA Supplemental Type Certificate (STC)',
-            'European Aviation Safety Documentation',
-            'Noise Certificate Validation'
-          ] : targetCountry === 'UK' ? [
-            'Post-Brexit Aviation Agreement',
-            'CAA Type Certificate Recognition',
-            'UK-specific Airworthiness Directives',
-            'Brexit Transition Documentation'
-          ] : undefined
-        }
-      ],
-      overallStatus: targetCountry === 'EU' ? 'pending' : targetCountry === 'UK' ? 'non-compliant' : 'compliant',
-      riskLevel: targetCountry === 'UK' ? 'high' : targetCountry === 'EU' ? 'medium' : 'low',
-      estimatedCompletionDays: targetCountry === 'EU' ? 45 : targetCountry === 'UK' ? 120 : undefined,
-      generatedAt: new Date().toISOString()
-    };
-
-    return mockData;
-  };
 
   const handleValidation = async () => {
     if (!selectedAircraft || !targetCountry) return;
     
     setIsLoading(true);
     try {
-      const report = await mockComplianceCheck();
-      setComplianceReport(report);
+      if (useAI) {
+        console.log('🤖 Using AI-enhanced analysis...');
+        const aiReport = await ComplianceService.validateComplianceWithAI(selectedAircraft, targetCountry);
+        setAiComplianceReport(aiReport);
+        setComplianceReport(null);
+      } else {
+        console.log('📋 Using traditional analysis...');
+        const report = await ComplianceService.validateCompliance(selectedAircraft, targetCountry);
+        setComplianceReport(report);
+        setAiComplianceReport(null);
+      }
     } catch (error) {
       console.error('Erro na validação:', error);
+      alert('Erro ao validar conformidade. Verifique os dados selecionados e tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -246,20 +246,68 @@ export default function AircraftComplianceValidator() {
                   <SelectTrigger className="border-2 h-12">
                     <SelectValue placeholder="Selecione o país de destino" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {targetCountries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        <div className="flex items-center space-x-2">
-                          <span>{country.flag}</span>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{country.label}</span>
-                            <span className="text-xs text-gray-500">{country.authority}</span>
-                          </div>
+                  <SelectContent className="max-h-96 overflow-y-auto">
+                    {Object.entries(
+                      targetCountries.reduce((acc, country) => {
+                        const region = country.region || 'Outros';
+                        if (!acc[region]) acc[region] = [];
+                        acc[region].push(country);
+                        return acc;
+                      }, {} as Record<string, typeof targetCountries>)
+                    ).map(([region, regionCountries]) => (
+                      <div key={region}>
+                        <div className="px-2 py-2 text-sm font-semibold text-blue-600 bg-blue-50 border-b border-blue-200">
+                          {region}
                         </div>
-                      </SelectItem>
+                        {regionCountries.map((country) => (
+                          <SelectItem key={country.value} value={country.value} className="pl-6">
+                            <div className="flex items-center space-x-2">
+                              <span>{country.flag}</span>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{country.label}</span>
+                                <span className="text-xs text-gray-500">{country.authority}</span>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </div>
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* Toggle de Análise AI */}
+            <div className="flex items-center justify-center space-x-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border-2 border-purple-200">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant={useAI ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setUseAI(true)}
+                  className={useAI ? "bg-purple-600 hover:bg-purple-700" : ""}
+                >
+                  <Brain className="h-4 w-4 mr-2" />
+                  Análise AI
+                </Button>
+                <Button
+                  variant={!useAI ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setUseAI(false)}
+                  className={!useAI ? "bg-gray-600 hover:bg-gray-700" : ""}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Análise Tradicional
+                </Button>
+              </div>
+              <div className="text-sm text-gray-600">
+                {useAI ? (
+                  <div className="flex items-center space-x-1">
+                    <Sparkles className="h-4 w-4 text-purple-500" />
+                    <span>Análise inteligente com insights AI</span>
+                  </div>
+                ) : (
+                  <span>Análise baseada em regras</span>
+                )}
               </div>
             </div>
 
@@ -285,6 +333,141 @@ export default function AircraftComplianceValidator() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Relatório AI Aprimorado */}
+        {aiComplianceReport && (
+          <div className="space-y-6">
+            <Card className="border-2 shadow-xl border-purple-200">
+              <CardHeader className="bg-gradient-to-r from-purple-800 to-blue-900 text-white rounded-t-lg">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Brain className="h-6 w-6" />
+                    Relatório AI de Conformidade Regulatória
+                  </CardTitle>
+                  <div className="flex items-center space-x-3">
+                    {getStatusBadge(aiComplianceReport.overallStatus)}
+                    {getRiskBadge(aiComplianceReport.riskLevel)}
+                  </div>
+                </div>
+                <CardDescription className="text-purple-100">
+                  Análise inteligente gerada em: {new Date(aiComplianceReport.generatedAt).toLocaleString('pt-BR')} | 
+                  Timeline: {aiComplianceReport.estimatedTimeline} | 
+                  Probabilidade de Sucesso: {Math.round(aiComplianceReport.successProbability * 100)}%
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                  <div className="lg:col-span-2">
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div className="flex items-center space-x-3">
+                        <Plane className="h-8 w-8 text-blue-600" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800">{aiComplianceReport.aircraft}</h3>
+                          <p className="text-sm text-gray-600">{aiComplianceReport.originCountry}</p>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Globe className="h-8 w-8 text-green-600" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800">{aiComplianceReport.targetCountry}</h3>
+                          <p className="text-sm text-gray-600">Destino da validação</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-1">
+                    <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-lg">
+                      <h4 className="font-semibold text-gray-800 mb-3">Status Geral</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">Conformidade</span>
+                          {getStatusIcon(aiComplianceReport.overallStatus)}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">Nível de Risco</span>
+                          <Badge className={getRiskBadgeColor(aiComplianceReport.riskLevel)}>
+                            {aiComplianceReport.riskLevel.toUpperCase()}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">Timeline</span>
+                          <span className="text-sm font-medium">{aiComplianceReport.estimatedTimeline}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Renderizar Insights AI */}
+                <AIInsightsDisplay report={aiComplianceReport} />
+                
+                {/* Regulamentações (se disponível) */}
+                {aiComplianceReport.regulations && aiComplianceReport.regulations.length > 0 && (
+                  <div className="mt-8">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Análise Regulatória Detalhada
+                    </h4>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {aiComplianceReport.regulations.map((regulation, index) => (
+                        <Card key={index} className="border border-gray-200">
+                          <CardHeader className="pb-4">
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-base font-semibold text-gray-800">
+                                {regulation.authority}
+                              </CardTitle>
+                              <div className="flex items-center space-x-2">
+                                {getStatusIcon(regulation.status)}
+                                <span className="text-sm font-medium">
+                                  {regulation.completionPercentage}%
+                                </span>
+                              </div>
+                            </div>
+                            <Progress value={regulation.completionPercentage} className="w-full" />
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div>
+                                <h5 className="text-sm font-semibold text-gray-700 mb-2">Requisitos:</h5>
+                                <ul className="text-sm text-gray-600 space-y-1">
+                                  {regulation.requirements.map((req, idx) => (
+                                    <li key={idx} className="flex items-center space-x-2">
+                                      <CheckCircle className="h-3 w-3 text-green-500" />
+                                      <span>{req}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                              
+                              {regulation.pendingItems && regulation.pendingItems.length > 0 && (
+                                <div>
+                                  <h5 className="text-sm font-semibold text-red-700 mb-2">Itens Pendentes:</h5>
+                                  <ul className="text-sm text-red-600 space-y-1">
+                                    {regulation.pendingItems.map((item, idx) => (
+                                      <li key={idx} className="flex items-center space-x-2">
+                                        <AlertTriangle className="h-3 w-3 text-red-500" />
+                                        <span>{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Relatório de Conformidade */}
         {complianceReport && (

@@ -25,7 +25,25 @@ class ComplianceService:
             "BRAZIL": "ANAC", 
             "EUROPE": "EASA",
         }
-        self.supported_models = ["E190", "E195"]
+        self.supported_models = [
+            # E-Jets E2 (Nova Geração)
+            "E175-E2", "E190-E2", "E195-E2",
+            
+            # E-Jets (Primeira Geração)
+            "E170", "E175", "E190", "E195",
+            
+            # Aviação Executiva - Família Phenom
+            "Phenom-100EX", "Phenom-300E",
+            
+            # Aviação Executiva - Família Praetor
+            "Praetor-500", "Praetor-600",
+            
+            # Defesa e Segurança
+            "C-390", "KC-390", "A-29",
+            
+            # Aviação Agrícola
+            "EMB-203"
+        ]
         self.supported_countries = ["USA", "BRAZIL", "EUROPE"]
 
     @property

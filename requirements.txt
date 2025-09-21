@@ -19,3 +19,11 @@ asyncpg
 alembic
 psycopg2-binary
 pytest-asyncio
+
+# Hugging Face and AI dependencies
+transformers>=4.35.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
