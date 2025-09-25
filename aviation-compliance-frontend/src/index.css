@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Mode Colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+
+    /* Aviation Specific Colors */
+    --aviation-primary: 221.2 83.2% 53.3%;
+    --aviation-secondary: 197 100% 46%;
+    --aviation-accent: 43 96% 56%;
+    --aviation-success: 142 71% 45%;
+    --aviation-warning: 38 92% 50%;
+    --aviation-danger: 0 84% 60%;
+    
+    /* Status Colors for Compliance */
+    --compliant: 142 71% 45%;
+    --non-compliant: 0 84% 60%;
+    --pending: 38 92% 50%;
+    --in-progress: 197 100% 46%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-md;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+
+  /* Enhanced Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: 0 0% 20%;
+      --input: 0 0% 20%;
+      --ring: 221.2 83.2% 53.3%;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@layer components {
+  /* Enhanced Aviation Theme Utilities */
+  .aviation-gradient {
+    background: linear-gradient(135deg, hsl(var(--aviation-primary)) 0%, hsl(var(--aviation-secondary)) 50%, hsl(var(--aviation-accent)) 100%);
+  }
+
+  .aviation-gradient-subtle {
+    background: linear-gradient(135deg, hsl(var(--aviation-primary) / 0.1) 0%, hsl(var(--aviation-secondary) / 0.1) 100%);
+  }
+
+  .aviation-gradient-radial {
+    background: radial-gradient(ellipse at center, hsl(var(--aviation-primary) / 0.15) 0%, transparent 70%);
+  }
+
+  .aviation-gradient-mesh {
+    background: 
+      radial-gradient(at 40% 20%, hsl(var(--aviation-primary) / 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(var(--aviation-secondary) / 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(var(--aviation-accent) / 0.1) 0px, transparent 50%);
+  }
+
+  /* Status Indicators */
+  .status-compliant {
+    @apply bg-compliant-50 text-compliant-700 border-compliant-200;
+  }
+
+  .status-non-compliant {
+    @apply bg-danger-50 text-danger-700 border-danger-200;
+  }
+
+  .status-pending {
+    @apply bg-warning-50 text-warning-700 border-warning-200;
+  }
+
+  .status-in-progress {
+    @apply bg-blue-50 text-blue-700 border-blue-200;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  /* Animation utilities */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.4s ease-out;
+  }
+
+  .animate-bounce-gentle {
+    animation: bounce-gentle 2s infinite;
+  }
+
+  /* Custom shadows */
+  .shadow-aviation {
+    box-shadow: 
+      0 4px 6px -1px rgba(59, 130, 246, 0.1),
+      0 2px 4px -1px rgba(59, 130, 246, 0.06);
+  }
+
+  .shadow-aviation-lg {
+    box-shadow: 
+      0 10px 15px -3px rgba(59, 130, 246, 0.1),
+      0 4px 6px -2px rgba(59, 130, 246, 0.05);
+  }
+
+  /* Enhanced Typography */
+  .text-aviation-gradient {
+    background: linear-gradient(135deg, hsl(var(--aviation-primary)), hsl(var(--aviation-secondary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-display {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .text-heading {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  .text-body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .text-caption {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+  }
+
+  /* Enhanced Card Patterns */
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-interactive {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  .card-interactive:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-interactive:active {
+    transform: scale(0.98);
+  }
+}
+
+@layer utilities {
+  /* Aviation specific utilities */
+  .border-aviation {
+    border-color: hsl(var(--aviation-primary) / 0.2);
+  }
+
+  .bg-aviation-primary {
+    background-color: hsl(var(--aviation-primary));
+  }
+
+  .bg-aviation-secondary {
+    background-color: hsl(var(--aviation-secondary));
+  }
+
+  .text-aviation-primary {
+    color: hsl(var(--aviation-primary));
+  }
+
+  .text-aviation-secondary {
+    color: hsl(var(--aviation-secondary));
+  }
+
+  /* Compliance status utilities */
+  .bg-compliant {
+    background-color: hsl(var(--compliant));
+  }
+
+  .bg-non-compliant {
+    background-color: hsl(var(--non-compliant));
+  }
+
+  .bg-pending {
+    background-color: hsl(var(--pending));
+  }
+
+  .text-compliant {
+    color: hsl(var(--compliant));
+  }
+
+  .text-non-compliant {
+    color: hsl(var(--non-compliant));
+  }
+
+  .text-pending {
+    color: hsl(var(--pending));
+  }
+}
+
+/* Enhanced Custom Keyframes */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce-gentle {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -5px, 0);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--aviation-primary) / 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px hsl(var(--aviation-primary) / 0.8), 0 0 30px hsl(var(--aviation-primary) / 0.6);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
