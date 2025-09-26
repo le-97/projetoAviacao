@@ -9,12 +9,10 @@ import {
   BarChart3,
   TrendingUp,
   PieChart,
-  FileSpreadsheet,
-  Printer,
-  Mail,
   Eye,
   RefreshCw,
-  Clock
+  FileSpreadsheet,
+  Mail
 } from 'lucide-react'
 
 export default function Reports() {

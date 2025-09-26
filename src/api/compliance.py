@@ -375,6 +375,406 @@ async def ai_enhanced_compliance_analysis(
         raise HTTPException(status_code=500, detail=f"AI analysis failed: {str(e)}")
 
 
+@router.get("/gap-analysis/{model}/{origin_country}/{target_country}")
+async def regulatory_gap_analysis(
+    model: str,
+    origin_country: str,
+    target_country: str,
+    compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
+):
+    """
+    Comprehensive gap analysis between origin and target country regulations.
+    
+    Identifies specific regulatory differences, missing certifications, 
+    additional requirements, and provides detailed action plan for compliance.
+    
+    Args:
+        model: Aircraft model (e.g., "e190", "phenom300", "kc390")
+        origin_country: Origin country (e.g., "BR", "US", "EU")
+        target_country: Target country (e.g., "US", "EU", "UK", "CA")
+        
+    Returns:
+        Detailed gap analysis with action items and timelines
+    """
+    try:
+        log_business_event(
+            "gap_analysis_request",
+            {"model": model, "origin": origin_country, "target": target_country}
+        )
+        
+        # Get compliance status for both countries
+        origin_compliance = await compliance_service.check_compliance(model, origin_country)
+        target_compliance = await compliance_service.check_compliance(model, target_country)
+        
+        # Analyze gaps between regulations
+        gaps = _analyze_regulatory_gaps(origin_compliance, target_compliance, model, origin_country, target_country)
+        
+        log_business_event(
+            "gap_analysis_completed",
+            {"model": model, "gaps_found": len(gaps.get("gaps", [])), "risk_level": gaps.get("overallRisk")}
+        )
+        
+        return gaps
+        
+    except ValidationError as e:
+        log_security_event(
+            "gap_analysis_validation_error",
+            "WARNING",
+            {"model": model, "origin": origin_country, "target": target_country, "error": e.message}
+        )
+        raise HTTPException(status_code=400, detail=e.message)
+    
+    except Exception as e:
+        log_security_event(
+            "gap_analysis_error",
+            "ERROR",
+            {"model": model, "origin": origin_country, "target": target_country, "error": str(e)}
+        )
+        raise HTTPException(status_code=500, detail=f"Gap analysis failed: {str(e)}")
+
+
+def _analyze_regulatory_gaps(origin_compliance, target_compliance, model: str, origin_country: str, target_country: str):
+    """Analyze regulatory gaps between two compliance reports."""
+    
+    # Country authority mapping
+    country_authorities = {
+        "BR": {"name": "Brasil", "authority": "ANAC"},
+        "US": {"name": "Estados Unidos", "authority": "FAA"},
+        "EU": {"name": "União Europeia", "authority": "EASA"},
+        "UK": {"name": "Reino Unido", "authority": "UK CAA"},
+        "CA": {"name": "Canadá", "authority": "Transport Canada"},
+        "AR": {"name": "Argentina", "authority": "ANAC Argentina"}
+    }
+    
+    origin_info = country_authorities.get(origin_country.upper(), {"name": origin_country, "authority": "Unknown"})
+    target_info = country_authorities.get(target_country.upper(), {"name": target_country, "authority": "Unknown"})
+    
+    # Analyze specific gaps based on target country requirements
+    gaps = []
+    recommendations = []
+    estimated_timeline = "6-12 months"
+    overall_risk = "medium"
+    
+    # US-specific gaps
+    if target_country.upper() == "US":
+        gaps.extend([
+            {
+                "category": "Type Certification",
+                "requirement": "FAA Type Certificate or Validation",
+                "current_status": "Missing" if origin_country.upper() != "US" else "Available",
+                "gap_description": "Requires FAA type certificate validation or acceptance of foreign type certificate",
+                "impact": "high",
+                "estimated_effort": "6-12 months",
+                "cost_estimate": "$250,000 - $1,000,000"
+            },
+            {
+                "category": "Noise Certification",
+                "requirement": "FAR Part 36 Noise Certificate",
+                "current_status": "Verification Required",
+                "gap_description": "Must demonstrate compliance with FAR Part 36 noise standards",
+                "impact": "medium",
+                "estimated_effort": "3-6 months",
+                "cost_estimate": "$50,000 - $150,000"
+            },
+            {
+                "category": "Environmental",
+                "requirement": "EPA Emission Compliance",
+                "current_status": "Assessment Required",
+                "gap_description": "Environmental Protection Agency emission standards compliance",
+                "impact": "medium",
+                "estimated_effort": "2-4 months",
+                "cost_estimate": "$25,000 - $75,000"
+            }
+        ])
+        
+        if model.lower() in ["kc390", "kc-390"]:
+            gaps.append({
+                "category": "Military/Export Control",
+                "requirement": "ITAR Compliance",
+                "current_status": "Required",
+                "gap_description": "International Traffic in Arms Regulations compliance for military aircraft",
+                "impact": "critical",
+                "estimated_effort": "12-24 months",
+                "cost_estimate": "$500,000 - $2,000,000"
+            })
+            overall_risk = "high"
+        
+        recommendations.extend([
+            "Engage FAA-certified representative early in the process",
+            "Prepare comprehensive technical documentation package",
+            "Schedule pre-application meetings with FAA",
+            "Consider type certificate validation pathway if original certification exists"
+        ])
+    
+    # EU-specific gaps
+    elif target_country.upper() == "EU":
+        gaps.extend([
+            {
+                "category": "Type Certification",
+                "requirement": "EASA Type Certificate",
+                "current_status": "Missing" if origin_country.upper() not in ["EU", "UK"] else "Available",
+                "gap_description": "EASA type certificate required for EU operations",
+                "impact": "high",
+                "estimated_effort": "8-14 months",
+                "cost_estimate": "$300,000 - $1,200,000"
+            },
+            {
+                "category": "Environmental",
+                "requirement": "ICAO Annex 16 Compliance",
+                "current_status": "Verification Required",
+                "gap_description": "Strict noise and emission limits per ICAO Annex 16",
+                "impact": "high",
+                "estimated_effort": "4-8 months",
+                "cost_estimate": "$100,000 - $300,000"
+            },
+            {
+                "category": "Safety",
+                "requirement": "EASA Safety Assessment",
+                "current_status": "Required",
+                "gap_description": "Comprehensive safety assessment per EASA requirements",
+                "impact": "medium",
+                "estimated_effort": "6-10 months",
+                "cost_estimate": "$150,000 - $400,000"
+            }
+        ])
+        
+        recommendations.extend([
+            "Engage EASA early through pre-certification meetings",
+            "Ensure compliance with latest environmental standards",
+            "Prepare for extensive documentation requirements",
+            "Consider bilateral agreement benefits with origin country"
+        ])
+    
+    # UK-specific gaps (post-Brexit)
+    elif target_country.upper() == "UK":
+        gaps.extend([
+            {
+                "category": "Type Certification",
+                "requirement": "UK CAA Type Certificate",
+                "current_status": "Required",
+                "gap_description": "Post-Brexit requirement for separate UK type certificate",
+                "impact": "high",
+                "estimated_effort": "6-12 months",
+                "cost_estimate": "$200,000 - $800,000"
+            },
+            {
+                "category": "Brexit Transition",
+                "requirement": "UK Aviation Transition Documentation",
+                "current_status": "Required",
+                "gap_description": "Additional documentation due to UK's exit from EASA framework",
+                "impact": "medium",
+                "estimated_effort": "3-6 months",
+                "cost_estimate": "$50,000 - $150,000"
+            }
+        ])
+        
+        overall_risk = "medium"
+        recommendations.extend([
+            "Navigate post-Brexit regulatory framework carefully",
+            "Consider expedited pathways for existing EASA certifications",
+            "Prepare for additional UK-specific requirements"
+        ])
+    
+    # Canada-specific gaps
+    elif target_country.upper() == "CA":
+        gaps.extend([
+            {
+                "category": "Type Certification",
+                "requirement": "Transport Canada Type Certificate",
+                "current_status": "Missing" if origin_country.upper() != "CA" else "Available",
+                "gap_description": "Transport Canada type certificate or validation required",
+                "impact": "high",
+                "estimated_effort": "4-8 months",
+                "cost_estimate": "$150,000 - $600,000"
+            },
+            {
+                "category": "Bilateral Agreement",
+                "requirement": "BASA Agreement Benefits",
+                "current_status": "Available" if origin_country.upper() in ["US", "BR"] else "Not Available",
+                "gap_description": "Bilateral Aviation Safety Agreement may expedite certification",
+                "impact": "positive",
+                "estimated_effort": "Reduced timeline",
+                "cost_estimate": "Cost savings possible"
+            }
+        ])
+        
+        if origin_country.upper() in ["US", "BR"]:
+            overall_risk = "low"
+            estimated_timeline = "3-6 months"
+            recommendations.append("Leverage BASA agreement for expedited certification")
+    
+    # Calculate overall metrics
+    high_impact_gaps = len([g for g in gaps if g.get("impact") == "high"])
+    critical_gaps = len([g for g in gaps if g.get("impact") == "critical"])
+    
+    if critical_gaps > 0:
+        overall_risk = "critical"
+        estimated_timeline = "12-24 months"
+    elif high_impact_gaps > 2:
+        overall_risk = "high"
+        estimated_timeline = "8-15 months"
+    
+    return {
+        "analysis": {
+            "model": model,
+            "originCountry": f"{origin_info['name']} ({origin_info['authority']})",
+            "targetCountry": f"{target_info['name']} ({target_info['authority']})",
+            "analysisDate": origin_compliance.generated_at
+        },
+        "summary": {
+            "totalGaps": len(gaps),
+            "criticalGaps": critical_gaps,
+            "highImpactGaps": high_impact_gaps,
+            "overallRisk": overall_risk,
+            "estimatedTimeline": estimated_timeline,
+            "estimatedCostRange": _calculate_cost_range(gaps)
+        },
+        "gaps": gaps,
+        "recommendations": recommendations,
+        "actionPlan": _generate_action_plan(gaps, target_country),
+        "regulatoryContext": {
+            "originFramework": _get_regulatory_framework(origin_country),
+            "targetFramework": _get_regulatory_framework(target_country),
+            "bilateralAgreements": _check_bilateral_agreements(origin_country, target_country)
+        }
+    }
+
+
+def _calculate_cost_range(gaps):
+    """Calculate estimated cost range for addressing all gaps."""
+    min_cost = 0
+    max_cost = 0
+    
+    for gap in gaps:
+        cost_str = gap.get("cost_estimate", "$0 - $0")
+        # Extract numbers from cost estimate string
+        import re
+        numbers = re.findall(r'\$?([\d,]+)', cost_str)
+        if len(numbers) >= 2:
+            min_val = int(numbers[0].replace(',', ''))
+            max_val = int(numbers[1].replace(',', ''))
+            min_cost += min_val
+            max_cost += max_val
+    
+    return f"${min_cost:,} - ${max_cost:,}"
+
+
+def _generate_action_plan(gaps, target_country):
+    """Generate prioritized action plan based on gaps."""
+    action_items = []
+    
+    # Prioritize critical and high-impact gaps
+    critical_gaps = [g for g in gaps if g.get("impact") == "critical"]
+    high_gaps = [g for g in gaps if g.get("impact") == "high"]
+    
+    phase = 1
+    
+    if critical_gaps:
+        action_items.append({
+            "phase": phase,
+            "title": "Critical Requirements (Immediate Action)",
+            "duration": "0-3 months",
+            "items": [f"Address {gap['requirement']}: {gap['gap_description']}" for gap in critical_gaps]
+        })
+        phase += 1
+    
+    if high_gaps:
+        action_items.append({
+            "phase": phase,
+            "title": "High Priority Certifications",
+            "duration": "3-8 months",
+            "items": [f"Complete {gap['requirement']}: {gap['gap_description']}" for gap in high_gaps]
+        })
+        phase += 1
+    
+    action_items.append({
+        "phase": phase,
+        "title": "Final Validation and Documentation",
+        "duration": "1-2 months",
+        "items": [
+            "Submit final certification package",
+            "Coordinate with target authority for final review",
+            "Prepare for operational approval",
+            "Finalize compliance documentation"
+        ]
+    })
+    
+    return action_items
+
+
+def _get_regulatory_framework(country_code):
+    """Get regulatory framework information for a country."""
+    frameworks = {
+        "BR": {
+            "authority": "ANAC Brasil",
+            "framework": "RBAC (Regulamento Brasileiro da Aviação Civil)",
+            "standards": "ICAO compliant with local adaptations",
+            "strengths": ["Strong commercial aviation framework", "BASA agreements with US/Canada"]
+        },
+        "US": {
+            "authority": "FAA",
+            "framework": "Federal Aviation Regulations (FAR)",
+            "standards": "Most stringent global standards",
+            "strengths": ["Comprehensive safety oversight", "Advanced certification processes"]
+        },
+        "EU": {
+            "authority": "EASA",
+            "framework": "European Aviation Safety Regulations",
+            "standards": "Harmonized European standards",
+            "strengths": ["Environmental leadership", "Unified European market access"]
+        },
+        "UK": {
+            "authority": "UK CAA",
+            "framework": "UK Aviation Regulations (post-Brexit)",
+            "standards": "Based on EASA with UK modifications",
+            "strengths": ["Flexible post-Brexit framework", "Experienced regulator"]
+        },
+        "CA": {
+            "authority": "Transport Canada",
+            "framework": "Canadian Aviation Regulations (CARs)",
+            "standards": "ICAO compliant with bilateral agreements",
+            "strengths": ["BASA agreements", "Streamlined processes"]
+        }
+    }
+    
+    return frameworks.get(country_code.upper(), {
+        "authority": "Unknown",
+        "framework": "Country-specific regulations",
+        "standards": "Typically ICAO based",
+        "strengths": ["Varies by country"]
+    })
+
+
+def _check_bilateral_agreements(origin_country, target_country):
+    """Check for bilateral aviation safety agreements."""
+    basa_pairs = [
+        ("BR", "US"), ("US", "BR"),
+        ("BR", "CA"), ("CA", "BR"),
+        ("US", "CA"), ("CA", "US"),
+        ("EU", "US"), ("US", "EU"),
+        ("EU", "CA"), ("CA", "EU")
+    ]
+    
+    pair = (origin_country.upper(), target_country.upper())
+    has_basa = pair in basa_pairs
+    
+    return {
+        "hasBilateralAgreement": has_basa,
+        "agreementType": "BASA (Bilateral Aviation Safety Agreement)" if has_basa else "None",
+        "benefits": [
+            "Expedited certification process",
+            "Mutual recognition of certifications",
+            "Reduced documentation requirements",
+            "Cost and time savings"
+        ] if has_basa else [],
+        "limitations": [] if has_basa else [
+            "Full certification process required",
+            "Extended timeline and costs",
+            "Potential for regulatory differences"
+        ]
+    }
+
+
 @router.get("/")
 async def compliance_root():
     """Root endpoint with API information."""

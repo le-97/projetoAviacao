@@ -7,17 +7,16 @@ import {
   Bell,
   Shield,
   Database,
-  Mail,
   Globe,
   Key,
   Download,
-  Upload,
-  RefreshCw,
   Save,
   AlertTriangle,
   CheckCircle,
   Eye,
-  EyeOff
+  EyeOff,
+  RefreshCw,
+  Upload
 } from 'lucide-react'
 
 export default function SettingsPage() {

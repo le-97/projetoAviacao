@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { 
   Plane, 
@@ -11,7 +11,6 @@ import {
   CheckCircle,
   Clock,
   Edit,
-  Trash2,
   Eye,
   FileText
 } from 'lucide-react'

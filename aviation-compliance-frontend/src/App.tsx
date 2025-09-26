@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Plane, Shield, BarChart3, Settings, FileText, Users, Globe, AlertTriangle } from 'lucide-react'
+import { Plane, Shield, BarChart3, Settings, FileText, Globe, AlertTriangle } from 'lucide-react'
 
 // Pages (will be created later)
 import Dashboard from '@/pages/Dashboard'

@@ -1,0 +1,51 @@
+# Azure Container Instances Deployment Configuration
+apiVersion: 2019-12-01
+location: East US
+name: aviation-compliance-group
+properties:
+  containers:
+  - name: aviation-backend
+    properties:
+      image: aviationcomplianceacr.azurecr.io/aviation-backend:latest
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 2.0
+      ports:
+      - port: 8000
+        protocol: TCP
+      environmentVariables:
+      - name: PORT
+        value: '8000'
+      - name: ENVIRONMENT
+        value: 'production'
+      - name: PYTHONPATH
+        value: '/app'
+      - name: DATABASE_URL
+        secureValue: 'sqlite:///data/aviation_compliance.db'
+  - name: aviation-frontend
+    properties:
+      image: aviationcomplianceacr.azurecr.io/aviation-frontend:latest
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 1.0
+      ports:
+      - port: 3000
+        protocol: TCP
+      environmentVariables:
+      - name: REACT_APP_API_URL
+        value: 'https://aviation-backend.eastus.azurecontainer.io:8000'
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: TCP
+      port: 8000
+    - protocol: TCP
+      port: 3000
+    dnsNameLabel: aviation-compliance-api
+  restartPolicy: Always
+tags:
+  project: aviation-compliance
+  environment: production

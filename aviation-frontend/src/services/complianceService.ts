@@ -261,6 +261,180 @@ export class ComplianceService {
   private static apiBaseUrl = 'https://aviation-backend.greensand-8aeaae63.brazilsouth.azurecontainerapps.io';
 
   /**
+   * Análise de lacunas entre países de origem e destino
+   */
+  static async performGapAnalysis(aircraftModel: string, originCountry: string, targetCountry: string): Promise<GapAnalysisReport> {
+    try {
+      // Tenta usar endpoint de Gap Analysis
+      const response = await fetch(`${this.apiBaseUrl}/compliance/gap-analysis/${aircraftModel}/${originCountry}/${targetCountry}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Gap Analysis successful:', result);
+        return result;
+      } else {
+        console.warn('⚠️ Gap Analysis endpoint failed, falling back to basic analysis');
+      }
+    } catch (error) {
+      console.warn('⚠️ Gap analysis failed, using fallback:', error);
+    }
+
+    // Fallback para análise básica local
+    return this.performLocalGapAnalysis(aircraftModel, originCountry, targetCountry);
+  }
+
+  /**
+   * Gap Analysis local como fallback
+   */
+  private static performLocalGapAnalysis(aircraftModel: string, originCountry: string, targetCountry: string): GapAnalysisReport {
+    const aircraft = aircraftSpecifications[aircraftModel.toLowerCase()];
+    const originRegulation = countryRegulations[originCountry.toUpperCase()];
+    const targetRegulation = countryRegulations[targetCountry.toUpperCase()];
+
+    if (!aircraft || !originRegulation || !targetRegulation) {
+      return {
+        analysis: {
+          model: aircraftModel,
+          originCountry: originCountry,
+          targetCountry: targetCountry,
+          analysisDate: new Date().toISOString()
+        },
+        summary: {
+          totalGaps: 0,
+          criticalGaps: 0,
+          highImpactGaps: 0,
+          overallRisk: 'unknown',
+          estimatedTimeline: 'Data unavailable',
+          estimatedCostRange: 'Unknown'
+        },
+        gaps: [],
+        recommendations: ['Verify aircraft model and country codes', 'Consult regulatory experts'],
+        actionPlan: [],
+        regulatoryContext: {
+          originFramework: {},
+          targetFramework: {},
+          bilateralAgreements: {
+            hasBilateralAgreement: false,
+            agreementType: 'Unknown',
+            benefits: [],
+            limitations: []
+          }
+        },
+        generatedAt: new Date().toISOString(),
+        error: 'Missing regulatory data for basic gap analysis'
+      };
+    }
+
+    // Análise básica de lacunas
+    const gaps: GapAnalysisGap[] = [];
+    
+    // Compara requisitos entre países
+    targetRegulation.requirements.forEach(targetReq => {
+      const hasEquivalent = originRegulation.requirements.some(originReq => 
+        originReq.documentType === targetReq.documentType
+      );
+
+      if (!hasEquivalent) {
+        gaps.push({
+          category: 'Certification',
+          requirement: targetReq.name,
+          current_status: 'Missing',
+          gap_description: `${targetReq.description} not available from origin country`,
+          impact: targetReq.mandatory ? 'high' : 'medium',
+          estimated_effort: targetReq.mandatory ? '6-12 months' : '3-6 months',
+          cost_estimate: targetReq.mandatory ? '$100,000 - $500,000' : '$25,000 - $100,000'
+        });
+      }
+    });
+
+    // Verifica acordos bilaterais
+    const hasBASA = (originCountry.toUpperCase() === 'BR' && targetCountry.toUpperCase() === 'US') ||
+                    (originCountry.toUpperCase() === 'US' && targetCountry.toUpperCase() === 'BR') ||
+                    (originCountry.toUpperCase() === 'BR' && targetCountry.toUpperCase() === 'CA') ||
+                    (originCountry.toUpperCase() === 'CA' && targetCountry.toUpperCase() === 'BR');
+
+    const summary: GapAnalysisSummary = {
+      totalGaps: gaps.length,
+      criticalGaps: gaps.filter(g => g.impact === 'critical').length,
+      highImpactGaps: gaps.filter(g => g.impact === 'high').length,
+      overallRisk: gaps.length > 3 ? 'high' : gaps.length > 1 ? 'medium' : 'low',
+      estimatedTimeline: gaps.length > 3 ? '12-18 months' : gaps.length > 1 ? '6-12 months' : '3-6 months',
+      estimatedCostRange: gaps.length > 3 ? '$500,000 - $2,000,000' : '$100,000 - $1,000,000'
+    };
+
+    return {
+      analysis: {
+        model: aircraft.model,
+        originCountry: `${originRegulation.countryName} (${originRegulation.authority})`,
+        targetCountry: `${targetRegulation.countryName} (${targetRegulation.authority})`,
+        analysisDate: new Date().toISOString()
+      },
+      summary,
+      gaps,
+      recommendations: [
+        hasBASA ? 'Leverage bilateral aviation safety agreement' : 'Consider establishing bilateral agreements',
+        'Engage regulatory consultants early in the process',
+        'Prepare comprehensive documentation package',
+        'Allow additional time for regulatory review'
+      ],
+      actionPlan: [
+        {
+          phase: 1,
+          title: 'Initial Assessment and Planning',
+          duration: '1-2 months',
+          items: [
+            'Review regulatory requirements',
+            'Engage regulatory consultants',
+            'Prepare documentation strategy'
+          ]
+        },
+        {
+          phase: 2,
+          title: 'Documentation and Application',
+          duration: `${Math.max(3, gaps.length * 2)}-${Math.max(6, gaps.length * 3)} months`,
+          items: gaps.map(gap => `Complete ${gap.requirement}`)
+        },
+        {
+          phase: 3,
+          title: 'Final Review and Approval',
+          duration: '2-4 months',
+          items: [
+            'Submit application to regulatory authority',
+            'Respond to regulatory queries',
+            'Obtain final approval'
+          ]
+        }
+      ],
+      regulatoryContext: {
+        originFramework: {
+          authority: originRegulation.authority,
+          framework: 'Country-specific aviation regulations',
+          standards: 'ICAO compliant',
+          strengths: ['Established certification process']
+        },
+        targetFramework: {
+          authority: targetRegulation.authority,
+          framework: 'Country-specific aviation regulations',
+          standards: 'ICAO compliant with local requirements',
+          strengths: ['Comprehensive safety oversight']
+        },
+        bilateralAgreements: {
+          hasBilateralAgreement: hasBASA,
+          agreementType: hasBASA ? 'BASA (Bilateral Aviation Safety Agreement)' : 'None',
+          benefits: hasBASA ? ['Expedited certification', 'Reduced costs', 'Mutual recognition'] : [],
+          limitations: hasBASA ? [] : ['Full certification required', 'Extended timeline']
+        }
+      },
+      generatedAt: new Date().toISOString()
+    };
+  }
+
+  /**
    * Validação de conformidade com análise AI aprimorada
    */
   static async validateComplianceWithAI(aircraftModel: string, targetCountryCode: string): Promise<AIComplianceReport> {
@@ -598,4 +772,67 @@ export interface AIComplianceReport {
   aiAnalysis: AIAnalysis;
   error?: string;
   fallback?: boolean;
+}
+
+// Interfaces para Gap Analysis
+export interface GapAnalysisGap {
+  category: string;
+  requirement: string;
+  current_status: string;
+  gap_description: string;
+  impact: 'low' | 'medium' | 'high' | 'critical';
+  estimated_effort: string;
+  cost_estimate: string;
+}
+
+export interface GapAnalysisSummary {
+  totalGaps: number;
+  criticalGaps: number;
+  highImpactGaps: number;
+  overallRisk: string;
+  estimatedTimeline: string;
+  estimatedCostRange: string;
+}
+
+export interface GapAnalysisActionItem {
+  phase: number;
+  title: string;
+  duration: string;
+  items: string[];
+}
+
+export interface RegulatoryFramework {
+  authority?: string;
+  framework?: string;
+  standards?: string;
+  strengths?: string[];
+}
+
+export interface BilateralAgreements {
+  hasBilateralAgreement: boolean;
+  agreementType: string;
+  benefits: string[];
+  limitations: string[];
+}
+
+export interface RegulatoryContext {
+  originFramework: RegulatoryFramework;
+  targetFramework: RegulatoryFramework;
+  bilateralAgreements: BilateralAgreements;
+}
+
+export interface GapAnalysisReport {
+  analysis: {
+    model: string;
+    originCountry: string;
+    targetCountry: string;
+    analysisDate: string;
+  };
+  summary: GapAnalysisSummary;
+  gaps: GapAnalysisGap[];
+  recommendations: string[];
+  actionPlan: GapAnalysisActionItem[];
+  regulatoryContext: RegulatoryContext;
+  generatedAt: string;
+  error?: string;
 }

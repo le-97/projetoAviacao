@@ -7,9 +7,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, XCircle, AlertTriangle, Plane, Globe, FileText, Shield, Clock, Brain, Sparkles } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CheckCircle, XCircle, AlertTriangle, Plane, Globe, FileText, Shield, Clock, Brain, Sparkles, TrendingUp } from 'lucide-react';
 import { ComplianceService, type ComplianceReport, type AIComplianceReport } from '@/services/ComplianceService';
 import { AIInsightsDisplay } from '@/components/AIInsightsDisplay';
+import GapAnalysis from '@/components/GapAnalysis';
 
 export default function AircraftComplianceValidator() {
   const [selectedAircraft, setSelectedAircraft] = useState<string>('');
@@ -168,6 +170,15 @@ export default function AircraftComplianceValidator() {
         {labels[risk as keyof typeof labels]}
       </Badge>
     );
+  };
+
+  const getRiskBadgeColor = (risk: string) => {
+    const variants = {
+      low: 'bg-green-100 text-green-800 border-green-200',
+      medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      high: 'bg-red-100 text-red-800 border-red-200'
+    };
+    return variants[risk as keyof typeof variants] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   return (
@@ -334,9 +345,24 @@ export default function AircraftComplianceValidator() {
           </CardContent>
         </Card>
 
-        {/* Relatório AI Aprimorado */}
-        {aiComplianceReport && (
-          <div className="space-y-6">
+        {/* Sistema de Tabs para Análises */}
+        <Tabs defaultValue="compliance" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="compliance" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              Análise de Conformidade
+            </TabsTrigger>
+            <TabsTrigger value="gap-analysis" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Análise de Lacunas
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Tab: Análise de Conformidade */}
+          <TabsContent value="compliance" className="space-y-6">
+            {/* Relatório AI Aprimorado */}
+            {aiComplianceReport && (
+              <div className="space-y-6">
             <Card className="border-2 shadow-xl border-purple-200">
               <CardHeader className="bg-gradient-to-r from-purple-800 to-blue-900 text-white rounded-t-lg">
                 <div className="flex items-center justify-between">
@@ -667,6 +693,13 @@ export default function AircraftComplianceValidator() {
             </CardContent>
           </Card>
         )}
+          </TabsContent>
+
+          {/* Tab: Análise de Lacunas */}
+          <TabsContent value="gap-analysis" className="space-y-6">
+            <GapAnalysis />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

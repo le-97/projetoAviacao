@@ -8,8 +8,6 @@ import {
   Clock, 
   TrendingUp,
   FileText,
-  Users,
-  Globe,
   Activity
 } from 'lucide-react'
 
