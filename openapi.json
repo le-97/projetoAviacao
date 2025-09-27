@@ -1,0 +1,591 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Aviation Compliance Microservice API",
+    "description": "🛩️ **Enhanced Aviation Compliance Microservice**\n\nThis microservice validates the regulatory compliance of aircraft models against international aviation regulations (ANAC, FAA, EASA).\n\n## Supported Aircraft Models\n- **E175 Series** - E175-E1, E175-E2 regional jets\n- **E190 Series** - E190-E1, E190-E2 regional jets  \n- **E195 Series** - E195-E1, E195-E2 regional jets\n- **Boeing 737** - Boeing 737-800 and variants\n- **Airbus A320** - A320neo and variants\n\n## Supported Countries/Regions\n- **BRAZIL** - ANAC (Agência Nacional de Aviação Civil) regulations\n- **USA** - FAA (Federal Aviation Administration) regulations\n- **EUROPE** - EASA (European Union Aviation Safety Agency) regulations\n\n## Features\n- ✅ Database-backed aircraft model validation\n- ✅ Authority-specific regulation retrieval\n- ✅ Enhanced E175 and E-Jets E2 support\n- ✅ Model-specific compliance validation\n- ✅ Comprehensive reporting and recommendations\n- ✅ Real-time compliance checking with optional Redis caching\n- ✅ Performance monitoring and metrics\n- ✅ Health checks and system status\n- ✅ Structured JSON logging with request correlation\n- ✅ Rate limiting protection with configurable limits",
+    "version": "2.0.0",
+    "contact": {
+      "name": "Projeto Aviacao Team",
+      "url": "https://github.com/le-97/projetoAviacao"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development server"
+    },
+    {
+      "url": "https://aviation-compliance-api.onrender.com",
+      "description": "Production server (Render.com)"
+    },
+    {
+      "url": "https://salmon-desert-0b07e100f-preview.eastus2.2.azurestaticapps.net",
+      "description": "Frontend (Azure Static Web Apps)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Health check and service status endpoints"
+    },
+    {
+      "name": "Compliance",
+      "description": "Aircraft compliance checking operations"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics and reporting endpoints"
+    },
+    {
+      "name": "Monitoring",
+      "description": "Performance monitoring and metrics"
+    },
+    {
+      "name": "Cache Management",
+      "description": "Cache management and statistics"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Root health check",
+        "description": "Basic health check endpoint for service status",
+        "operationId": "read_root",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": {
+                      "type": "string",
+                      "example": "Enhanced Aviation Compliance Microservice"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "2.0.0"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "example": "/docs"
+                    },
+                    "redoc": {
+                      "type": "string",
+                      "example": "/redoc"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Detailed health check",
+        "description": "Comprehensive health check with service and cache information",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Detailed health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/check/{model}/{country}": {
+      "get": {
+        "tags": ["Compliance"],
+        "summary": "Check aircraft compliance",
+        "description": "Check compliance for an aircraft model in a specific country.\nThis endpoint provides comprehensive compliance validation against\nregulatory authorities.",
+        "operationId": "check_compliance",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "description": "Aircraft model identifier",
+            "schema": {
+              "type": "string",
+              "enum": ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320", "Phenom-300E", "C-390"]
+            },
+            "example": "E175-E2"
+          },
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Country/region for compliance check",
+            "schema": {
+              "type": "string",
+              "enum": ["USA", "BRAZIL", "EUROPE"]
+            },
+            "example": "USA"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compliance check completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplianceReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/models": {
+      "get": {
+        "tags": ["Compliance"],
+        "summary": "Get supported aircraft models",
+        "description": "Retrieve list of all supported aircraft models with details",
+        "operationId": "get_models",
+        "responses": {
+          "200": {
+            "description": "List of supported aircraft models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AircraftModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/authorities": {
+      "get": {
+        "tags": ["Compliance"],
+        "summary": "Get aviation authorities",
+        "description": "Retrieve list of supported aviation regulatory authorities",
+        "operationId": "get_authorities",
+        "responses": {
+          "200": {
+            "description": "List of aviation authorities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Authority"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Monitoring"],
+        "summary": "Get system metrics",
+        "description": "Retrieve system performance metrics and statistics",
+        "operationId": "get_metrics",
+        "responses": {
+          "200": {
+            "description": "System metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemMetrics"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ComplianceReport": {
+        "type": "object",
+        "required": [
+          "aircraft_model",
+          "country",
+          "overall_status",
+          "total_checks",
+          "compliant_checks",
+          "non_compliant_checks",
+          "critical_issues",
+          "checks",
+          "recommendations"
+        ],
+        "properties": {
+          "aircraft_model": {
+            "type": "string",
+            "description": "The aircraft model that was checked",
+            "example": "E190"
+          },
+          "country": {
+            "type": "string",
+            "description": "The country/region for which compliance was checked",
+            "example": "USA"
+          },
+          "overall_status": {
+            "type": "string",
+            "enum": ["COMPLIANT", "NON_COMPLIANT", "PARTIAL_COMPLIANCE"],
+            "description": "Overall compliance status"
+          },
+          "total_checks": {
+            "type": "integer",
+            "description": "Total number of checks performed",
+            "example": 25
+          },
+          "compliant_checks": {
+            "type": "integer",
+            "description": "Number of compliant checks",
+            "example": 20
+          },
+          "non_compliant_checks": {
+            "type": "integer",
+            "description": "Number of non-compliant checks",
+            "example": 5
+          },
+          "critical_issues": {
+            "type": "integer",
+            "description": "Number of critical issues found",
+            "example": 2
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ComplianceCheck"
+            },
+            "description": "Individual compliance checks"
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Overall recommendations"
+          },
+          "aircraft_info": {
+            "$ref": "#/components/schemas/AircraftInfo"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["OK", "PENDING", "NON-COMPLIANT", "NON_COMPLIANT"],
+            "description": "Legacy status field - use overall_status instead",
+            "example": "PENDING"
+          },
+          "compliance_percentage": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Overall compliance percentage (0-100)",
+            "example": 85.5
+          },
+          "authority": {
+            "type": "string",
+            "description": "Regulatory authority name",
+            "example": "Federal Aviation Administration"
+          }
+        }
+      },
+      "ComplianceCheck": {
+        "type": "object",
+        "required": [
+          "regulation_reference",
+          "regulation_title",
+          "status",
+          "severity"
+        ],
+        "properties": {
+          "regulation_reference": {
+            "type": "string",
+            "description": "Regulation reference code",
+            "example": "FAR 25.571"
+          },
+          "regulation_title": {
+            "type": "string",
+            "description": "Regulation title",
+            "example": "Damage-tolerance and fatigue evaluation of structure"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["COMPLIANT", "NON_COMPLIANT", "PARTIAL_COMPLIANCE", "NOT_APPLICABLE"],
+            "description": "Compliance status for this check"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["CRITICAL", "MAJOR", "MINOR", "INFO"],
+            "description": "Severity level of the check"
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Detailed findings",
+            "default": []
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Recommendations for compliance",
+            "default": []
+          }
+        }
+      },
+      "AircraftInfo": {
+        "type": "object",
+        "required": ["manufacturer", "model"],
+        "properties": {
+          "manufacturer": {
+            "type": "string",
+            "description": "Aircraft manufacturer",
+            "example": "Embraer"
+          },
+          "model": {
+            "type": "string",
+            "description": "Aircraft model",
+            "example": "E175-E2"
+          },
+          "variant": {
+            "type": "string",
+            "description": "Aircraft variant",
+            "example": "E175-E2"
+          },
+          "type_certificate": {
+            "type": "string",
+            "description": "Type certificate number",
+            "example": "A41NM"
+          },
+          "max_seats": {
+            "type": "integer",
+            "description": "Maximum seating capacity",
+            "example": 88
+          },
+          "max_weight_kg": {
+            "type": "number",
+            "format": "float",
+            "description": "Maximum weight in kg",
+            "example": 38790.0
+          }
+        }
+      },
+      "AircraftModel": {
+        "type": "object",
+        "required": ["id", "model", "manufacturer", "supported"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Aircraft model identifier",
+            "example": "E175-E2"
+          },
+          "model": {
+            "type": "string",
+            "description": "Aircraft model name",
+            "example": "E175"
+          },
+          "variant": {
+            "type": "string",
+            "description": "Aircraft variant",
+            "example": "E175-E2"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "Aircraft manufacturer",
+            "example": "Embraer"
+          },
+          "description": {
+            "type": "string",
+            "description": "Aircraft description",
+            "example": "Embraer E175-E2 - Commercial Aircraft"
+          },
+          "supported": {
+            "type": "boolean",
+            "description": "Whether the model is supported",
+            "example": true
+          }
+        }
+      },
+      "Authority": {
+        "type": "object",
+        "required": ["code", "name", "country"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Authority code",
+            "example": "FAA"
+          },
+          "name": {
+            "type": "string",
+            "description": "Authority full name",
+            "example": "Federal Aviation Administration"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country/region",
+            "example": "USA"
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "description": "Authority website",
+            "example": "https://www.faa.gov"
+          }
+        }
+      },
+      "HealthStatus": {
+        "type": "object",
+        "required": ["status", "service", "version"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "healthy"
+          },
+          "service": {
+            "type": "string",
+            "example": "enhanced-compliance-microservice"
+          },
+          "version": {
+            "type": "string",
+            "example": "2.0.0"
+          },
+          "supported_models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"]
+          },
+          "supported_countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["BRAZIL", "USA", "EUROPE"]
+          },
+          "database": {
+            "type": "string",
+            "example": "sqlite"
+          }
+        }
+      },
+      "SystemMetrics": {
+        "type": "object",
+        "properties": {
+          "uptime": {
+            "type": "number",
+            "description": "System uptime in seconds"
+          },
+          "request_count": {
+            "type": "integer",
+            "description": "Total requests processed"
+          },
+          "response_time_avg": {
+            "type": "number",
+            "format": "float",
+            "description": "Average response time in milliseconds"
+          },
+          "memory_usage": {
+            "type": "object",
+            "description": "Memory usage statistics"
+          },
+          "cpu_usage": {
+            "type": "number",
+            "format": "float",
+            "description": "CPU usage percentage"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type identifier",
+            "example": "UNSUPPORTED_MODEL"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message",
+            "example": "Aircraft model 'INVALID' is not supported"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional error details or suggestions",
+            "example": "Check the API documentation for supported values"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token authentication"
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key authentication"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    },
+    {
+      "ApiKeyAuth": []
+    },
+    {}
+  ]
+}
