@@ -8,7 +8,7 @@
       },
       "type": "stdio"
     },
-    "API Documentation": {
+    "API docuemntation": {
       "command": "npx",
       "args": [
         "-y",
@@ -17,8 +17,7 @@
       ],
       "env": {
         "APIDOG_ACCESS_TOKEN": "APS-tLr6pAvLNkORIjKAmWlYeyT3bhS9d4Ky"
-      },
-      "type": "stdio"
+      }
     }
   }
 }
