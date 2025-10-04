@@ -93,7 +93,8 @@ router = APIRouter(prefix="/metrics", tags=["monitoring"])
                 }
             }
         }
-    }
+    },
+    operation_id="get_performance_metrics"
 )
 async def get_performance_metrics() -> MetricsResponse:
     """Get comprehensive performance metrics for the API."""
@@ -114,7 +115,8 @@ async def get_performance_metrics() -> MetricsResponse:
         200: {
             "description": "Endpoint metrics retrieved successfully"
         }
-    }
+    },
+    operation_id="get_specific_endpoint_metrics"
 )
 async def get_specific_endpoint_metrics(
     endpoint: str = Query(..., description="API endpoint path (e.g., '/check-compliance')", example="/check-compliance"),
@@ -134,7 +136,8 @@ async def get_specific_endpoint_metrics(
     responses={
         200: {"description": "Service is healthy"},
         503: {"description": "Service is degraded or unhealthy"}
-    }
+    },
+    operation_id="performance_health"
 )
 async def performance_health():
     """Quick performance-based health check."""

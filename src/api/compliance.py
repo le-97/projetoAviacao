@@ -2,15 +2,40 @@
 API endpoints for compliance checking service with database integration.
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Dict, Any, Annotated
+from enum import Enum
 import asyncio
 
-from src.services.enhanced_compliance_service import EnhancedComplianceService, ValidationError
+from src.services.enhanced_compliance_service import EnhancedComplianceService
 from src.models.compliance import ComplianceReport, ErrorResponse
 from src.database import get_async_session
 from src.logger import log_business_event, log_security_event
+from src.exceptions import ValidationError, DatabaseError, create_not_found_error
+
+
+# Enums for path parameter validation
+class AircraftModel(str, Enum):
+    E175 = "E175"
+    E175_E1 = "E175-E1"
+    E175_E2 = "E175-E2"
+    E190 = "E190"
+    E190_E1 = "E190-E1"
+    E190_E2 = "E190-E2"
+    E195 = "E195"  
+    E195_E1 = "E195-E1"
+    E195_E2 = "E195-E2"
+    B737 = "737"
+    A320 = "A320"
+
+
+class Country(str, Enum):
+    USA = "USA"
+    BRAZIL = "BRAZIL"
+    EUROPE = "EUROPE"
+    UK = "UK"
+    CANADA = "CANADA"
 
 
 # Create router instance
@@ -21,10 +46,12 @@ async def get_compliance_service(session: AsyncSession = Depends(get_async_sessi
     """Dependency to get compliance service instance."""
     return EnhancedComplianceService(session)
 
-@router.get("/check/{model}/{country}", response_model=ComplianceReport)
+@router.get("/check/{model}/{country}", 
+            response_model=ComplianceReport,
+            operation_id="check_compliance")
 async def check_compliance(
-    model: str, 
-    country: str,
+    model: Annotated[AircraftModel, Path(description="Aircraft model", example="E175")], 
+    country: Annotated[Country, Path(description="Country/region for compliance check", example="USA")],
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
     """
@@ -40,36 +67,19 @@ async def check_compliance(
     Raises:
         HTTPException: If validation fails or service error occurs
     """
-    try:
-        log_business_event(
-            "compliance_check_request",
-            {"model": model, "country": country}
-        )
-        
-        result = await compliance_service.check_compliance(model, country)
-        
-        log_business_event(
-            "compliance_check_response",
-            {"model": model, "country": country, "status": result.overall_status}
-        )
-        
-        return result
-        
-    except ValidationError as e:
-        log_security_event(
-            "compliance_validation_error",
-            "WARNING",
-            {"model": model, "country": country, "error": e.message}
-        )
-        raise HTTPException(status_code=400, detail=e.message)
+    log_business_event(
+        "compliance_check_request",
+        {"model": model, "country": country}
+    )
     
-    except Exception as e:
-        log_security_event(
-            "compliance_check_error",
-            "ERROR",
-            {"model": model, "country": country, "error": str(e)}
-        )
-        raise HTTPException(status_code=500, detail="Internal server error")
+    result = await compliance_service.check_compliance(model, country)
+    
+    log_business_event(
+        "compliance_check_response",
+        {"model": model, "country": country, "status": result.overall_status}
+    )
+    
+    return result
 
 
 @router.get("/check-compliance", 
@@ -153,7 +163,7 @@ async def check_compliance_legacy(
             )
 
 
-@router.get("/models")
+@router.get("/models", operation_id="get_supported_models")
 async def get_supported_models(
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
@@ -179,10 +189,12 @@ async def get_supported_models(
         raise HTTPException(status_code=500, detail=f"Error retrieving models: {str(e)}")
 
 
-@router.get("/regulations/{model}/{country}")
-async def get_regulations(
-    model: str, 
-    country: str,
+@router.get("/requirements/{model}/{country}", 
+            response_model=dict,
+            operation_id="get_requirements")
+async def get_requirements(
+    model: Annotated[AircraftModel, Path(description="Aircraft model", example="E175")], 
+    country: Annotated[Country, Path(description="Country/region", example="USA")],
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
     """Get applicable regulations for an aircraft model and country from database."""
@@ -203,7 +215,7 @@ async def get_regulations(
         raise HTTPException(status_code=500, detail=f"Error retrieving regulations: {str(e)}")
 
 
-@router.get("/authorities")
+@router.get("/authorities", operation_id="get_authorities")
 async def get_authorities(
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
@@ -228,7 +240,7 @@ async def get_authorities(
         raise HTTPException(status_code=500, detail=f"Error retrieving authorities: {str(e)}")
 
 
-@router.get("/aircraft")
+@router.get("/aircraft", operation_id="get_aircraft_models")
 async def get_aircraft_models(
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
@@ -255,7 +267,7 @@ async def get_aircraft_models(
         raise HTTPException(status_code=500, detail=f"Error retrieving aircraft: {str(e)}")
 
 
-@router.get("/health")
+@router.get("/health", operation_id="health_check")
 async def health_check(
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
@@ -285,10 +297,11 @@ async def health_check(
         }
 
 
-@router.get("/ai-analysis/{model}/{country}")
+@router.get("/ai-analysis/{model}/{country}",
+            operation_id="ai_enhanced_compliance_analysis")
 async def ai_enhanced_compliance_analysis(
-    model: str,
-    country: str,
+    model: Annotated[AircraftModel, Path(description="Aircraft model", example="E175")],
+    country: Annotated[Country, Path(description="Target country", example="USA")],
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
     """
@@ -375,11 +388,12 @@ async def ai_enhanced_compliance_analysis(
         raise HTTPException(status_code=500, detail=f"AI analysis failed: {str(e)}")
 
 
-@router.get("/gap-analysis/{model}/{origin_country}/{target_country}")
+@router.get("/gap-analysis/{model}/{origin_country}/{target_country}",
+            operation_id="regulatory_gap_analysis")
 async def regulatory_gap_analysis(
-    model: str,
-    origin_country: str,
-    target_country: str,
+    model: Annotated[AircraftModel, Path(description="Aircraft model", example="E175")],
+    origin_country: Annotated[Country, Path(description="Origin country", example="BRAZIL")],
+    target_country: Annotated[Country, Path(description="Target country", example="USA")],
     compliance_service: EnhancedComplianceService = Depends(get_compliance_service)
 ):
     """
@@ -775,7 +789,7 @@ def _check_bilateral_agreements(origin_country, target_country):
     }
 
 
-@router.get("/")
+@router.get("/", operation_id="compliance_root")
 async def compliance_root():
     """Root endpoint with API information."""
     return {

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, Dict, Any
 from datetime import datetime
 
 class Aircraft(BaseModel):
@@ -120,28 +120,46 @@ class ComplianceReport(BaseModel):
     }
 
 class ErrorResponse(BaseModel):
-    """Represents an error response."""
-    error: str = Field(
-        description="Error type identifier",
-        examples=["UNSUPPORTED_MODEL", "MISSING_COUNTRY"]
-    )
-    message: str = Field(
-        description="Human-readable error message",
-        examples=["Aircraft model 'INVALID' is not supported"]
-    )
-    details: str = Field(
-        default=None,
-        description="Additional error details or suggestions",
-        examples=["Check the API documentation for supported values"]
+    """Represents a standardized error response."""
+    error: Dict[str, Any] = Field(
+        description="Error information object containing type, code, message, and context",
+        examples=[{
+            "type": "VALIDATION_ERROR",
+            "code": "UNSUPPORTED_MODEL",
+            "message": "Aircraft model 'INVALID' is not supported",
+            "context": {
+                "field": "model",
+                "value": "INVALID",
+                "supported_values": ["E175", "E190", "E195", "737", "A320"]
+            }
+        }]
     )
 
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "error": "UNSUPPORTED_MODEL",
-                    "message": "Aircraft model 'INVALID' is not supported. Supported models: E190, E195",
-                    "details": "Check the API documentation for supported values"
+                    "error": {
+                        "type": "VALIDATION_ERROR",
+                        "code": "UNSUPPORTED_MODEL",
+                        "message": "Aircraft model 'INVALID' is not supported. Supported models: E175, E190, E195, 737, A320",
+                        "context": {
+                            "field": "model",
+                            "value": "INVALID",
+                            "supported_values": ["E175", "E190", "E195", "737", "A320"]
+                        }
+                    }
+                },
+                {
+                    "error": {
+                        "type": "DATABASE_ERROR",
+                        "code": "CONNECTION_FAILED",
+                        "message": "Unable to connect to the database",
+                        "context": {
+                            "operation": "CONNECT",
+                            "retry_count": 3
+                        }
+                    }
                 }
             ]
         }

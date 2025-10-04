@@ -12,14 +12,8 @@ from src.repositories import AuthorityRepository, AircraftModelRepository, Regul
 from src.logger import log_business_event, log_security_event
 from src.services.cache_service import cache_service
 from src.config import settings
-
-
-class ValidationError(Exception):
-    """Custom exception for validation errors."""
-    def __init__(self, message: str, error_type: str = "VALIDATION_ERROR"):
-        self.message = message
-        self.error_type = error_type
-        super().__init__(self.message)
+from src.exceptions import ValidationError, DatabaseError, create_not_found_error
+from src.error_messages import unsupported_aircraft_model, unsupported_country, resource_not_found
 
 
 class EnhancedComplianceService:
@@ -82,18 +76,12 @@ class EnhancedComplianceService:
         # Check if country is supported
         country_upper = str(country).upper() if country else ""
         if country_upper not in self.supported_countries:
-            raise ValidationError(
-                f"Country '{country}' is not supported. Supported countries: {', '.join(self.supported_countries)}",
-                "UNSUPPORTED_COUNTRY"
-            )
+            raise unsupported_country(country)
 
         # Check if model exists in database
         aircraft_models = await self._find_aircraft_models(model)
         if not aircraft_models:
-            raise ValidationError(
-                f"Aircraft model '{model}' is not supported. Supported models: {', '.join(self.supported_models)}",
-                "UNSUPPORTED_MODEL"
-            )
+            raise unsupported_aircraft_model(model)
 
         log_business_event(
             "input_validation_success", 

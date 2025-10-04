@@ -2,15 +2,36 @@
 Cache management endpoints for monitoring and administration.
 """
 
-from fastapi import APIRouter, HTTPException
-from typing import Dict, Any
+from fastapi import APIRouter, HTTPException, Path
+from typing import Dict, Any, Annotated
+from enum import Enum
 from src.services.cache_service import cache_service
 from src.logger import log_business_event
+
+class AircraftModel(str, Enum):
+    E175 = "E175"
+    E175_E1 = "E175-E1"
+    E175_E2 = "E175-E2"
+    E190 = "E190"
+    E190_E1 = "E190-E1" 
+    E190_E2 = "E190-E2"
+    E195 = "E195"
+    E195_E1 = "E195-E1"
+    E195_E2 = "E195-E2"
+    B737 = "B737"
+    A320 = "A320"
+
+class Country(str, Enum):
+    USA = "USA"
+    BRAZIL = "BRAZIL" 
+    EUROPE = "EUROPE"
+    UK = "UK"
+    CANADA = "CANADA"
 
 router = APIRouter(prefix="/cache", tags=["Cache Management"])
 
 
-@router.get("/stats", summary="Get Cache Statistics")
+@router.get("/stats", summary="Get Cache Statistics", operation_id="get_cache_stats")
 async def get_cache_stats() -> Dict[str, Any]:
     """Get detailed cache statistics and health information."""
     log_business_event(
@@ -28,7 +49,7 @@ async def get_cache_stats() -> Dict[str, Any]:
     return stats
 
 
-@router.delete("/compliance", summary="Clear Compliance Cache")
+@router.delete("/compliance", summary="Clear Compliance Cache", operation_id="clear_compliance_cache")
 async def clear_compliance_cache() -> Dict[str, Any]:
     """Clear all compliance-related cache entries."""
     log_business_event(
@@ -63,8 +84,11 @@ async def clear_compliance_cache() -> Dict[str, Any]:
     }
 
 
-@router.delete("/compliance/{model}/{country}", summary="Clear Specific Cache Entry")
-async def clear_specific_cache(model: str, country: str) -> Dict[str, Any]:
+@router.delete("/compliance/{model}/{country}", summary="Clear Specific Cache Entry", operation_id="clear_specific_cache")
+async def clear_specific_cache(
+    model: Annotated[AircraftModel, Path(description="Aircraft model", example="E175")],
+    country: Annotated[Country, Path(description="Country/region", example="USA")]
+) -> Dict[str, Any]:
     """Clear cache entry for a specific model and country combination."""
     log_business_event(
         "cache_invalidate_requested",

@@ -11,6 +11,7 @@ from src.middleware import PerformanceMiddleware, create_rate_limit_middleware
 from src.logger import RequestLoggingMiddleware, setup_logging
 from src.services.cache_service import cache_service
 from src.config import settings
+from src.error_handlers import register_exception_handlers
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -75,6 +76,9 @@ app = FastAPI(
 
 # Initialize structured logging
 setup_logging()
+
+# Register global exception handlers
+register_exception_handlers(app)
 
 # Add CORS middleware
 app.add_middleware(
