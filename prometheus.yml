@@ -1,0 +1,39 @@
+# Prometheus configuration for Aviation Compliance API
+global:
+  scrape_interval: 15s      # Scrape targets every 15 seconds
+  evaluation_interval: 15s  # Evaluate rules every 15 seconds
+
+# Rule files
+rule_files:
+  - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Aviation Compliance API
+  - job_name: 'aviation-compliance-api'
+    static_configs:
+      - targets: ['aviation-compliance-api:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    honor_labels: true
+    params:
+      format: ['prometheus']
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 30d   # Keep data for 30 days
+    retention.size: 10GB  # Max storage size

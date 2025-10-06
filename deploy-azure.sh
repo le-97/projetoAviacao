@@ -138,7 +138,12 @@ deploy_backend_app() {
             ENVIRONMENT=production \
             PYTHONPATH=/app \
             WEBSITES_PORT=8000 \
-            WEBSITES_CONTAINER_START_TIME_LIMIT=1800
+            WEBSITES_CONTAINER_START_TIME_LIMIT=1800 \
+            DATABASE_URL="sqlite:///data/aviation_compliance.db" \
+            LOG_LEVEL=INFO \
+            CORS_ORIGINS="*" \
+            APP_NAME="Aviation Compliance API" \
+            APP_VERSION="2.0.0"
     
     # Configure ACR authentication
     local acr_username=$(az acr credential show --name "$ACR_NAME" --query username --output tsv)
@@ -219,6 +224,7 @@ get_deployment_info() {
         echo "  Backend App Service: https://$app_url"
         echo "  API Documentation: https://$app_url/docs"
         echo "  Health Check: https://$app_url/health"
+        echo "  Prometheus Metrics: https://$app_url/metrics"
     fi
     
     # Container Instances URL
@@ -227,6 +233,7 @@ get_deployment_info() {
         echo "  Container Instance: http://$container_ip:8000"
         echo "  API Documentation: http://$container_ip:8000/docs"
         echo "  Health Check: http://$container_ip:8000/health"
+        echo "  Prometheus Metrics: http://$container_ip:8000/metrics"
     fi
     
     echo

@@ -13,6 +13,7 @@ from src.models.compliance import ComplianceReport, ErrorResponse
 from src.database import get_async_session
 from src.logger import log_business_event, log_security_event
 from src.exceptions import ValidationError, DatabaseError, create_not_found_error
+from src.middleware.prometheus_metrics import record_compliance_check
 
 
 # Enums for path parameter validation
@@ -74,6 +75,13 @@ async def check_compliance(
     
     result = await compliance_service.check_compliance(model, country)
     
+    # Record Prometheus metric
+    record_compliance_check(
+        aircraft_model=model,
+        country=country, 
+        result=result.overall_status.lower()
+    )
+    
     log_business_event(
         "compliance_check_response",
         {"model": model, "country": country, "status": result.overall_status}
@@ -108,6 +116,13 @@ async def check_compliance_legacy(
         
         result = await compliance_service.check_compliance(model, country)
         
+        # Record Prometheus metric
+        record_compliance_check(
+            aircraft_model=model,
+            country=country,
+            result=result.overall_status.lower()
+        )
+        
         log_business_event(
             "api_compliance_request_completed",
             {
@@ -123,9 +138,9 @@ async def check_compliance_legacy(
         
     except ValidationError as e:
         log_security_event(
-            "api_validation_error",
-            "warning",
-            {
+            event="api_validation_error",
+            severity="WARNING",
+            details={
                 "endpoint": "/check-compliance",
                 "error_type": e.error_type,
                 "message": e.message,
@@ -345,9 +360,9 @@ async def ai_enhanced_compliance_analysis(
             
         except ImportError as e:
             log_security_event(
-                "ai_dependencies_missing",
-                "WARNING",
-                {"error": str(e), "model": model, "country": country}
+                event="ai_dependencies_missing",
+                severity="WARNING",
+                details={"error": str(e), "model": model, "country": country}
             )
             
             # Fallback to regular compliance check
@@ -373,17 +388,17 @@ async def ai_enhanced_compliance_analysis(
         
     except ValidationError as e:
         log_security_event(
-            "ai_compliance_validation_error",
-            "WARNING",
-            {"model": model, "country": country, "error": e.message}
+            event="ai_compliance_validation_error",
+            severity="WARNING",
+            details={"model": model, "country": country, "error": e.message}
         )
         raise HTTPException(status_code=400, detail=e.message)
     
     except Exception as e:
         log_security_event(
-            "ai_compliance_analysis_error",
-            "ERROR",
-            {"model": model, "country": country, "error": str(e)}
+            event="ai_compliance_analysis_error",
+            severity="ERROR",
+            details={"model": model, "country": country, "error": str(e)}
         )
         raise HTTPException(status_code=500, detail=f"AI analysis failed: {str(e)}")
 
@@ -432,17 +447,17 @@ async def regulatory_gap_analysis(
         
     except ValidationError as e:
         log_security_event(
-            "gap_analysis_validation_error",
-            "WARNING",
-            {"model": model, "origin": origin_country, "target": target_country, "error": e.message}
+            event="gap_analysis_validation_error",
+            severity="WARNING",
+            details={"model": model, "origin": origin_country, "target": target_country, "error": e.message}
         )
         raise HTTPException(status_code=400, detail=e.message)
     
     except Exception as e:
         log_security_event(
-            "gap_analysis_error",
-            "ERROR",
-            {"model": model, "origin": origin_country, "target": target_country, "error": str(e)}
+            event="gap_analysis_error",
+            severity="ERROR",
+            details={"model": model, "origin": origin_country, "target": target_country, "error": str(e)}
         )
         raise HTTPException(status_code=500, detail=f"Gap analysis failed: {str(e)}")
 

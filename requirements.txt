@@ -11,6 +11,8 @@ py-spy
 coverage
 memory-profiler
 line-profiler
+PyYAML
+prometheus_client
 
 # PostgreSQL and SQLAlchemy async dependencies
 sqlalchemy[asyncio]
@@ -20,7 +22,10 @@ alembic
 psycopg2-binary
 pytest-asyncio
 
-# Hugging Face and AI dependencies
+# System monitoring and observability
+psutil>=5.9.0
+
+# Hugging Face and AI dependencies  
 transformers>=4.35.0
 torch>=2.0.0
 sentence-transformers>=2.2.0

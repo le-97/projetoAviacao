@@ -88,8 +88,8 @@ async def app_exception_handler(request: Request, exc: AppException) -> JSONResp
     
     # Log the exception with context
     log_security_event(
-        event_type="exception_handled",
-        level="ERROR" if exc.status_code >= 500 else "WARNING",
+        event="exception_handled",
+        severity="ERROR" if exc.status_code >= 500 else "WARNING",
         details={
             "exception_type": exc.error_type,
             "exception_code": exc.error_code,
@@ -138,8 +138,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     
     # Log validation error
     log_security_event(
-        event_type="validation_error",
-        level="WARNING",
+        event="validation_error",
+        severity="WARNING",
         details={
             "request_path": request.url.path,
             "request_method": request.method,
@@ -178,8 +178,8 @@ async def http_exception_handler_custom(request: Request, exc: HTTPException) ->
     
     # Log HTTP exception
     log_security_event(
-        event_type="http_exception",
-        level="ERROR" if exc.status_code >= 500 else "WARNING",
+        event="http_exception",
+        severity="ERROR" if exc.status_code >= 500 else "WARNING",
         details={
             "status_code": exc.status_code,
             "detail": exc.detail,
@@ -231,8 +231,8 @@ async def starlette_http_exception_handler(request: Request, exc: StarletteHTTPE
     
     # Log Starlette exception
     log_security_event(
-        event_type="starlette_exception",
-        level="ERROR" if exc.status_code >= 500 else "WARNING",
+        event="starlette_exception",
+        severity="ERROR" if exc.status_code >= 500 else "WARNING",
         details={
             "status_code": exc.status_code,
             "detail": exc.detail,
@@ -269,8 +269,8 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
     
     # Log unexpected exception with full traceback
     log_security_event(
-        event_type="unexpected_exception",
-        level="ERROR",
+        event="unexpected_exception",
+        severity="ERROR",
         details={
             "exception_type": type(exc).__name__,
             "exception_message": str(exc),

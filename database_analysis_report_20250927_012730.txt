@@ -1,0 +1,222 @@
+================================================================================
+DATABASE SCHEMA ANALYSIS REPORT
+================================================================================
+Analysis Date: 2025-09-27T01:27:30.934432
+Database: projetoAviacao.db
+Total Tables: 9
+
+📋 TABLE: aircraft
+----------------------------------------
+Columns: 8
+Rows: 0
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • name: VARCHAR(255) NOT NULL
+  • aircraft_type: VARCHAR(100) NOT NULL
+  • registration: VARCHAR(20) NOT NULL
+  • current_hours: FLOAT NOT NULL
+  • last_inspection: DATETIME NOT NULL
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 2
+  • ix_aircraft_registration
+  • sqlite_autoindex_aircraft_1
+
+📋 TABLE: aircraft_models
+----------------------------------------
+Columns: 10
+Rows: 8
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • manufacturer: VARCHAR(100) NOT NULL
+  • model: VARCHAR(100) NOT NULL
+  • variant: VARCHAR(50)
+  • type_certificate: VARCHAR(100)
+  • category: VARCHAR(50)
+  • max_seats: INTEGER
+  • max_weight_kg: FLOAT
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 3
+  • ix_aircraft_models_model
+  • ix_aircraft_models_manufacturer
+  • sqlite_autoindex_aircraft_models_1
+
+📋 TABLE: authorities
+----------------------------------------
+Columns: 7
+Rows: 3
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • code: VARCHAR(10) NOT NULL
+  • name: VARCHAR(255) NOT NULL
+  • country: VARCHAR(3)
+  • website: VARCHAR(500)
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 2
+  • ix_authorities_code
+  • sqlite_autoindex_authorities_1
+
+📋 TABLE: compliance_checks
+----------------------------------------
+Columns: 13
+Rows: 0
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • aircraft_model_id: VARCHAR(36) NOT NULL
+  • regulation_id: VARCHAR(36) NOT NULL
+  • status: VARCHAR(20) NOT NULL
+  • severity: VARCHAR(20)
+  • findings: TEXT
+  • recommendations: TEXT
+  • checked_by: VARCHAR(100)
+  • checked_at: DATETIME
+  • evidence_documents: JSON
+  • extra_metadata: JSON
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 5
+  • idx_compliance_checks_severity
+  • idx_compliance_checks_status
+  • idx_compliance_checks_aircraft_regulation
+  • ix_compliance_checks_status
+  • sqlite_autoindex_compliance_checks_1
+Foreign Keys: 2
+  • regulation_id → regulations.id
+  • aircraft_model_id → aircraft_models.id
+
+📋 TABLE: compliance_reports
+----------------------------------------
+Columns: 11
+Rows: 0
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • aircraft_model_id: VARCHAR(36) NOT NULL
+  • title: VARCHAR(500) NOT NULL
+  • summary: TEXT
+  • overall_status: VARCHAR(20) NOT NULL
+  • report_type: VARCHAR(50)
+  • generated_by: VARCHAR(100)
+  • generated_at: DATETIME NOT NULL
+  • extra_metadata: JSON
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 5
+  • idx_compliance_reports_generated
+  • idx_compliance_reports_aircraft_status
+  • idx_compliance_reports_type
+  • ix_compliance_reports_overall_status
+  • sqlite_autoindex_compliance_reports_1
+Foreign Keys: 1
+  • aircraft_model_id → aircraft_models.id
+
+📋 TABLE: compliance_requirements
+----------------------------------------
+Columns: 9
+Rows: 0
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • title: VARCHAR(500) NOT NULL
+  • description: TEXT
+  • authority: VARCHAR(100) NOT NULL
+  • frequency_hours: INTEGER
+  • aircraft_types: TEXT
+  • priority: VARCHAR(20) NOT NULL
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 1
+  • sqlite_autoindex_compliance_requirements_1
+
+📋 TABLE: regulation_models
+----------------------------------------
+Columns: 2
+Rows: 0
+Columns:
+  • regulation_id: VARCHAR(36)
+  • aircraft_model_id: VARCHAR(36)
+Indexes: 2
+  • idx_regulation_models_regulation
+  • idx_regulation_models_model
+Foreign Keys: 2
+  • aircraft_model_id → aircraft_models.id
+  • regulation_id → regulations.id
+
+📋 TABLE: regulations
+----------------------------------------
+Columns: 12
+Rows: 13
+Columns:
+  • id: VARCHAR(36) (PK) NOT NULL
+  • authority_id: VARCHAR(36) NOT NULL
+  • reference: VARCHAR(100) NOT NULL
+  • title: VARCHAR(500) NOT NULL
+  • description: TEXT NOT NULL
+  • category: VARCHAR(100)
+  • subcategory: VARCHAR(100)
+  • status: VARCHAR(20) NOT NULL
+  • effective_date: DATETIME
+  • content: JSON
+  • created_at: DATETIME NOT NULL
+  • updated_at: DATETIME NOT NULL
+Indexes: 4
+  • ix_regulations_reference
+  • ix_regulations_status
+  • ix_regulations_category
+  • sqlite_autoindex_regulations_1
+Foreign Keys: 1
+  • authority_id → authorities.id
+
+📋 TABLE: report_checks
+----------------------------------------
+Columns: 2
+Rows: 0
+Columns:
+  • report_id: VARCHAR(36)
+  • check_id: VARCHAR(36)
+Indexes: 2
+  • idx_report_checks_report
+  • idx_report_checks_check
+Foreign Keys: 2
+  • check_id → compliance_checks.id
+  • report_id → compliance_reports.id
+
+📊 DATABASE STATISTICS
+----------------------------------------
+Database Size: 0.16 MB
+Table Sizes (by row count):
+  • regulations: 13 rows
+  • aircraft_models: 8 rows
+  • authorities: 3 rows
+  • aircraft: 0 rows
+  • compliance_checks: 0 rows
+  • compliance_reports: 0 rows
+  • compliance_requirements: 0 rows
+  • regulation_models: 0 rows
+  • report_checks: 0 rows
+
+❌ ISSUES IDENTIFIED
+----------------------------------------
+ 1. Table 'regulation_models' missing 'id' primary key
+ 2. Table 'regulation_models' missing 'created_at' timestamp
+ 3. Table 'regulation_models' missing 'updated_at' timestamp
+ 4. Table 'report_checks' missing 'id' primary key
+ 5. Table 'report_checks' missing 'created_at' timestamp
+ 6. Table 'report_checks' missing 'updated_at' timestamp
+
+💡 RECOMMENDATIONS
+----------------------------------------
+✅ Schema follows best practices!
+
+🚀 ADDITIONAL BEST PRACTICES
+----------------------------------------
+ 1. Consider implementing database connection pooling for better performance
+ 2. Add database backup and recovery procedures
+ 3. Implement proper error handling for database operations
+ 4. Consider using database migrations for schema changes
+ 5. Add database monitoring and logging for production
+ 6. Review and optimize slow queries using EXPLAIN QUERY PLAN
+ 7. Consider implementing read replicas for better read performance
+ 8. Add proper indexing strategy for frequently queried columns
+
+================================================================================

@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     cache_key_prefix: str = "compliance:"
     
     # Application Configuration
-    app_name: str = "Compliance Microservice"
-    app_version: str = "1.0.0"
+    app_name: str = "Aviation Compliance API"
+    app_version: str = "2.0.0"
     debug: bool = False
     cors_origins: list = [
         "*",  # Allow all origins for development
@@ -39,6 +39,12 @@ class Settings(BaseSettings):
         "http://localhost:5173",  # Local development
         "http://127.0.0.1:5173"   # Local development alternative
     ]
+    
+    # Monitoring Configuration
+    prometheus_metrics_enabled: bool = True
+    system_metrics_enabled: bool = True
+    metrics_update_interval: int = 30  # seconds
+    openmetrics_support: bool = True
     
     # Performance Configuration
     max_cache_size: int = 1000  # Maximum number of cached items
@@ -51,5 +57,9 @@ class Settings(BaseSettings):
         extra = "ignore"  # Ignore extra fields from .env
 
 
-# Global settings instance
-settings = Settings()
+# Global settings instance with reload capability
+def get_settings() -> Settings:
+    """Get settings instance - allows for easy reloading."""
+    return Settings()
+
+settings = get_settings()

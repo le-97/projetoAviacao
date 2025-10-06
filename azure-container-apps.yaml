@@ -1,0 +1,64 @@
+# Azure Container Apps Configuration
+# deploy-azure-container-apps.yaml
+
+properties:
+  environmentId: /subscriptions/{subscription-id}/resourceGroups/rg-aviation-compliance/providers/Microsoft.App/managedEnvironments/aviation-compliance-env
+  configuration:
+    ingress:
+      external: true
+      targetPort: 8000
+      traffic:
+        - weight: 100
+          latestRevision: true
+    registries:
+      - server: aviationcomplianceregistry.azurecr.io
+        username: # Will be populated by script
+        passwordSecretRef: registry-password
+    secrets:
+      - name: registry-password
+        value: # Will be populated by script
+  template:
+    containers:
+      - image: aviationcomplianceregistry.azurecr.io/aviation-compliance-api:latest
+        name: aviation-compliance-api
+        env:
+          - name: ENVIRONMENT
+            value: production
+          - name: API_HOST
+            value: 0.0.0.0
+          - name: API_PORT
+            value: "8000"
+          - name: DATABASE_URL
+            value: sqlite:///data/aviation_compliance.db
+          - name: LOG_LEVEL
+            value: INFO
+          - name: CORS_ORIGINS
+            value: "*"
+          - name: APP_NAME
+            value: Aviation Compliance API
+          - name: APP_VERSION
+            value: "2.0.0"
+        resources:
+          cpu: 1.0
+          memory: 2.0Gi
+        probes:
+          - type: Liveness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          - type: Readiness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+    scale:
+      minReplicas: 1
+      maxReplicas: 10
+      rules:
+        - name: http-scaler
+          http:
+            metadata:
+              concurrentRequests: "100"

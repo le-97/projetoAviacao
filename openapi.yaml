@@ -352,6 +352,205 @@ paths:
               schema:
                 $ref: '#/components/schemas/PerformanceHealth'
 
+  # AI-Enhanced Compliance Endpoints (undocumented)
+  /compliance/:
+    get:
+      tags:
+        - Compliance
+      summary: Compliance service information
+      description: Root endpoint for compliance service with API information and capabilities
+      operationId: compliance_root
+      responses:
+        '200':
+          description: Compliance service information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceServiceInfo'
+
+  /compliance/ai-analysis/{model}/{country}:
+    get:
+      tags:
+        - Compliance
+      summary: AI-enhanced compliance analysis
+      description: |
+        AI-enhanced compliance analysis using Hugging Face models.
+        Provides intelligent analysis beyond basic rule-based compliance checking,
+        including contextual insights, risk assessment, and recommendations.
+      operationId: ai_enhanced_compliance_analysis
+      parameters:
+        - name: model
+          in: path
+          required: true
+          description: Aircraft model (e.g., "e190", "phenom300", "kc390")
+          schema:
+            type: string
+            enum: ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"]
+        - name: country
+          in: path
+          required: true
+          description: Target country (e.g., "US", "EU", "UK", "CA")
+          schema:
+            type: string
+            enum: ["USA", "BRAZIL", "EUROPE", "UK", "CANADA"]
+      responses:
+        '200':
+          description: AI-enhanced compliance analysis results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIComplianceAnalysis'
+        '400':
+          description: Invalid input parameters
+        '500':
+          description: AI analysis service error
+
+  /compliance/gap-analysis/{model}/{origin_country}/{target_country}:
+    get:
+      tags:
+        - Compliance
+      summary: Regulatory gap analysis
+      description: |
+        Comprehensive gap analysis between origin and target country regulations.
+        Identifies specific regulatory differences, missing certifications, 
+        additional requirements, and provides detailed action plan for compliance.
+      operationId: regulatory_gap_analysis
+      parameters:
+        - name: model
+          in: path
+          required: true
+          description: Aircraft model (e.g., "e190", "phenom300", "kc390")
+          schema:
+            type: string
+            enum: ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"]
+        - name: origin_country
+          in: path
+          required: true
+          description: Origin country (e.g., "BR", "US", "EU")
+          schema:
+            type: string
+            enum: ["USA", "BRAZIL", "EUROPE", "UK", "CANADA"]
+        - name: target_country
+          in: path
+          required: true
+          description: Target country (e.g., "US", "EU", "UK", "CA")
+          schema:
+            type: string
+            enum: ["USA", "BRAZIL", "EUROPE", "UK", "CANADA"]
+      responses:
+        '200':
+          description: Detailed gap analysis with action items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GapAnalysisReport'
+        '400':
+          description: Invalid input parameters
+        '500':
+          description: Gap analysis service error
+
+  # Cache Management Endpoints (undocumented)
+  /cache/stats:
+    get:
+      tags:
+        - Cache Management
+      summary: Get cache statistics
+      description: Get detailed cache statistics and health information
+      operationId: get_cache_stats
+      responses:
+        '200':
+          description: Cache statistics and health information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheStats'
+        '503':
+          description: Cache service unavailable
+
+  /cache/compliance:
+    delete:
+      tags:
+        - Cache Management
+      summary: Clear compliance cache
+      description: Clear all compliance-related cache entries
+      operationId: clear_compliance_cache
+      responses:
+        '200':
+          description: Cache cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheOperationResult'
+        '503':
+          description: Cache service unavailable
+
+  /cache/compliance/{model}/{country}:
+    delete:
+      tags:
+        - Cache Management
+      summary: Clear specific cache entry
+      description: Clear cache entry for a specific model and country combination
+      operationId: clear_specific_cache
+      parameters:
+        - name: model
+          in: path
+          required: true
+          description: Aircraft model
+          schema:
+            type: string
+            enum: ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"]
+        - name: country
+          in: path
+          required: true
+          description: Country code
+          schema:
+            type: string
+            enum: ["USA", "BRAZIL", "EUROPE", "UK", "CANADA"]
+      responses:
+        '200':
+          description: Specific cache entry cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheOperationResult'
+        '503':
+          description: Cache service unavailable
+
+  # Analytics Extensions (undocumented)
+  /analytics/performance-metrics:
+    get:
+      tags:
+        - Analytics
+      summary: Get performance metrics
+      description: Get performance and operational metrics for the fleet
+      operationId: get_performance_metrics
+      responses:
+        '200':
+          description: Performance and operational metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceMetrics'
+        '500':
+          description: Error calculating performance metrics
+
+  /analytics/requirements-summary:
+    get:
+      tags:
+        - Analytics
+      summary: Get requirements summary
+      description: Get summary of compliance requirements and their coverage
+      operationId: get_requirements_summary
+      responses:
+        '200':
+          description: Summary of compliance requirements and coverage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequirementsSummary'
+        '500':
+          description: Error retrieving requirements summary
+
 components:
   schemas:
     ComplianceReport:
@@ -749,6 +948,264 @@ components:
           type: string
           description: Additional error details or suggestions
           example: "Check the API documentation for supported values"
+
+    # New schemas for undocumented endpoints
+    ComplianceServiceInfo:
+      type: object
+      properties:
+        service:
+          type: string
+          example: "Enhanced Aviation Compliance API"
+        version:
+          type: string
+          example: "2.1.0"
+        description:
+          type: string
+          example: "Database-backed compliance checking with AI-enhanced analysis"
+        features:
+          type: array
+          items:
+            type: string
+          example: ["Database-driven aircraft model validation", "AI-enhanced analysis with Hugging Face models"]
+        endpoints:
+          type: object
+          description: Available endpoints and their descriptions
+
+    AIComplianceAnalysis:
+      type: object
+      properties:
+        model:
+          type: string
+          example: "E190"
+        country:
+          type: string
+          example: "USA"
+        ai_analysis:
+          type: object
+          properties:
+            confidence_score:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+              example: 0.95
+            risk_assessment:
+              type: string
+              enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+              example: "MEDIUM"
+            contextual_insights:
+              type: array
+              items:
+                type: string
+              example: ["Aircraft age may affect certain compliance requirements"]
+            recommendations:
+              type: array
+              items:
+                type: string
+              example: ["Consider updating maintenance schedule", "Review certification validity"]
+            timeline_estimate:
+              type: object
+              properties:
+                compliance_timeline_days:
+                  type: integer
+                  example: 45
+                certification_timeline_days:
+                  type: integer
+                  example: 120
+        standard_compliance:
+          $ref: '#/components/schemas/ComplianceReport'
+
+    GapAnalysisReport:
+      type: object
+      properties:
+        model:
+          type: string
+          example: "E190"
+        origin_country:
+          type: string
+          example: "BRAZIL"
+        target_country:
+          type: string
+          example: "USA"
+        gap_analysis:
+          type: object
+          properties:
+            regulatory_differences:
+              type: array
+              items:
+                type: object
+                properties:
+                  requirement:
+                    type: string
+                    example: "AD-2025-12: Wing inspection required"
+                  origin_status:
+                    type: string
+                    example: "COMPLIANT"
+                  target_status:
+                    type: string
+                    example: "NON_COMPLIANT"
+                  action_required:
+                    type: string
+                    example: "Complete wing inspection certification"
+            missing_certifications:
+              type: array
+              items:
+                type: string
+              example: ["FAA Type Certificate validation", "EASA STC approval"]
+            additional_requirements:
+              type: array
+              items:
+                type: string
+              example: ["Updated maintenance manual", "Pilot training certification"]
+            action_plan:
+              type: array
+              items:
+                type: object
+                properties:
+                  step:
+                    type: string
+                    example: "Submit documentation to FAA"
+                  estimated_timeline:
+                    type: string
+                    example: "30-45 days"
+                  priority:
+                    type: string
+                    enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+                    example: "HIGH"
+        compliance_summary:
+          type: object
+          properties:
+            origin_compliance:
+              $ref: '#/components/schemas/ComplianceReport'
+            target_compliance:
+              $ref: '#/components/schemas/ComplianceReport'
+
+    CacheStats:
+      type: object
+      properties:
+        connected:
+          type: boolean
+          example: true
+        total_keys:
+          type: integer
+          example: 156
+        memory_usage:
+          type: string
+          example: "2.1MB"
+        hit_rate:
+          type: number
+          format: float
+          example: 0.85
+        cache_metrics:
+          type: object
+          properties:
+            compliance_cache_entries:
+              type: integer
+              example: 45
+            avg_cache_age_minutes:
+              type: number
+              format: float
+              example: 12.5
+        redis_info:
+          type: object
+          description: Redis server information
+
+    CacheOperationResult:
+      type: object
+      properties:
+        action:
+          type: string
+          example: "clear_all_compliance_cache"
+        deleted_entries:
+          type: integer
+          example: 23
+        status:
+          type: string
+          enum: ["success", "failed"]
+          example: "success"
+        target:
+          type: object
+          properties:
+            model:
+              type: string
+              example: "E190"
+            country:
+              type: string
+              example: "USA"
+
+    PerformanceMetrics:
+      type: object
+      properties:
+        utilization_rate:
+          type: number
+          format: float
+          example: 85.5
+        avg_monthly_hours:
+          type: number
+          format: float
+          example: 142.3
+        fleet_availability:
+          type: number
+          format: float
+          example: 95.5
+        maintenance_efficiency:
+          type: number
+          format: float
+          example: 88.3
+        cost_per_hour:
+          type: number
+          format: float
+          example: 450.75
+        metrics_timestamp:
+          type: string
+          format: date-time
+          example: "2025-09-27T04:00:00Z"
+
+    RequirementsSummary:
+      type: object
+      properties:
+        total_requirements:
+          type: integer
+          example: 156
+        priority_breakdown:
+          type: object
+          properties:
+            CRITICAL:
+              type: integer
+              example: 12
+            HIGH:
+              type: integer
+              example: 45
+            MEDIUM:
+              type: integer
+              example: 78
+            LOW:
+              type: integer
+              example: 21
+        authority_breakdown:
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            FAA: 85
+            EASA: 45
+            ANAC: 26
+        compliance_coverage:
+          type: object
+          properties:
+            overall_coverage_percentage:
+              type: number
+              format: float
+              example: 87.5
+            aircraft_with_full_compliance:
+              type: integer
+              example: 8
+            aircraft_with_partial_compliance:
+              type: integer
+              example: 4
+            total_aircraft:
+              type: integer
+              example: 12
 
   securitySchemes:
     BearerAuth:

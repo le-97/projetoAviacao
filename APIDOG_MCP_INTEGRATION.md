@@ -10,7 +10,7 @@ O **Apidog MCP Server** foi configurado para integrar nossa documentação OpenA
 ```json
 {
   "mcpServers": {
-    "API Documentation": {
+    "API docuemntation": {
       "command": "npx",
       "args": [
         "-y",
@@ -19,8 +19,7 @@ O **Apidog MCP Server** foi configurado para integrar nossa documentação OpenA
       ],
       "env": {
         "APIDOG_ACCESS_TOKEN": "APS-tLr6pAvLNkORIjKAmWlYeyT3bhS9d4Ky"
-      },
-      "type": "stdio"
+      }
     }
   }
 }
