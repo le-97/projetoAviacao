@@ -1,0 +1,287 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Aviation Compliance API",
+    "version": "1.0.0",
+    "description": "API for aircraft compliance checking and specifications"
+  },
+  "servers": [
+    {
+      "url": "https://aviation-compliance-app.wonderfulsea-d38b4e92.eastus.azurecontainerapps.io",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aircraft/models": {
+      "get": {
+        "summary": "Get all aircraft models",
+        "responses": {
+          "200": {
+            "description": "List of aircraft models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AircraftModelsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aircraft/specifications/{model}": {
+      "get": {
+        "summary": "Get aircraft specifications",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aircraft specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AircraftSpecifications"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aircraft not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/authorities": {
+      "get": {
+        "summary": "Get compliance authorities",
+        "responses": {
+          "200": {
+            "description": "Compliance authorities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthoritiesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/check/{model}/{authority}": {
+      "get": {
+        "summary": "Check compliance",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authority",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compliance check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplianceCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/fleet-metrics": {
+      "get": {
+        "summary": "Get fleet analytics",
+        "responses": {
+          "200": {
+            "description": "Fleet metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FleetMetricsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "required": ["status", "message", "timestamp", "database_status", "aircraft_models_loaded"],
+        "properties": {
+          "status": { "type": "string" },
+          "message": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "database_status": { "type": "string" },
+          "aircraft_models_loaded": { "type": "number" }
+        }
+      },
+      "AircraftModelsResponse": {
+        "type": "object",
+        "required": ["total_models", "models_by_series", "all_models", "latest_generation"],
+        "properties": {
+          "total_models": { "type": "number" },
+          "models_by_series": {
+            "type": "object",
+            "properties": {
+              "E1": { "type": "array", "items": { "type": "string" } },
+              "E2": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "all_models": { "type": "array", "items": { "type": "string" } },
+          "latest_generation": { "type": "string" }
+        }
+      },
+      "AircraftSpecifications": {
+        "type": "object",
+        "required": [
+          "model", "series", "seats", "mtow_lbs", "range_nm", "engine_type",
+          "noise_compliance", "emissions_compliance", "certification", 
+          "fuel_capacity_kg", "avionics", "safety_rating"
+        ],
+        "properties": {
+          "model": { "type": "string" },
+          "series": { "type": "string", "enum": ["E1", "E2"] },
+          "seats": { "type": "number", "minimum": 1 },
+          "mtow_lbs": { "type": "number", "minimum": 1 },
+          "range_nm": { "type": "number", "minimum": 1 },
+          "engine_type": { "type": "string" },
+          "noise_compliance": { "type": "string" },
+          "emissions_compliance": { "type": "string" },
+          "certification": { "type": "array", "items": { "type": "string" } },
+          "fuel_capacity_kg": { "type": "number", "minimum": 1 },
+          "avionics": { "type": "string" },
+          "safety_rating": { "type": "string" }
+        }
+      },
+      "AuthoritiesResponse": {
+        "type": "object",
+        "required": ["authorities", "supported_checks", "global_standards"],
+        "properties": {
+          "authorities": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "region": { "type": "string" }
+              }
+            }
+          },
+          "supported_checks": { "type": "array", "items": { "type": "string" } },
+          "global_standards": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "ComplianceCheckResponse": {
+        "type": "object",
+        "required": [
+          "aircraft_model", "authority", "compliance_status", "score", 
+          "details", "specifications", "timestamp"
+        ],
+        "properties": {
+          "aircraft_model": { "type": "string" },
+          "authority": { "type": "string" },
+          "compliance_status": { "type": "string", "enum": ["COMPLIANT", "NON-COMPLIANT", "PARTIAL"] },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "details": {
+            "type": "object",
+            "required": [
+              "noise_level", "emissions_level", "certifications", "engine_technology",
+              "avionics_suite", "generation", "check_performed", "authority_region"
+            ],
+            "properties": {
+              "noise_level": { "type": "string" },
+              "emissions_level": { "type": "string" },
+              "certifications": { "type": "array", "items": { "type": "string" } },
+              "engine_technology": { "type": "string" },
+              "avionics_suite": { "type": "string" },
+              "generation": { "type": "string" },
+              "check_performed": { "type": "string" },
+              "authority_region": { "type": "string" }
+            }
+          },
+          "specifications": { "$ref": "#/components/schemas/AircraftSpecifications" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "FleetMetricsResponse": {
+        "type": "object",
+        "required": [
+          "total_models", "e1_series_count", "e2_series_count", 
+          "average_compliance_score", "compliance_by_series", "latest_models"
+        ],
+        "properties": {
+          "total_models": { "type": "number", "minimum": 1 },
+          "e1_series_count": { "type": "number", "minimum": 0 },
+          "e2_series_count": { "type": "number", "minimum": 0 },
+          "average_compliance_score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "compliance_by_series": {
+            "type": "object",
+            "properties": {
+              "E1": { "type": "number", "minimum": 0, "maximum": 100 },
+              "E2": { "type": "number", "minimum": 0, "maximum": 100 }
+            }
+          },
+          "latest_models": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["detail"],
+        "properties": {
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  }
+}

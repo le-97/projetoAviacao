@@ -1,0 +1,64 @@
+{
+  "name": "aviation-compliance-api-tests",
+  "version": "1.0.0",
+  "description": "Jest integration tests for Aviation Compliance API",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:integration": "jest --testMatch='**/integration/**/*.test.js'",
+    "test:unit": "jest --testMatch='**/unit/**/*.test.js'",
+    "test:e2e": "jest --testMatch='**/e2e/**/*.test.js'",
+    "test:contracts": "jest --testMatch='**/contracts/**/*.test.js'"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "@jest/globals": "^29.7.0",
+    "jest-environment-node": "^29.7.0",
+    "axios": "^1.6.0",
+    "json-schema-to-typescript": "^13.1.1",
+    "ajv": "^8.12.0",
+    "jest-junit": "^16.0.0",
+    "jest-html-reporters": "^3.1.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/__tests__/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.py",
+      "main_azure_simple.py",
+      "!src/test/**",
+      "!**/node_modules/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html",
+      "json"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit",
+      ["jest-html-reporters", {
+        "publicPath": "./coverage/html-report",
+        "filename": "report.html",
+        "expand": true
+      }]
+    ],
+    "testTimeout": 30000,
+    "maxWorkers": 4
+  },
+  "jest-junit": {
+    "outputDirectory": "./coverage",
+    "outputName": "junit.xml"
+  }
+}
