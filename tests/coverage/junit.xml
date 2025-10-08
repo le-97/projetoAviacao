@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="6" failures="6" errors="0" time="22.362">
+  <testsuite name="Health Endpoints" errors="0" failures="6" skipped="0" timestamp="2025-10-08T04:21:45" time="22.233" tests="6">
+    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.005">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0">
+      <failure>Error: API not ready after 10 attempts
+    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

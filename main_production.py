@@ -12,7 +12,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Depends, Request, Response, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import uvicorn
@@ -183,13 +182,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add trusted host middleware for Azure
-azure_hosts = [
-    "aviation-compliance-app.wonderfulsea-d38b4e92.eastus.azurecontainerapps.io",
-    "localhost",
-    "127.0.0.1"
-]
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=azure_hosts)
+# Azure-ready CORS configuration
+# Note: Trusted host middleware removed to prevent 400 errors in Azure Container Apps
 
 # Health check endpoint
 @app.get("/health", tags=["Health"])

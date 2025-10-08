@@ -7,8 +7,8 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '.env.test' });
 
 // Global test configuration
-global.API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8000';
-global.AZURE_API_URL = process.env.AZURE_API_URL || 'https://aviation-compliance-app.wonderfulsea-d38b4e92.eastus.azurecontainerapps.io';
+global.API_BASE_URL = process.env.API_BASE_URL || 'https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io';
+global.AZURE_API_URL = process.env.AZURE_API_URL || 'https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io';
 
 // Test timeouts
 jest.setTimeout(30000);
