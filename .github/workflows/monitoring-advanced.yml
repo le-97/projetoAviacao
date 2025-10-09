@@ -1,0 +1,390 @@
+name: 📊 Continuous Monitoring
+
+on:
+  schedule:
+    # Every 15 minutes during business hours (UTC)
+    - cron: '*/15 8-20 * * 1-5'
+    # Every hour during off-hours
+    - cron: '0 */1 * * *'
+  workflow_dispatch:
+    inputs:
+      deep_check:
+        description: 'Run deep monitoring checks'
+        required: false
+        default: false
+        type: boolean
+      environment:
+        description: 'Environment to monitor'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+        - all
+
+env:
+  PRODUCTION_URL: https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io
+  STAGING_URL: https://aviation-compliance-app-staging.graytree-b170d21d.eastus.azurecontainerapps.io
+
+jobs:
+  health-monitoring:
+    name: 🏥 Health Monitoring
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: 
+          - ${{ (inputs.environment == 'all' || inputs.environment == 'production' || inputs.environment == '') && 'production' || '' }}
+          - ${{ (inputs.environment == 'all' || inputs.environment == 'staging') && 'staging' || '' }}
+      fail-fast: false
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Environment
+      id: setup
+      run: |
+        if [ "${{ matrix.environment }}" = "production" ]; then
+          echo "url=${{ env.PRODUCTION_URL }}" >> $GITHUB_OUTPUT
+          echo "env_name=Production" >> $GITHUB_OUTPUT
+        elif [ "${{ matrix.environment }}" = "staging" ]; then
+          echo "url=${{ env.STAGING_URL }}" >> $GITHUB_OUTPUT
+          echo "env_name=Staging" >> $GITHUB_OUTPUT
+        else
+          echo "Skipping empty matrix entry"
+          exit 0
+        fi
+
+    - name: 🏥 Basic Health Check
+      id: health
+      run: |
+        if [ -z "${{ steps.setup.outputs.url }}" ]; then exit 0; fi
+        
+        URL="${{ steps.setup.outputs.url }}"
+        ENV_NAME="${{ steps.setup.outputs.env_name }}"
+        
+        echo "🔍 Checking $ENV_NAME health at $URL"
+        
+        # Health check with timeout and retry
+        HEALTH_STATUS="unhealthy"
+        RESPONSE_TIME=0
+        
+        for attempt in {1..3}; do
+          echo "Health check attempt $attempt/3..."
+          
+          START_TIME=$(date +%s.%N)
+          if HEALTH_RESPONSE=$(curl -s -f --max-time 10 "$URL/health"); then
+            END_TIME=$(date +%s.%N)
+            RESPONSE_TIME=$(echo "$END_TIME - $START_TIME" | bc -l)
+            HEALTH_STATUS="healthy"
+            break
+          else
+            echo "❌ Health check failed, attempt $attempt"
+            sleep 5
+          fi
+        done
+        
+        echo "Health Status: $HEALTH_STATUS"
+        echo "Response Time: ${RESPONSE_TIME}s"
+        
+        # Parse health response
+        if [ "$HEALTH_STATUS" = "healthy" ]; then
+          echo "✅ $ENV_NAME is healthy"
+          echo "📊 Response: $HEALTH_RESPONSE"
+          
+          # Extract metrics if available
+          AIRCRAFT_COUNT=$(echo "$HEALTH_RESPONSE" | jq -r '.aircraft_models_loaded // 0')
+          echo "✈️ Aircraft models loaded: $AIRCRAFT_COUNT"
+        else
+          echo "❌ $ENV_NAME is unhealthy"
+        fi
+        
+        # Output for later steps
+        echo "status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+        echo "response_time=$RESPONSE_TIME" >> $GITHUB_OUTPUT
+        echo "aircraft_count=$AIRCRAFT_COUNT" >> $GITHUB_OUTPUT
+
+    - name: 🧪 API Functionality Test
+      if: steps.health.outputs.status == 'healthy'
+      run: |
+        if [ -z "${{ steps.setup.outputs.url }}" ]; then exit 0; fi
+        
+        URL="${{ steps.setup.outputs.url }}"
+        
+        echo "🧪 Testing API functionality..."
+        
+        # Test main endpoints
+        ENDPOINTS=(
+          "/"
+          "/aircraft/models"
+          "/compliance/authorities"
+        )
+        
+        ALL_PASSED=true
+        
+        for endpoint in "${ENDPOINTS[@]}"; do
+          echo "Testing: $endpoint"
+          
+          START_TIME=$(date +%s.%N)
+          if curl -s -f --max-time 15 "$URL$endpoint" > /dev/null; then
+            END_TIME=$(date +%s.%N)
+            RESPONSE_TIME=$(echo "$END_TIME - $START_TIME" | bc -l)
+            echo "  ✅ OK (${RESPONSE_TIME}s)"
+          else
+            echo "  ❌ FAILED"
+            ALL_PASSED=false
+          fi
+        done
+        
+        if [ "$ALL_PASSED" = "true" ]; then
+          echo "✅ All API endpoints are working"
+        else
+          echo "❌ Some API endpoints failed"
+          exit 1
+        fi
+
+    - name: 📊 Performance Metrics
+      if: steps.health.outputs.status == 'healthy' && inputs.deep_check
+      run: |
+        if [ -z "${{ steps.setup.outputs.url }}" ]; then exit 0; fi
+        
+        URL="${{ steps.setup.outputs.url }}"
+        
+        echo "📊 Collecting performance metrics..."
+        
+        # Response time test
+        echo "Testing response times..."
+        TOTAL_TIME=0
+        SUCCESSFUL_REQUESTS=0
+        
+        for i in {1..5}; do
+          START_TIME=$(date +%s.%N)
+          if curl -s -f --max-time 10 "$URL/health" > /dev/null; then
+            END_TIME=$(date +%s.%N)
+            REQUEST_TIME=$(echo "$END_TIME - $START_TIME" | bc -l)
+            TOTAL_TIME=$(echo "$TOTAL_TIME + $REQUEST_TIME" | bc -l)
+            SUCCESSFUL_REQUESTS=$((SUCCESSFUL_REQUESTS + 1))
+            echo "  Request $i: ${REQUEST_TIME}s"
+          else
+            echo "  Request $i: FAILED"
+          fi
+        done
+        
+        if [ $SUCCESSFUL_REQUESTS -gt 0 ]; then
+          AVERAGE_TIME=$(echo "scale=3; $TOTAL_TIME / $SUCCESSFUL_REQUESTS" | bc -l)
+          echo "📈 Average response time: ${AVERAGE_TIME}s"
+          
+          # Performance thresholds
+          if (( $(echo "$AVERAGE_TIME > 5.0" | bc -l) )); then
+            echo "⚠️ Warning: Average response time is high (>${AVERAGE_TIME}s)"
+          elif (( $(echo "$AVERAGE_TIME > 2.0" | bc -l) )); then
+            echo "⚠️ Notice: Response time is elevated (${AVERAGE_TIME}s)"
+          else
+            echo "✅ Performance looks good (${AVERAGE_TIME}s)"
+          fi
+        fi
+
+    - name: 🚨 Alert on Failure
+      if: failure()
+      run: |
+        ENV_NAME="${{ steps.setup.outputs.env_name }}"
+        URL="${{ steps.setup.outputs.url }}"
+        
+        echo "🚨 ALERT: $ENV_NAME monitoring failed!"
+        echo "Environment: $ENV_NAME"
+        echo "URL: $URL"
+        echo "Time: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+        echo "Workflow: ${{ github.workflow }}"
+        echo "Run ID: ${{ github.run_id }}"
+
+  security-monitoring:
+    name: 🛡️ Security Monitoring
+    runs-on: ubuntu-latest
+    if: inputs.deep_check || github.event.schedule == '0 */6 * * *'
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 🛡️ Security Headers Check
+      run: |
+        echo "🛡️ Checking security headers..."
+        
+        URL="${{ env.PRODUCTION_URL }}"
+        
+        # Check security headers
+        HEADERS=$(curl -I -s "$URL" --max-time 10)
+        
+        echo "Response headers:"
+        echo "$HEADERS"
+        
+        # Check for important security headers
+        SECURITY_ISSUES=()
+        
+        if ! echo "$HEADERS" | grep -qi "x-frame-options"; then
+          SECURITY_ISSUES+=("Missing X-Frame-Options header")
+        fi
+        
+        if ! echo "$HEADERS" | grep -qi "x-content-type-options"; then
+          SECURITY_ISSUES+=("Missing X-Content-Type-Options header")
+        fi
+        
+        if ! echo "$HEADERS" | grep -qi "strict-transport-security"; then
+          SECURITY_ISSUES+=("Missing Strict-Transport-Security header")
+        fi
+        
+        if [ ${#SECURITY_ISSUES[@]} -eq 0 ]; then
+          echo "✅ Security headers look good"
+        else
+          echo "⚠️ Security issues found:"
+          for issue in "${SECURITY_ISSUES[@]}"; do
+            echo "  - $issue"
+          done
+        fi
+
+    - name: 🔍 SSL Certificate Check
+      run: |
+        echo "🔍 Checking SSL certificate..."
+        
+        DOMAIN="aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io"
+        
+        # Get certificate info
+        CERT_INFO=$(echo | openssl s_client -servername $DOMAIN -connect $DOMAIN:443 2>/dev/null | openssl x509 -noout -dates 2>/dev/null)
+        
+        if [ $? -eq 0 ]; then
+          echo "Certificate information:"
+          echo "$CERT_INFO"
+          
+          # Check expiration
+          EXPIRY_DATE=$(echo "$CERT_INFO" | grep "notAfter" | cut -d= -f2)
+          EXPIRY_TIMESTAMP=$(date -d "$EXPIRY_DATE" +%s 2>/dev/null || echo "0")
+          CURRENT_TIMESTAMP=$(date +%s)
+          DAYS_UNTIL_EXPIRY=$(( (EXPIRY_TIMESTAMP - CURRENT_TIMESTAMP) / 86400 ))
+          
+          echo "Days until expiry: $DAYS_UNTIL_EXPIRY"
+          
+          if [ $DAYS_UNTIL_EXPIRY -lt 30 ]; then
+            echo "⚠️ WARNING: SSL certificate expires in $DAYS_UNTIL_EXPIRY days"
+          elif [ $DAYS_UNTIL_EXPIRY -lt 60 ]; then
+            echo "📝 Notice: SSL certificate expires in $DAYS_UNTIL_EXPIRY days"
+          else
+            echo "✅ SSL certificate is valid for $DAYS_UNTIL_EXPIRY days"
+          fi
+        else
+          echo "❌ Could not retrieve SSL certificate information"
+        fi
+
+  infrastructure-monitoring:
+    name: 🏗️ Infrastructure Monitoring
+    runs-on: ubuntu-latest
+    if: inputs.deep_check
+    
+    steps:
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 📊 Container App Status
+      run: |
+        echo "📊 Checking Container App status..."
+        
+        # Get container app status
+        APP_STATUS=$(az containerapp show \
+          --name aviation-compliance-app \
+          --resource-group aviation-compliance-rg \
+          --query 'properties.provisioningState' \
+          --output tsv)
+        
+        RUNNING_STATUS=$(az containerapp show \
+          --name aviation-compliance-app \
+          --resource-group aviation-compliance-rg \
+          --query 'properties.runningStatus' \
+          --output tsv)
+        
+        echo "Provisioning State: $APP_STATUS"
+        echo "Running Status: $RUNNING_STATUS"
+        
+        if [ "$APP_STATUS" = "Succeeded" ] && [ "$RUNNING_STATUS" = "Running" ]; then
+          echo "✅ Container App is healthy"
+        else
+          echo "⚠️ Container App status issues detected"
+        fi
+
+    - name: 🐳 Registry Health Check
+      run: |
+        echo "🐳 Checking Container Registry..."
+        
+        # Check registry status
+        REGISTRY_STATUS=$(az acr show \
+          --name aviationcomplianceacr \
+          --query 'provisioningState' \
+          --output tsv)
+        
+        echo "Registry Status: $REGISTRY_STATUS"
+        
+        if [ "$REGISTRY_STATUS" = "Succeeded" ]; then
+          echo "✅ Container Registry is healthy"
+          
+          # Check recent images
+          echo "Recent images:"
+          az acr repository show-tags \
+            --name aviationcomplianceacr \
+            --repository aviation-compliance-api \
+            --orderby time_desc \
+            --top 5 \
+            --output table
+        else
+          echo "⚠️ Container Registry issues detected"
+        fi
+
+  generate-monitoring-report:
+    name: 📋 Generate Monitoring Report
+    runs-on: ubuntu-latest
+    needs: [health-monitoring, security-monitoring, infrastructure-monitoring]
+    if: always()
+    
+    steps:
+    - name: 📋 Create Monitoring Report
+      run: |
+        cat << EOF > monitoring-report.md
+        # 📊 System Monitoring Report
+        
+        **Date:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+        **Workflow:** ${{ github.workflow }}
+        **Run ID:** ${{ github.run_id }}
+        
+        ## 📈 Health Status
+        
+        | Component | Status | Notes |
+        |-----------|--------|-------|
+        | Health Monitoring | ${{ needs.health-monitoring.result }} | Basic health checks |
+        | Security Monitoring | ${{ needs.security-monitoring.result }} | SSL and headers |
+        | Infrastructure Monitoring | ${{ needs.infrastructure-monitoring.result }} | Azure resources |
+        
+        ## 🔗 Quick Links
+        
+        - [Production App](https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io)
+        - [API Documentation](https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/docs)
+        - [Health Endpoint](https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/health)
+        
+        ## 📊 Summary
+        
+        - **Overall Status:** $(if [ "${{ needs.health-monitoring.result }}" = "success" ]; then echo "✅ Healthy"; else echo "❌ Issues Detected"; fi)
+        - **Security Status:** $(if [ "${{ needs.security-monitoring.result }}" = "success" ] || [ "${{ needs.security-monitoring.result }}" = "skipped" ]; then echo "✅ Secure"; else echo "⚠️ Needs Attention"; fi)
+        - **Infrastructure:** $(if [ "${{ needs.infrastructure-monitoring.result }}" = "success" ] || [ "${{ needs.infrastructure-monitoring.result }}" = "skipped" ]; then echo "✅ Operational"; else echo "⚠️ Issues Found"; fi)
+        
+        EOF
+
+    - name: 📤 Upload Monitoring Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: monitoring-report-${{ github.run_number }}
+        path: monitoring-report.md
+        retention-days: 7

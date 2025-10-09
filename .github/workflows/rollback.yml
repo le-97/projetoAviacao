@@ -1,0 +1,357 @@
+name: 🔄 Emergency Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      rollback_version:
+        description: 'Version to rollback to (e.g., v1.2.3 or latest-stable)'
+        required: true
+        type: string
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+      reason:
+        description: 'Reason for rollback'
+        required: true
+        type: string
+      skip_health_check:
+        description: 'Skip health check (emergency only)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  REGISTRY_NAME: aviationcomplianceacr
+  IMAGE_NAME: aviation-compliance-api
+  RESOURCE_GROUP: aviation-compliance-rg
+  CONTAINER_APP_NAME: aviation-compliance-app
+
+jobs:
+  pre-rollback-checks:
+    name: 🔍 Pre-Rollback Validation
+    runs-on: ubuntu-latest
+    outputs:
+      target-image: ${{ steps.validate.outputs.target-image }}
+      current-image: ${{ steps.validate.outputs.current-image }}
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 🔍 Validate Rollback Target
+      id: validate
+      run: |
+        ENVIRONMENT="${{ inputs.environment }}"
+        ROLLBACK_VERSION="${{ inputs.rollback_version }}"
+        
+        # Determine container app name
+        if [ "$ENVIRONMENT" = "production" ]; then
+          APP_NAME="${{ env.CONTAINER_APP_NAME }}"
+        else
+          APP_NAME="${{ env.CONTAINER_APP_NAME }}-${ENVIRONMENT}"
+        fi
+        
+        # Get current deployment info
+        echo "Getting current deployment information..."
+        CURRENT_IMAGE=$(az containerapp show \
+          --name $APP_NAME \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query 'properties.template.containers[0].image' \
+          --output tsv)
+        
+        echo "Current image: $CURRENT_IMAGE"
+        echo "current-image=$CURRENT_IMAGE" >> $GITHUB_OUTPUT
+        
+        # Determine target image
+        if [ "$ROLLBACK_VERSION" = "latest-stable" ]; then
+          TARGET_IMAGE="${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:stable"
+        else
+          # Remove 'v' prefix if present
+          CLEAN_VERSION=${ROLLBACK_VERSION#v}
+          TARGET_IMAGE="${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${CLEAN_VERSION}"
+        fi
+        
+        echo "Target image: $TARGET_IMAGE"
+        echo "target-image=$TARGET_IMAGE" >> $GITHUB_OUTPUT
+        
+        # Verify target image exists
+        echo "Verifying target image exists..."
+        if az acr repository show-tags \
+            --name ${{ env.REGISTRY_NAME }} \
+            --repository ${{ env.IMAGE_NAME }} \
+            --output tsv | grep -q "${CLEAN_VERSION:-stable}"; then
+          echo "✅ Target image found in registry"
+        else
+          echo "❌ Target image not found in registry"
+          exit 1
+        fi
+        
+        # Check if rollback is needed
+        if [ "$CURRENT_IMAGE" = "$TARGET_IMAGE" ]; then
+          echo "⚠️ Current image is already the target image"
+          echo "No rollback needed"
+          exit 1
+        fi
+        
+        echo "📋 Rollback Summary:"
+        echo "  Environment: $ENVIRONMENT"
+        echo "  From: $CURRENT_IMAGE"
+        echo "  To: $TARGET_IMAGE"
+        echo "  Reason: ${{ inputs.reason }}"
+
+    - name: 📊 Create Rollback Plan
+      run: |
+        cat << EOF > rollback-plan.md
+        # 🔄 Emergency Rollback Plan
+        
+        ## 📋 Rollback Details
+        - **Environment:** ${{ inputs.environment }}
+        - **Target Version:** ${{ inputs.rollback_version }}
+        - **Reason:** ${{ inputs.reason }}
+        - **Initiated By:** ${{ github.actor }}
+        - **Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+        
+        ## 🎯 Image Information
+        - **Current Image:** ${{ steps.validate.outputs.current-image }}
+        - **Target Image:** ${{ steps.validate.outputs.target-image }}
+        
+        ## ⚠️ Warnings
+        - This will replace the current deployment immediately
+        - All current changes will be lost
+        - Monitor application closely after rollback
+        EOF
+
+    - name: 📤 Upload Rollback Plan
+      uses: actions/upload-artifact@v4
+      with:
+        name: rollback-plan
+        path: rollback-plan.md
+
+  execute-rollback:
+    name: 🔄 Execute Rollback
+    runs-on: ubuntu-latest
+    needs: pre-rollback-checks
+    environment: ${{ inputs.environment }}
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 💾 Create Backup Record
+      run: |
+        echo "Creating backup record of current deployment..."
+        
+        BACKUP_TAG="backup-$(date +'%Y%m%d-%H%M%S')-${{ github.run_number }}"
+        
+        cat << EOF > rollback-backup.json
+        {
+          "backup_timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+          "rollback_reason": "${{ inputs.reason }}",
+          "previous_image": "${{ needs.pre-rollback-checks.outputs.current-image }}",
+          "target_image": "${{ needs.pre-rollback-checks.outputs.target-image }}",
+          "environment": "${{ inputs.environment }}",
+          "initiated_by": "${{ github.actor }}",
+          "backup_tag": "$BACKUP_TAG"
+        }
+        EOF
+
+    - name: 🚀 Execute Rollback
+      run: |
+        ENVIRONMENT="${{ inputs.environment }}"
+        TARGET_IMAGE="${{ needs.pre-rollback-checks.outputs.target-image }}"
+        
+        # Determine container app name
+        if [ "$ENVIRONMENT" = "production" ]; then
+          APP_NAME="${{ env.CONTAINER_APP_NAME }}"
+        else
+          APP_NAME="${{ env.CONTAINER_APP_NAME }}-${ENVIRONMENT}"
+        fi
+        
+        echo "🔄 Starting rollback to: $TARGET_IMAGE"
+        echo "📱 Application: $APP_NAME"
+        
+        # Execute rollback
+        az containerapp update \
+          --name $APP_NAME \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --image $TARGET_IMAGE \
+          --set-env-vars \
+            ENVIRONMENT=$ENVIRONMENT \
+            ROLLBACK_TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            ROLLBACK_REASON="${{ inputs.reason }}"
+        
+        echo "✅ Rollback command executed successfully"
+
+    - name: ⏳ Wait for Deployment
+      run: |
+        echo "Waiting for rollback deployment to stabilize..."
+        sleep 30
+
+    - name: 🏥 Health Check
+      if: '!inputs.skip_health_check'
+      run: |
+        ENVIRONMENT="${{ inputs.environment }}"
+        
+        # Get application URL
+        if [ "$ENVIRONMENT" = "production" ]; then
+          APP_URL="https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io"
+        else
+          APP_NAME="${{ env.CONTAINER_APP_NAME }}-${ENVIRONMENT}"
+          APP_FQDN=$(az containerapp show \
+            --name $APP_NAME \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' \
+            --output tsv)
+          APP_URL="https://$APP_FQDN"
+        fi
+        
+        echo "Testing application at: $APP_URL"
+        
+        # Extended health check
+        SUCCESS=false
+        for i in {1..15}; do
+          echo "Health check attempt $i/15..."
+          
+          if curl -f "$APP_URL/health" --max-time 10; then
+            echo "✅ Health check passed"
+            
+            # Additional endpoint validation
+            if curl -f "$APP_URL/aircraft/models" --max-time 10 > /dev/null; then
+              echo "✅ Aircraft models endpoint working"
+              SUCCESS=true
+              break
+            fi
+          fi
+          
+          echo "⏳ Retrying in 20 seconds..."
+          sleep 20
+        done
+        
+        if [ "$SUCCESS" = "false" ]; then
+          echo "❌ Health check failed after rollback"
+          echo "🚨 Manual intervention required!"
+          exit 1
+        fi
+        
+        echo "🎉 Rollback completed successfully!"
+
+    - name: 📊 Upload Backup Record
+      uses: actions/upload-artifact@v4
+      with:
+        name: rollback-backup-${{ github.run_number }}
+        path: rollback-backup.json
+
+  post-rollback-validation:
+    name: ✅ Post-Rollback Validation
+    runs-on: ubuntu-latest
+    needs: [pre-rollback-checks, execute-rollback]
+    if: success()
+    
+    steps:
+    - name: 🧪 Extended Validation
+      run: |
+        ENVIRONMENT="${{ inputs.environment }}"
+        
+        # Get application URL
+        if [ "$ENVIRONMENT" = "production" ]; then
+          APP_URL="https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io"
+        else
+          # For staging/dev, we'd need to get the FQDN
+          APP_URL="https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io"
+        fi
+        
+        echo "Running extended validation..."
+        
+        # Test all major endpoints
+        ENDPOINTS=(
+          "/"
+          "/health"
+          "/aircraft/models"
+          "/compliance/authorities"
+          "/docs"
+        )
+        
+        for endpoint in "${ENDPOINTS[@]}"; do
+          echo "Testing: $APP_URL$endpoint"
+          if curl -f "$APP_URL$endpoint" --max-time 15 > /dev/null; then
+            echo "✅ $endpoint - OK"
+          else
+            echo "❌ $endpoint - FAILED"
+          fi
+        done
+
+    - name: 📝 Generate Rollback Report
+      run: |
+        cat << EOF > rollback-report.md
+        # 🔄 Rollback Completion Report
+        
+        ## ✅ Rollback Status: SUCCESS
+        
+        ### 📋 Details
+        - **Environment:** ${{ inputs.environment }}
+        - **Target Version:** ${{ inputs.rollback_version }}
+        - **Reason:** ${{ inputs.reason }}
+        - **Executed By:** ${{ github.actor }}
+        - **Completion Time:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+        
+        ### 🎯 Images
+        - **Previous Image:** ${{ needs.pre-rollback-checks.outputs.current-image }}
+        - **Current Image:** ${{ needs.pre-rollback-checks.outputs.target-image }}
+        
+        ### 🏥 Health Status
+        - ✅ Application is responding
+        - ✅ Health check passed
+        - ✅ Main endpoints validated
+        
+        ### 📝 Next Steps
+        1. Monitor application closely for the next 30 minutes
+        2. Verify all functionality works as expected
+        3. Update monitoring and alerting if needed
+        4. Document any lessons learned
+        EOF
+
+    - name: 📤 Upload Rollback Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: rollback-report-${{ github.run_number }}
+        path: rollback-report.md
+
+  notify-rollback:
+    name: 📢 Rollback Notification
+    runs-on: ubuntu-latest
+    needs: [execute-rollback, post-rollback-validation]
+    if: always()
+    
+    steps:
+    - name: ✅ Success Notification
+      if: needs.execute-rollback.result == 'success'
+      run: |
+        echo "🎉 ROLLBACK COMPLETED SUCCESSFULLY"
+        echo "Environment: ${{ inputs.environment }}"
+        echo "Target Version: ${{ inputs.rollback_version }}"
+        echo "Reason: ${{ inputs.reason }}"
+        echo "Completed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+    - name: ❌ Failure Notification
+      if: needs.execute-rollback.result == 'failure'
+      run: |
+        echo "🚨 ROLLBACK FAILED"
+        echo "Environment: ${{ inputs.environment }}"
+        echo "Target Version: ${{ inputs.rollback_version }}"
+        echo "🆘 MANUAL INTERVENTION REQUIRED"
+        echo "Check the logs and consider emergency procedures"

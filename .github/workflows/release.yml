@@ -1,0 +1,289 @@
+name: 🏷️ Automated Release
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+      prerelease:
+        description: 'Pre-release'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  REGISTRY_NAME: aviationcomplianceacr
+  IMAGE_NAME: aviation-compliance-api
+
+jobs:
+  semantic-release:
+    name: 🚀 Semantic Release
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.semantic.outputs.new_release_published }}
+      version: ${{ steps.semantic.outputs.new_release_version }}
+      changelog: ${{ steps.semantic.outputs.new_release_notes }}
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: 📦 Install Semantic Release
+      run: |
+        npm install -g semantic-release \
+          @semantic-release/git \
+          @semantic-release/github \
+          @semantic-release/changelog \
+          @semantic-release/commit-analyzer \
+          @semantic-release/release-notes-generator
+
+    - name: 📝 Create Release Configuration
+      run: |
+        cat > .releaserc.json << 'EOF'
+        {
+          "branches": ["main"],
+          "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            ["@semantic-release/changelog", {
+              "changelogFile": "CHANGELOG.md"
+            }],
+            ["@semantic-release/git", {
+              "assets": ["CHANGELOG.md", "package.json"],
+              "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+            }],
+            ["@semantic-release/github", {
+              "assets": [
+                {"path": "CHANGELOG.md", "label": "Changelog"}
+              ]
+            }]
+          ]
+        }
+        EOF
+
+    - name: 🏷️ Generate Release
+      id: semantic
+      run: |
+        # Manual release type override
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          case "${{ inputs.release_type }}" in
+            "major")
+              export SEMANTIC_RELEASE_TYPE="major"
+              ;;
+            "minor")
+              export SEMANTIC_RELEASE_TYPE="minor"
+              ;;
+            "patch")
+              export SEMANTIC_RELEASE_TYPE="patch"
+              ;;
+          esac
+        fi
+        
+        # Run semantic release
+        npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker-release:
+    name: 🐳 Docker Release
+    runs-on: ubuntu-latest
+    needs: semantic-release
+    if: needs.semantic-release.outputs.released == 'true'
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 🐳 Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 🔑 Login to Azure Container Registry
+      run: |
+        az acr login --name ${{ env.REGISTRY_NAME }}
+
+    - name: 🏗️ Build and Push Release Image
+      run: |
+        VERSION="${{ needs.semantic-release.outputs.version }}"
+        
+        # Build multi-platform image
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --tag ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${VERSION} \
+          --tag ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest \
+          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+          --build-arg VERSION=${VERSION} \
+          --build-arg VCS_REF=${{ github.sha }} \
+          --label "org.opencontainers.image.version=${VERSION}" \
+          --label "org.opencontainers.image.revision=${{ github.sha }}" \
+          --label "org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+          --file Dockerfile.production \
+          --push \
+          .
+
+    - name: 🏷️ Tag Latest Stable
+      run: |
+        VERSION="${{ needs.semantic-release.outputs.version }}"
+        
+        # Create stable tag
+        docker pull ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${VERSION}
+        docker tag ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${VERSION} \
+                   ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:stable
+        docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:stable
+
+  deploy-release:
+    name: 🚀 Deploy Release
+    runs-on: ubuntu-latest
+    needs: [semantic-release, docker-release]
+    if: needs.semantic-release.outputs.released == 'true'
+    environment: production
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔐 Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 🚀 Deploy Release to Production
+      run: |
+        VERSION="${{ needs.semantic-release.outputs.version }}"
+        IMAGE_TAG="${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${VERSION}"
+        
+        echo "Deploying release version: $VERSION"
+        
+        # Update production container app
+        az containerapp update \
+          --name aviation-compliance-app \
+          --resource-group aviation-compliance-rg \
+          --image $IMAGE_TAG \
+          --set-env-vars \
+            ENVIRONMENT=production \
+            VERSION=${VERSION} \
+            RELEASE_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+    - name: 🏥 Production Health Check
+      run: |
+        echo "Waiting for deployment to be ready..."
+        sleep 60
+        
+        # Extended health check for release
+        for i in {1..20}; do
+          if curl -f https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/health; then
+            echo "✅ Release deployment successful!"
+            
+            # Verify version endpoint
+            VERSION_RESPONSE=$(curl -s https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/)
+            echo "API Response: $VERSION_RESPONSE"
+            
+            # Verify all main endpoints
+            curl -f https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/aircraft/models
+            curl -f https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/compliance/authorities
+            curl -f https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/docs
+            
+            echo "🎉 All endpoints verified successfully!"
+            break
+          else
+            echo "⏳ Attempt $i/20 failed, retrying in 15 seconds..."
+            sleep 15
+          fi
+        done
+
+  notify-release:
+    name: 📢 Notify Release
+    runs-on: ubuntu-latest
+    needs: [semantic-release, deploy-release]
+    if: needs.semantic-release.outputs.released == 'true'
+    
+    steps:
+    - name: 🎉 Release Notification
+      run: |
+        VERSION="${{ needs.semantic-release.outputs.version }}"
+        
+        echo "🚀 Aviation Compliance API Release $VERSION"
+        echo "📅 Release Date: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+        echo "🌐 Live URL: https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io"
+        echo "📚 API Docs: https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/docs"
+        echo "🏷️ Docker Image: ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:$VERSION"
+        
+        # Create release summary
+        cat << EOF > release-summary.md
+        ## 🚀 Release $VERSION Successfully Deployed!
+        
+        ### 📋 Release Information
+        - **Version:** $VERSION
+        - **Release Date:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+        - **Commit:** ${{ github.sha }}
+        - **Build Number:** ${{ github.run_number }}
+        
+        ### 🔗 Important Links
+        - **🌐 Live Application:** https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io
+        - **📚 API Documentation:** https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/docs  
+        - **❤️ Health Check:** https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/health
+        
+        ### 🐳 Docker Image
+        \`\`\`
+        ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:$VERSION
+        \`\`\`
+        
+        ### 📝 Release Notes
+        ${{ needs.semantic-release.outputs.changelog }}
+        EOF
+
+    - name: 📊 Upload Release Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-summary-${{ needs.semantic-release.outputs.version }}
+        path: release-summary.md
+
+  create-deployment-tag:
+    name: 🏷️ Create Deployment Tag
+    runs-on: ubuntu-latest
+    needs: [semantic-release, deploy-release]
+    if: needs.semantic-release.outputs.released == 'true'
+    
+    steps:
+    - name: 📂 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🏷️ Create Deployment Tag
+      run: |
+        VERSION="${{ needs.semantic-release.outputs.version }}"
+        DEPLOY_TAG="deploy-prod-$VERSION-$(date +'%Y%m%d-%H%M%S')"
+        
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        
+        git tag -a $DEPLOY_TAG -m "Production deployment of version $VERSION"
+        git push origin $DEPLOY_TAG
+        
+        echo "Created deployment tag: $DEPLOY_TAG"
