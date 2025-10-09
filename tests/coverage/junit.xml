@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="35" failures="6" errors="0" time="34.863">
-  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:24:58" time="6.36" tests="6">
-    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.23">
+<testsuites name="jest tests" tests="35" failures="6" errors="0" time="45.758">
+  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:35:42" time="12.058" tests="6">
+    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.181">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.185">
+    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.151">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.246">
+    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.15">
     </testcase>
-    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.155">
+    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.154">
       <failure>Error: expect(received).toHaveProperty(path)
 
 Expected path: &quot;service&quot;
@@ -17,19 +17,19 @@ Received value: {&quot;aircraft_models&quot;: 7, &quot;documentation&quot;: &quo
     at Object.toHaveProperty (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\analytics.test.js:59:29)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.458">
+    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.477">
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.151">
+    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.163">
     </testcase>
   </testsuite>
-  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:24:58" time="6.364" tests="6">
-    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.229">
+  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:35:42" time="12.17" tests="6">
+    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.196">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.185">
+    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.149">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.244">
+    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.165">
     </testcase>
-    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.15">
+    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.156">
       <failure>Error: expect(received).toHaveProperty(path)
 
 Expected path: &quot;service&quot;
@@ -39,33 +39,33 @@ Received value: {&quot;aircraft_models&quot;: 7, &quot;documentation&quot;: &quo
     at Object.toHaveProperty (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:59:29)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.463">
+    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.497">
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.15">
-    </testcase>
-  </testsuite>
-  <testsuite name="Aircraft Endpoints" errors="0" failures="0" skipped="0" timestamp="2025-10-09T03:24:58" time="7.287" tests="9">
-    <testcase classname="Aircraft Endpoints GET /aircraft/models should return all aircraft models" name="Aircraft Endpoints GET /aircraft/models should return all aircraft models" time="0.228">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/models should have consistent data structure" name="Aircraft Endpoints GET /aircraft/models should have consistent data structure" time="0.185">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" time="0.247">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" time="0.151">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" time="0.148">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" time="0.191">
-    </testcase>
-    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" name="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" time="0.446">
-    </testcase>
-    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" name="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" time="0.188">
-    </testcase>
-    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" name="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" time="0.613">
+    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.157">
     </testcase>
   </testsuite>
-  <testsuite name="API Contract Tests" errors="0" failures="4" skipped="0" timestamp="2025-10-09T03:24:58" time="10.992" tests="14">
-    <testcase classname="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" name="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" time="0.013">
+  <testsuite name="Aircraft Endpoints" errors="0" failures="0" skipped="0" timestamp="2025-10-09T03:35:42" time="12.691" tests="9">
+    <testcase classname="Aircraft Endpoints GET /aircraft/models should return all aircraft models" name="Aircraft Endpoints GET /aircraft/models should return all aircraft models" time="0.169">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/models should have consistent data structure" name="Aircraft Endpoints GET /aircraft/models should have consistent data structure" time="0.15">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" time="0.154">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" time="0.156">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" time="0.153">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" time="0.153">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" name="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" time="0.468">
+    </testcase>
+    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" name="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" time="0.158">
+    </testcase>
+    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" name="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" time="0.629">
+    </testcase>
+  </testsuite>
+  <testsuite name="API Contract Tests" errors="0" failures="4" skipped="0" timestamp="2025-10-09T03:35:42" time="16.981" tests="14">
+    <testcase classname="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" name="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" time="0.029">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
 Expected: &quot;3.0.0&quot;
@@ -87,7 +87,7 @@ Received: &quot;4.0.0&quot;
     at runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="API Contract Tests OpenAPI Specification should document all endpoints" name="API Contract Tests OpenAPI Specification should document all endpoints" time="0.002">
+    <testcase classname="API Contract Tests OpenAPI Specification should document all endpoints" name="API Contract Tests OpenAPI Specification should document all endpoints" time="0.011">
       <failure>Error: expect(received).toHaveProperty(path)
 
 Expected path: &quot;/compliance/check&quot;
@@ -113,7 +113,7 @@ Received value: {&quot;/&quot;: {&quot;get&quot;: {&quot;description&quot;: &quo
     at runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:444:34)
     at Object.worker (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
     </testcase>
-    <testcase classname="API Contract Tests Response Schema Validation should validate health endpoint response" name="API Contract Tests Response Schema Validation should validate health endpoint response" time="0.191">
+    <testcase classname="API Contract Tests Response Schema Validation should validate health endpoint response" name="API Contract Tests Response Schema Validation should validate health endpoint response" time="0.226">
       <failure>Error: expect(received).toBe(expected) // Object.is equality
 
 Expected: true
@@ -121,17 +121,17 @@ Received: false
     at Object.toBe (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:152:21)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft models response" name="API Contract Tests Response Schema Validation should validate aircraft models response" time="0.219">
+    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft models response" name="API Contract Tests Response Schema Validation should validate aircraft models response" time="0.154">
     </testcase>
-    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft specifications response" name="API Contract Tests Response Schema Validation should validate aircraft specifications response" time="0.153">
+    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft specifications response" name="API Contract Tests Response Schema Validation should validate aircraft specifications response" time="0.166">
     </testcase>
-    <testcase classname="API Contract Tests Response Schema Validation should validate compliance check response" name="API Contract Tests Response Schema Validation should validate compliance check response" time="0.157">
+    <testcase classname="API Contract Tests Response Schema Validation should validate compliance check response" name="API Contract Tests Response Schema Validation should validate compliance check response" time="0.163">
     </testcase>
-    <testcase classname="API Contract Tests Response Schema Validation should validate all aircraft specifications" name="API Contract Tests Response Schema Validation should validate all aircraft specifications" time="1.255">
+    <testcase classname="API Contract Tests Response Schema Validation should validate all aircraft specifications" name="API Contract Tests Response Schema Validation should validate all aircraft specifications" time="1.204">
     </testcase>
-    <testcase classname="API Contract Tests Error Response Validation should validate 404 error responses" name="API Contract Tests Error Response Validation should validate 404 error responses" time="0.189">
+    <testcase classname="API Contract Tests Error Response Validation should validate 404 error responses" name="API Contract Tests Error Response Validation should validate 404 error responses" time="0.163">
     </testcase>
-    <testcase classname="API Contract Tests Error Response Validation should validate validation error responses" name="API Contract Tests Error Response Validation should validate validation error responses" time="0.147">
+    <testcase classname="API Contract Tests Error Response Validation should validate validation error responses" name="API Contract Tests Error Response Validation should validate validation error responses" time="0.158">
       <failure>Error: expect(received).toContain(expected) // indexOf
 
 Expected value: 404
@@ -139,15 +139,15 @@ Received array: [400, 422]
     at Object.toContain (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:245:28)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="API Contract Tests API Consistency should have consistent aircraft model references" name="API Contract Tests API Consistency should have consistent aircraft model references" time="1.466">
+    <testcase classname="API Contract Tests API Consistency should have consistent aircraft model references" name="API Contract Tests API Consistency should have consistent aircraft model references" time="1.557">
     </testcase>
-    <testcase classname="API Contract Tests API Consistency should have consistent authority references" name="API Contract Tests API Consistency should have consistent authority references" time="0.739">
+    <testcase classname="API Contract Tests API Consistency should have consistent authority references" name="API Contract Tests API Consistency should have consistent authority references" time="0.795">
     </testcase>
-    <testcase classname="API Contract Tests API Consistency should maintain data consistency across endpoints" name="API Contract Tests API Consistency should maintain data consistency across endpoints" time="0.147">
+    <testcase classname="API Contract Tests API Consistency should maintain data consistency across endpoints" name="API Contract Tests API Consistency should maintain data consistency across endpoints" time="0.151">
     </testcase>
-    <testcase classname="API Contract Tests Response Headers Validation should have correct content-type headers" name="API Contract Tests Response Headers Validation should have correct content-type headers" time="0.968">
+    <testcase classname="API Contract Tests Response Headers Validation should have correct content-type headers" name="API Contract Tests Response Headers Validation should have correct content-type headers" time="0.986">
     </testcase>
-    <testcase classname="API Contract Tests Response Headers Validation should have CORS headers" name="API Contract Tests Response Headers Validation should have CORS headers" time="0.146">
+    <testcase classname="API Contract Tests Response Headers Validation should have CORS headers" name="API Contract Tests Response Headers Validation should have CORS headers" time="0.148">
     </testcase>
   </testsuite>
 </testsuites>
