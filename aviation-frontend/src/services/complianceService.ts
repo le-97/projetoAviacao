@@ -258,7 +258,7 @@ const aircraftSpecifications: Record<string, AircraftSpecification> = {
 };
 
 export class ComplianceService {
-  private static apiBaseUrl = 'https://aviation-backend.greensand-8aeaae63.brazilsouth.azurecontainerapps.io';
+  private static apiBaseUrl = 'https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io';
 
   /**
    * Análise de lacunas entre países de origem e destino
@@ -440,7 +440,7 @@ export class ComplianceService {
   static async validateComplianceWithAI(aircraftModel: string, targetCountryCode: string): Promise<AIComplianceReport> {
     try {
       // Tenta usar endpoint AI primeiro
-      const response = await fetch(`${this.apiBaseUrl}/compliance/ai-analysis/${aircraftModel}/${targetCountryCode}`, {
+      const response = await fetch(`${this.apiBaseUrl}/compliance/check/${aircraftModel}/${targetCountryCode}?check_type=full`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -469,19 +469,16 @@ export class ComplianceService {
   static async validateCompliance(aircraftModel: string, targetCountryCode: string): Promise<ComplianceReport> {
     try {
       // Primeiro, tenta obter dados da API backend
-      const response = await fetch(`${this.apiBaseUrl}/api/compliance/validate`, {
-        method: 'POST',
+      const response = await fetch(`${this.apiBaseUrl}/compliance/check/${aircraftModel}/${targetCountryCode}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          aircraft: aircraftModel,
-          targetCountry: targetCountryCode
-        })
+        }
       });
 
       if (response.ok) {
-        return await response.json();
+        const apiResult = await response.json();
+        return this.convertApiResponseToComplianceReport(apiResult, aircraftModel, targetCountryCode);
       }
     } catch (error) {
       console.warn('API backend não disponível, usando validação local:', error);
@@ -576,6 +573,40 @@ export class ComplianceService {
     recommendations.push('Monitor regulatory changes in target jurisdiction');
     
     return recommendations;
+  }
+
+  /**
+   * Converte resposta da API real para formato do ComplianceReport
+   */
+  private static convertApiResponseToComplianceReport(apiResult: any, aircraftModel: string, targetCountryCode: string): ComplianceReport {
+    const targetCountry = countryRegulations[targetCountryCode.toUpperCase()];
+    
+    return {
+      aircraft: apiResult.aircraft_model || aircraftModel,
+      originCountry: 'Brasil (ANAC)',
+      targetCountry: targetCountry?.countryName || targetCountryCode,
+      regulations: [{
+        authority: apiResult.authority || 'Unknown Authority',
+        status: apiResult.compliance_status?.toLowerCase() === 'compliant' ? 'compliant' : 
+               apiResult.compliance_status?.toLowerCase() === 'partial' ? 'pending' : 'non-compliant',
+        completionPercentage: apiResult.score || 0,
+        requirements: [
+          'Type Certificate Validation',
+          'Airworthiness Certification',
+          'Noise Compliance Verification',
+          'Emission Standards Check'
+        ],
+        pendingItems: apiResult.compliance_status?.toLowerCase() === 'compliant' ? undefined : [
+          'Additional documentation required',
+          'Regulatory review pending'
+        ]
+      }],
+      overallStatus: apiResult.compliance_status?.toLowerCase() === 'compliant' ? 'compliant' : 
+                    apiResult.compliance_status?.toLowerCase() === 'partial' ? 'pending' : 'non-compliant',
+      riskLevel: apiResult.score >= 90 ? 'low' : apiResult.score >= 70 ? 'medium' : 'high',
+      estimatedCompletionDays: apiResult.compliance_status?.toLowerCase() === 'compliant' ? undefined : 45,
+      generatedAt: new Date().toISOString()
+    };
   }
 
   private static performLocalValidation(aircraftModel: string, targetCountryCode: string): ComplianceReport {
