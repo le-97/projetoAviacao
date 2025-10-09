@@ -1,41 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="6" failures="6" errors="0" time="22.362">
-  <testsuite name="Health Endpoints" errors="0" failures="6" skipped="0" timestamp="2025-10-08T04:21:45" time="22.233" tests="6">
-    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.005">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+<testsuites name="jest tests" tests="35" failures="6" errors="0" time="34.863">
+  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:24:58" time="6.36" tests="6">
+    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.23">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.185">
     </testcase>
-    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.246">
     </testcase>
-    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.155">
+      <failure>Error: expect(received).toHaveProperty(path)
+
+Expected path: &quot;service&quot;
+Received path: []
+
+Received value: {&quot;aircraft_models&quot;: 7, &quot;documentation&quot;: &quot;/docs&quot;, &quot;health_check&quot;: &quot;/health&quot;, &quot;message&quot;: &quot;Aviation Compliance API - Embraer E-Jets&quot;, &quot;status&quot;: &quot;operational&quot;, &quot;supported_authorities&quot;: [&quot;FAA&quot;, &quot;EASA&quot;, &quot;ANAC&quot;, &quot;ICAO&quot;], &quot;version&quot;: &quot;4.0.0&quot;}
+    at Object.toHaveProperty (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\analytics.test.js:59:29)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.458">
     </testcase>
-    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0">
-      <failure>Error: API not ready after 10 attempts
-    at Object.waitForAPI (C:\Users\lelem\Documents\github\projetoAviacao\tests\setup.js:51:17)
+    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.151">
+    </testcase>
+  </testsuite>
+  <testsuite name="Health Endpoints" errors="0" failures="1" skipped="0" timestamp="2025-10-09T03:24:58" time="6.364" tests="6">
+    <testcase classname="Health Endpoints GET /health should return healthy status" name="Health Endpoints GET /health should return healthy status" time="0.229">
+    </testcase>
+    <testcase classname="Health Endpoints GET /health should have correct response headers" name="Health Endpoints GET /health should have correct response headers" time="0.185">
+    </testcase>
+    <testcase classname="Health Endpoints GET /health should respond within acceptable time" name="Health Endpoints GET /health should respond within acceptable time" time="0.244">
+    </testcase>
+    <testcase classname="Health Endpoints GET / should return API information" name="Health Endpoints GET / should return API information" time="0.15">
+      <failure>Error: expect(received).toHaveProperty(path)
+
+Expected path: &quot;service&quot;
+Received path: []
+
+Received value: {&quot;aircraft_models&quot;: 7, &quot;documentation&quot;: &quot;/docs&quot;, &quot;health_check&quot;: &quot;/health&quot;, &quot;message&quot;: &quot;Aviation Compliance API - Embraer E-Jets&quot;, &quot;status&quot;: &quot;operational&quot;, &quot;supported_authorities&quot;: [&quot;FAA&quot;, &quot;EASA&quot;, &quot;ANAC&quot;, &quot;ICAO&quot;], &quot;version&quot;: &quot;4.0.0&quot;}
+    at Object.toHaveProperty (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:59:29)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+    <testcase classname="Health Endpoints Health Check Reliability should handle multiple concurrent requests" name="Health Endpoints Health Check Reliability should handle multiple concurrent requests" time="0.463">
+    </testcase>
+    <testcase classname="Health Endpoints Health Check Reliability should maintain consistent response structure" name="Health Endpoints Health Check Reliability should maintain consistent response structure" time="0.15">
+    </testcase>
+  </testsuite>
+  <testsuite name="Aircraft Endpoints" errors="0" failures="0" skipped="0" timestamp="2025-10-09T03:24:58" time="7.287" tests="9">
+    <testcase classname="Aircraft Endpoints GET /aircraft/models should return all aircraft models" name="Aircraft Endpoints GET /aircraft/models should return all aircraft models" time="0.228">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/models should have consistent data structure" name="Aircraft Endpoints GET /aircraft/models should have consistent data structure" time="0.185">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E170" time="0.247">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E175-E2" time="0.151">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return specifications for E190-E2" time="0.148">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" name="Aircraft Endpoints GET /aircraft/specifications/{model} should return 404 for invalid aircraft model" time="0.191">
+    </testcase>
+    <testcase classname="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" name="Aircraft Endpoints GET /aircraft/specifications/{model} should validate E1 vs E2 differences" time="0.446">
+    </testcase>
+    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" name="Aircraft Endpoints Aircraft Data Integrity should have consistent aircraft count across endpoints" time="0.188">
+    </testcase>
+    <testcase classname="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" name="Aircraft Endpoints Aircraft Data Integrity should have valid specifications for all models" time="0.613">
+    </testcase>
+  </testsuite>
+  <testsuite name="API Contract Tests" errors="0" failures="4" skipped="0" timestamp="2025-10-09T03:24:58" time="10.992" tests="14">
+    <testcase classname="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" name="API Contract Tests OpenAPI Specification should have valid OpenAPI specification" time="0.013">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;3.0.0&quot;
+Received: &quot;4.0.0&quot;
+    at Object.toBe (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:46:40)
+    at Promise.then.completed (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:316:40)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.&lt;anonymous&gt; (C:\Users\lelem\Documents\github\projetoAviacao\tests\integration\health.test.js:17:5)</failure>
+    at _runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="API Contract Tests OpenAPI Specification should document all endpoints" name="API Contract Tests OpenAPI Specification should document all endpoints" time="0.002">
+      <failure>Error: expect(received).toHaveProperty(path)
+
+Expected path: &quot;/compliance/check&quot;
+Received path: []
+
+Received value: {&quot;/&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;API root endpoint with basic information.&quot;, &quot;operationId&quot;: &quot;root__get&quot;, &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {}}}, &quot;description&quot;: &quot;Successful Response&quot;}}, &quot;summary&quot;: &quot;Root&quot;, &quot;tags&quot;: [&quot;Root&quot;]}}, &quot;/aircraft/models&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Get all available aircraft models.&quot;, &quot;operationId&quot;: &quot;get_aircraft_models_aircraft_models_get&quot;, &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {}}}, &quot;description&quot;: &quot;Successful Response&quot;}}, &quot;summary&quot;: &quot;Get Aircraft Models&quot;, &quot;tags&quot;: [&quot;Aircraft&quot;]}}, &quot;/aircraft/specifications/{model}&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Get detailed specifications for a specific aircraft model.&quot;, &quot;operationId&quot;: &quot;get_aircraft_specifications_aircraft_specifications__model__get&quot;, &quot;parameters&quot;: [{&quot;in&quot;: &quot;path&quot;, &quot;name&quot;: &quot;model&quot;, &quot;required&quot;: true, &quot;schema&quot;: {&quot;title&quot;: &quot;Model&quot;, &quot;type&quot;: &quot;string&quot;}}], &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {&quot;$ref&quot;: &quot;#/components/schemas/AircraftSpecification&quot;}}}, &quot;description&quot;: &quot;Successful Response&quot;}, &quot;422&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {&quot;$ref&quot;: &quot;#/components/schemas/HTTPValidationError&quot;}}}, &quot;description&quot;: &quot;Validation Error&quot;}}, &quot;summary&quot;: &quot;Get Aircraft Specifications&quot;, &quot;tags&quot;: [&quot;Aircraft&quot;]}}, &quot;/analytics/fleet-metrics&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Get fleet-wide analytics and metrics.&quot;, &quot;operationId&quot;: &quot;get_fleet_metrics_analytics_fleet_metrics_get&quot;, &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {}}}, &quot;description&quot;: &quot;Successful Response&quot;}}, &quot;summary&quot;: &quot;Get Fleet Metrics&quot;, &quot;tags&quot;: [&quot;Analytics&quot;]}}, &quot;/compliance/authorities&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Get all supported compliance authorities and their information.&quot;, &quot;operationId&quot;: &quot;get_compliance_authorities_compliance_authorities_get&quot;, &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {}}}, &quot;description&quot;: &quot;Successful Response&quot;}}, &quot;summary&quot;: &quot;Get Compliance Authorities&quot;, &quot;tags&quot;: [&quot;Compliance&quot;]}}, &quot;/compliance/check/{model}/{authority}&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Perform compliance check for an aircraft model against a specific authority.&quot;, &quot;operationId&quot;: &quot;check_compliance_compliance_check__model___authority__get&quot;, &quot;parameters&quot;: [{&quot;in&quot;: &quot;path&quot;, &quot;name&quot;: &quot;model&quot;, &quot;required&quot;: true, &quot;schema&quot;: {&quot;title&quot;: &quot;Model&quot;, &quot;type&quot;: &quot;string&quot;}}, {&quot;in&quot;: &quot;path&quot;, &quot;name&quot;: &quot;authority&quot;, &quot;required&quot;: true, &quot;schema&quot;: {&quot;title&quot;: &quot;Authority&quot;, &quot;type&quot;: &quot;string&quot;}}, {&quot;description&quot;: &quot;Type of compliance check&quot;, &quot;in&quot;: &quot;query&quot;, &quot;name&quot;: &quot;check_type&quot;, &quot;required&quot;: false, &quot;schema&quot;: {&quot;default&quot;: &quot;full&quot;, &quot;description&quot;: &quot;Type of compliance check&quot;, &quot;title&quot;: &quot;Check Type&quot;, &quot;type&quot;: &quot;string&quot;}}], &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {&quot;$ref&quot;: &quot;#/components/schemas/ComplianceCheckResult&quot;}}}, &quot;description&quot;: &quot;Successful Response&quot;}, &quot;422&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {&quot;$ref&quot;: &quot;#/components/schemas/HTTPValidationError&quot;}}}, &quot;description&quot;: &quot;Validation Error&quot;}}, &quot;summary&quot;: &quot;Check Compliance&quot;, &quot;tags&quot;: [&quot;Compliance&quot;]}}, &quot;/health&quot;: {&quot;get&quot;: {&quot;description&quot;: &quot;Health check endpoint for monitoring and load balancers.&quot;, &quot;operationId&quot;: &quot;health_check_health_get&quot;, &quot;responses&quot;: {&quot;200&quot;: {&quot;content&quot;: {&quot;application/json&quot;: {&quot;schema&quot;: {}}}, &quot;description&quot;: &quot;Successful Response&quot;}}, &quot;summary&quot;: &quot;Health Check&quot;, &quot;tags&quot;: [&quot;Health&quot;]}}}
+    at toHaveProperty (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:65:35)
+    at Array.forEach (&lt;anonymous&gt;)
+    at Object.forEach (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:64:21)
+    at Promise.then.completed (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\utils.js:231:10)
+    at _callCircusTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:252:3)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:126:9)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:121:9)
+    at _runTestsForDescribeBlock (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:121:9)
+    at run (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\run.js:71:3)
+    at runAndTransformResultsToJestFormat (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+    at jestAdapter (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+    at runTestInternal (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:367:16)
+    at runTest (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\runTest.js:444:34)
+    at Object.worker (C:\Users\lelem\Documents\github\projetoAviacao\tests\node_modules\jest-runner\build\testWorker.js:106:12)</failure>
+    </testcase>
+    <testcase classname="API Contract Tests Response Schema Validation should validate health endpoint response" name="API Contract Tests Response Schema Validation should validate health endpoint response" time="0.191">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+    at Object.toBe (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:152:21)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft models response" name="API Contract Tests Response Schema Validation should validate aircraft models response" time="0.219">
+    </testcase>
+    <testcase classname="API Contract Tests Response Schema Validation should validate aircraft specifications response" name="API Contract Tests Response Schema Validation should validate aircraft specifications response" time="0.153">
+    </testcase>
+    <testcase classname="API Contract Tests Response Schema Validation should validate compliance check response" name="API Contract Tests Response Schema Validation should validate compliance check response" time="0.157">
+    </testcase>
+    <testcase classname="API Contract Tests Response Schema Validation should validate all aircraft specifications" name="API Contract Tests Response Schema Validation should validate all aircraft specifications" time="1.255">
+    </testcase>
+    <testcase classname="API Contract Tests Error Response Validation should validate 404 error responses" name="API Contract Tests Error Response Validation should validate 404 error responses" time="0.189">
+    </testcase>
+    <testcase classname="API Contract Tests Error Response Validation should validate validation error responses" name="API Contract Tests Error Response Validation should validate validation error responses" time="0.147">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Expected value: 404
+Received array: [400, 422]
+    at Object.toContain (C:\Users\lelem\Documents\github\projetoAviacao\tests\contracts\api-contracts.test.js:245:28)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</failure>
+    </testcase>
+    <testcase classname="API Contract Tests API Consistency should have consistent aircraft model references" name="API Contract Tests API Consistency should have consistent aircraft model references" time="1.466">
+    </testcase>
+    <testcase classname="API Contract Tests API Consistency should have consistent authority references" name="API Contract Tests API Consistency should have consistent authority references" time="0.739">
+    </testcase>
+    <testcase classname="API Contract Tests API Consistency should maintain data consistency across endpoints" name="API Contract Tests API Consistency should maintain data consistency across endpoints" time="0.147">
+    </testcase>
+    <testcase classname="API Contract Tests Response Headers Validation should have correct content-type headers" name="API Contract Tests Response Headers Validation should have correct content-type headers" time="0.968">
+    </testcase>
+    <testcase classname="API Contract Tests Response Headers Validation should have CORS headers" name="API Contract Tests Response Headers Validation should have CORS headers" time="0.146">
     </testcase>
   </testsuite>
 </testsuites>

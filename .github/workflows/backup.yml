@@ -1,0 +1,77 @@
+name: Backup & Disaster Recovery
+
+on:
+  schedule:
+    # Run daily backup at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup-configuration:
+    runs-on: ubuntu-latest
+    name: Backup Configuration & Data
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Backup Azure Resources Configuration
+      run: |
+        echo "Creating backup of Azure resources configuration..."
+        
+        # Export container app configuration
+        az containerapp show \
+          --name aviation-compliance-app \
+          --resource-group aviation-compliance-rg \
+          --output json > backup-containerapp-config.json
+          
+        # Export container registry information
+        az acr show \
+          --name aviationcomplianceacr \
+          --resource-group aviation-compliance-rg \
+          --output json > backup-registry-config.json
+          
+        echo "✅ Configuration backup completed"
+        
+    - name: Backup Application Data
+      run: |
+        echo "Backing up application data..."
+        
+        # Get current aircraft models data
+        curl -s https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/aircraft/models \
+          > backup-aircraft-data.json
+          
+        # Get authorities data
+        curl -s https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io/compliance/authorities \
+          > backup-authorities-data.json
+          
+        echo "✅ Application data backup completed"
+        
+    - name: Store Backup
+      uses: actions/upload-artifact@v4
+      with:
+        name: daily-backup-${{ github.run_number }}
+        path: |
+          backup-*.json
+        retention-days: 30
+        
+    - name: Verify Backup Integrity
+      run: |
+        echo "Verifying backup integrity..."
+        
+        # Check if backup files are valid JSON
+        for file in backup-*.json; do
+          if jq empty "$file" 2>/dev/null; then
+            echo "✅ $file is valid JSON"
+          else
+            echo "❌ $file is invalid JSON"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All backup files verified"

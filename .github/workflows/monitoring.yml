@@ -1,0 +1,82 @@
+name: Monitoring & Notifications
+
+on:
+  schedule:
+    # Check every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+env:
+  AZURE_APP_URL: https://aviation-compliance-app.graytree-b170d21d.eastus.azurecontainerapps.io
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    name: Application Health Check
+    
+    steps:
+    - name: Check Application Health
+      run: |
+        echo "Checking application health..."
+        
+        # Test main endpoint
+        MAIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.AZURE_APP_URL }}/)
+        echo "Main endpoint status: $MAIN_STATUS"
+        
+        # Test health endpoint
+        HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.AZURE_APP_URL }}/health)
+        echo "Health endpoint status: $HEALTH_STATUS"
+        
+        # Test API docs
+        DOCS_STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.AZURE_APP_URL }}/docs)
+        echo "Docs endpoint status: $DOCS_STATUS"
+        
+        if [ "$MAIN_STATUS" != "200" ] || [ "$HEALTH_STATUS" != "200" ] || [ "$DOCS_STATUS" != "200" ]; then
+          echo "❌ Application health check failed!"
+          exit 1
+        else
+          echo "✅ Application is healthy!"
+        fi
+
+    - name: Performance Check
+      run: |
+        echo "Checking application performance..."
+        
+        # Measure response time
+        RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" ${{ env.AZURE_APP_URL }}/health)
+        echo "Response time: ${RESPONSE_TIME}s"
+        
+        # Check if response time is acceptable (< 5 seconds)
+        if (( $(echo "$RESPONSE_TIME > 5" | bc -l) )); then
+          echo "⚠️  Warning: Response time is slow (${RESPONSE_TIME}s)"
+          exit 1
+        else
+          echo "✅ Performance is good (${RESPONSE_TIME}s)"
+        fi
+
+    - name: API Functionality Check
+      run: |
+        echo "Testing API functionality..."
+        
+        # Test aircraft models endpoint
+        MODELS_RESPONSE=$(curl -s ${{ env.AZURE_APP_URL }}/aircraft/models)
+        MODELS_COUNT=$(echo $MODELS_RESPONSE | jq -r '.total_models // 0')
+        echo "Aircraft models loaded: $MODELS_COUNT"
+        
+        if [ "$MODELS_COUNT" -lt 7 ]; then
+          echo "❌ Expected at least 7 aircraft models, got $MODELS_COUNT"
+          exit 1
+        else
+          echo "✅ Aircraft models loaded correctly"
+        fi
+        
+        # Test authorities endpoint
+        AUTHORITIES_RESPONSE=$(curl -s ${{ env.AZURE_APP_URL }}/compliance/authorities)
+        echo "Authorities response: $AUTHORITIES_RESPONSE"
+        
+    - name: Notify on Failure
+      if: failure()
+      run: |
+        echo "🚨 Application monitoring detected issues!"
+        echo "Timestamp: $(date)"
+        echo "Please check the application at: ${{ env.AZURE_APP_URL }}"
