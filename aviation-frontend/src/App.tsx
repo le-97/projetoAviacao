@@ -43,18 +43,24 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header de Navegação */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-blue-200 sticky top-0 z-50">
+    <div className="min-h-screen" style={{ background: 'var(--aviation-neutral-50)' }}>
+      {/* Header de Navegação - Aviation Premium */}
+      <header className="dashboard-header sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg text-white">
+              <div className="p-2 rounded-lg text-white" style={{ background: 'var(--gradient-aviation-primary)' }}>
                 <Plane className="w-6 h-6" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Sistema de Aviação</h1>
-                <p className="text-sm text-gray-600">Plataforma Integrada de Gestão Aeronáutica</p>
+                <h1 className="text-xl font-bold" style={{ 
+                  fontFamily: 'var(--font-aviation-sans)', 
+                  color: 'var(--aviation-neutral-900)' 
+                }}>Sistema de Aviação</h1>
+                <p className="text-sm" style={{ 
+                  fontFamily: 'var(--font-aviation-sans)', 
+                  color: 'var(--aviation-neutral-600)' 
+                }}>Plataforma Integrada de Gestão Aeronáutica</p>
               </div>
             </div>
             
@@ -83,10 +89,21 @@ function App() {
         <div className="space-y-8">
           {/* Seção de Boas-vindas */}
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="font-bold" style={{ 
+              fontSize: 'var(--text-aviation-3xl)',
+              fontFamily: 'var(--font-aviation-sans)',
+              background: 'var(--gradient-aviation-primary)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
               Bem-vindo ao Sistema de Aviação
             </h2>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            <p className="text-lg max-w-3xl mx-auto" style={{ 
+              fontFamily: 'var(--font-aviation-sans)',
+              fontSize: 'var(--text-aviation-lg)',
+              color: 'var(--aviation-neutral-600)'
+            }}>
               Explore nossa plataforma integrada com validação de conformidade de aeronaves e 
               componentes de interface gerados por inteligência artificial.
             </p>
@@ -99,26 +116,47 @@ function App() {
               return (
                 <Card 
                   key={item.id}
-                  className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 bg-gradient-to-br from-white to-blue-50 border-blue-200"
+                  className="card-aviation cursor-pointer"
+                  style={{ 
+                    border: '1px solid var(--aviation-neutral-200)',
+                    background: 'white'
+                  }}
                   onClick={() => setCurrentPage(item.id)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg text-white">
+                      <div className="p-3 rounded-lg text-white" style={{ 
+                        background: 'var(--gradient-aviation-primary)',
+                        borderRadius: 'var(--radius-aviation-lg)'
+                      }}>
                         <Icon className="w-8 h-8" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        <h3 className="text-xl font-semibold mb-2" style={{ 
+                          fontFamily: 'var(--font-aviation-sans)',
+                          color: 'var(--aviation-neutral-900)'
+                        }}>
                           {item.label}
                         </h3>
-                        <p className="text-gray-600 mb-4">
+                        <p className="mb-4" style={{ 
+                          fontFamily: 'var(--font-aviation-sans)',
+                          color: 'var(--aviation-neutral-600)'
+                        }}>
                           {item.description}
                         </p>
                         <div className="flex items-center justify-between">
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                          <Badge variant="secondary" style={{ 
+                            background: 'var(--aviation-primary-50)',
+                            color: 'var(--aviation-primary-800)',
+                            fontFamily: 'var(--font-aviation-sans)'
+                          }}>
                             {item.id === 'compliance' ? 'Operacional' : 'Demonstração'}
                           </Badge>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" style={{ 
+                            borderColor: 'var(--aviation-primary-500)',
+                            color: 'var(--aviation-primary-600)',
+                            fontFamily: 'var(--font-aviation-sans)'
+                          }}>
                             Acessar →
                           </Button>
                         </div>
@@ -132,50 +170,90 @@ function App() {
 
           {/* Estatísticas Rápidas */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-blue-400">
+            <Card className="metric-card-aviation text-white" style={{ 
+              background: 'var(--gradient-aviation-primary)',
+              borderColor: 'var(--aviation-primary-400)'
+            }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-100 text-sm">Componentes IA</p>
-                    <p className="text-2xl font-bold">10+</p>
+                    <p className="text-sm" style={{ 
+                      color: 'var(--aviation-primary-50)',
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>Componentes IA</p>
+                    <p className="text-2xl font-bold" style={{ 
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>10+</p>
                   </div>
-                  <Sparkles className="w-8 h-8 text-blue-200" />
+                  <Sparkles className="w-8 h-8" style={{ 
+                    color: 'var(--aviation-primary-100)'
+                  }} />
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-green-400">
+            <Card className="metric-card-aviation text-white" style={{ 
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              borderColor: '#34d399'
+            }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-green-100 text-sm">Taxa de Sucesso</p>
-                    <p className="text-2xl font-bold">100%</p>
+                    <p className="text-sm" style={{ 
+                      color: '#d1fae5',
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>Taxa de Sucesso</p>
+                    <p className="text-2xl font-bold" style={{ 
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>100%</p>
                   </div>
-                  <BarChart3 className="w-8 h-8 text-green-200" />
+                  <BarChart3 className="w-8 h-8" style={{ 
+                    color: '#a7f3d0'
+                  }} />
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-purple-400">
+            <Card className="metric-card-aviation text-white" style={{ 
+              background: 'var(--gradient-aviation-accent)',
+              borderColor: 'var(--aviation-accent-400)'
+            }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-purple-100 text-sm">Aeronaves</p>
-                    <p className="text-2xl font-bold">50+</p>
+                    <p className="text-sm" style={{ 
+                      color: 'var(--aviation-accent-50)',
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>Aeronaves</p>
+                    <p className="text-2xl font-bold" style={{ 
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>50+</p>
                   </div>
-                  <Plane className="w-8 h-8 text-purple-200" />
+                  <Plane className="w-8 h-8" style={{ 
+                    color: 'var(--aviation-accent-100)'
+                  }} />
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-orange-400">
+            <Card className="metric-card-aviation text-white" style={{ 
+              background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+              borderColor: '#fb923c'
+            }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-orange-100 text-sm">Conformidade</p>
-                    <p className="text-2xl font-bold">98%</p>
+                    <p className="text-sm" style={{ 
+                      color: '#fed7aa',
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>Conformidade</p>
+                    <p className="text-2xl font-bold" style={{ 
+                      fontFamily: 'var(--font-aviation-sans)'
+                    }}>98%</p>
                   </div>
-                  <Shield className="w-8 h-8 text-orange-200" />
+                  <Shield className="w-8 h-8" style={{ 
+                    color: '#fdba74'
+                  }} />
                 </div>
               </CardContent>
             </Card>

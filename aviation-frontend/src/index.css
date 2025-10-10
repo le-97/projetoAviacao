@@ -1,4 +1,12 @@
-/* Aviation Control System - CSS with shadcn/ui support */
+/* ========================================
+ * AVIATION DESIGN SYSTEM - Professional CSS
+ * Premium Aeronautical Interface
+ * Inspired by: Embraer, NASA, Boeing, SpaceX
+ * ======================================== */
+
+/* Import Professional Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @plugin "tailwindcss-animate";
 
@@ -64,52 +72,446 @@
   }
 }
 
-/* Custom aviation styles preserved */
-.aviation-button {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border: none;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-family: ui-monospace, monospace;
+/* ========================================
+ * AVIATION COMPONENTS - Premium Styles
+ * Following AVIATION_DESIGN_SYSTEM.md
+ * ======================================== */
+
+/* ==========================================
+   SHADCN/UI GLOBAL OVERRIDES
+   ========================================== */
+
+/* Override all buttons globally */
+button, .btn, [role="button"] {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Override Card components */
+[class*="card"] {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Override all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-aviation-sans) !important;
+  color: var(--aviation-neutral-900) !important;
+}
+
+/* Override all paragraph text */
+p {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Override select/input elements */
+select, input, textarea {
+  font-family: var(--font-aviation-sans) !important;
+  border-color: var(--aviation-neutral-300) !important;
+}
+
+/* Override table elements */
+table {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Override badge components */
+[class*="badge"] {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* ==========================================
+   AVIATION COMPONENT CLASSES
+   ========================================== */
+
+/* Primary Button - Aviation Blue */
+.btn-aviation-primary {
+  background: var(--gradient-aviation-primary) !important;
+  color: white !important;
+  padding: var(--space-aviation-2) var(--space-aviation-4);
+  border-radius: var(--radius-aviation-md);
+  font-family: var(--font-aviation-sans) !important;
   font-weight: 600;
-  text-transform: uppercase;
+  border: none !important;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-aviation-sm);
+}
+
+.btn-aviation-primary:hover {
+  box-shadow: var(--shadow-aviation-md) !important;
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* Secondary Button - Technical Style */
+.btn-aviation-secondary {
+  background: transparent;
+  color: var(--aviation-primary-600);
+  border: 2px solid var(--aviation-primary-600);
+  border-radius: var(--radius-aviation-md);
+  padding: var(--space-aviation-3) var(--space-aviation-6);
+  font-weight: 600;
+  font-size: var(--text-aviation-sm);
+  font-family: var(--font-aviation-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-aviation-secondary:hover {
+  background: var(--aviation-primary-50);
+  transform: translateY(-1px);
+}
+
+/* Card Component - Premium Aviation */
+.card-aviation {
+  background: white;
+  border-radius: var(--radius-aviation-lg);
+  box-shadow: var(--shadow-aviation-md);
+  border: 1px solid var(--aviation-neutral-200);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-aviation:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-aviation-xl);
+}
+
+/* Status Card with Side Indicator */
+.card-aviation-status {
+  position: relative;
+}
+
+.card-aviation-status::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--aviation-primary-500);
+}
+
+.card-aviation-status.success::before {
+  background: var(--aviation-success-500);
+}
+
+.card-aviation-status.warning::before {
+  background: var(--aviation-warning-500);
+}
+
+.card-aviation-status.danger::before {
+  background: var(--aviation-danger-500);
+}
+
+/* Navigation - Professional Aviation Interface */
+.navigation-aviation {
+  background: var(--gradient-aviation-dark);
+  border-right: 1px solid var(--aviation-neutral-700);
+  width: 280px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.nav-item-aviation {
+  display: flex;
+  align-items: center;
+  padding: var(--space-aviation-4) var(--space-aviation-6);
+  color: var(--aviation-neutral-300);
+  text-decoration: none;
+  font-family: var(--font-aviation-sans);
+  font-size: var(--text-aviation-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.nav-item-aviation:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--aviation-primary-400);
+  border-left-color: var(--aviation-primary-400);
+}
+
+.nav-item-aviation.active {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--aviation-primary-300);
+  border-left-color: var(--aviation-accent-500);
+}
+
+/* Metric Cards - Aviation Dashboard */
+.metric-card-aviation {
+  background: white;
+  border-radius: var(--radius-aviation-lg);
+  padding: var(--space-aviation-6);
+  box-shadow: var(--shadow-aviation-md);
+  border: 1px solid var(--aviation-neutral-200);
   position: relative;
   overflow: hidden;
 }
 
-.aviation-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+.metric-card-aviation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: var(--gradient-aviation-primary);
+  opacity: 0.1;
+  border-radius: 50%;
+  transform: translate(30px, -30px);
 }
 
-.aviation-button:active {
-  transform: translateY(0);
+.metric-value {
+  font-size: var(--text-aviation-3xl);
+  font-weight: 700;
+  color: var(--aviation-primary-700);
+  font-family: var(--font-aviation-mono);
 }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  font-family: ui-monospace, monospace;
-  font-size: 0.875rem;
+.metric-label {
+  font-size: var(--text-aviation-sm);
+  color: var(--aviation-neutral-600);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-aviation-sans);
 }
 
-.nav-item:hover {
-  background-color: rgba(51, 65, 85, 0.5);
-  color: white;
+/* Table - Technical Data Display */
+.table-aviation {
+  background: white;
+  border-radius: var(--radius-aviation-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-aviation-md);
+  border: 1px solid var(--aviation-neutral-200);
+  width: 100%;
 }
 
-.nav-item.active {
-  background-color: #1e293b;
-  color: white;
-  border: 1px solid #475569;
-  border-left: 4px solid #3b82f6;
+.table-aviation th {
+  background: var(--aviation-neutral-50);
+  padding: var(--space-aviation-4) var(--space-aviation-6);
+  font-weight: 600;
+  color: var(--aviation-neutral-700);
+  font-size: var(--text-aviation-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-aviation-sans);
+}
+
+.table-aviation td {
+  padding: var(--space-aviation-4) var(--space-aviation-6);
+  border-bottom: 1px solid var(--aviation-neutral-100);
+  font-family: var(--font-aviation-sans);
+}
+
+.table-aviation tr:hover {
+  background: var(--aviation-primary-50);
+}
+
+/* Dashboard Layout - NASA/SpaceX Inspired */
+.dashboard-aviation {
+  background: var(--aviation-neutral-50);
+  min-height: 100vh;
+  margin-left: 280px;
+}
+
+.dashboard-header {
+  background: white;
+  border-bottom: 1px solid var(--aviation-neutral-200);
+  padding: var(--space-aviation-6) var(--space-aviation-8);
+  box-shadow: var(--shadow-aviation-sm);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-aviation-6);
+  padding: var(--space-aviation-8);
+}
+
+/* Technical Code Display */
+.code-aviation {
+  font-family: var(--font-aviation-mono);
+  font-size: var(--text-aviation-sm);
+  background: var(--aviation-neutral-900);
+  color: var(--aviation-primary-300);
+  padding: var(--space-aviation-4);
+  border-radius: var(--radius-aviation-md);
+  overflow-x: auto;
+}
+
+/* ==========================================
+   TAILWIND/GENERIC CLASS OVERRIDES
+   Force aviation colors on common classes
+   ========================================== */
+
+.bg-gray-50, .bg-slate-50, .bg-zinc-50, [class*="bg-sky-50"], [class*="bg-blue-50"] {
+  background-color: var(--aviation-neutral-50) !important;
+}
+
+.bg-gray-100, .bg-slate-100 {
+  background-color: var(--aviation-neutral-100) !important;
+}
+
+.text-gray-900, .text-slate-900 {
+  color: var(--aviation-neutral-900) !important;
+}
+
+.text-gray-600, .text-slate-600 {
+  color: var(--aviation-neutral-600) !important;
+}
+
+.text-gray-500, .text-slate-500 {
+  color: var(--aviation-neutral-500) !important;
+}
+
+.border-gray-200, .border-slate-200 {
+  border-color: var(--aviation-neutral-200) !important;
+}
+
+.border-gray-300, .border-slate-300 {
+  border-color: var(--aviation-neutral-300) !important;
+}
+
+/* Force aviation colors on buttons */
+[class*="bg-blue-"], [class*="bg-sky-"], [class*="bg-indigo-"] {
+  background: var(--gradient-aviation-primary) !important;
+  color: white !important;
+}
+
+/* ==========================================
+   SHADCN/UI COMPONENT SPECIFIC OVERRIDES
+   Force aviation styling on all shadcn components
+   ========================================== */
+
+/* Card Components */
+[data-slot="card"], 
+div[class*="rounded-lg"][class*="border"],
+div[class*="rounded-xl"][class*="border"] {
+  border-color: var(--aviation-neutral-200) !important;
+  box-shadow: var(--shadow-aviation-md) !important;
+}
+
+/* Button Variants */
+button[class*="bg-primary"],
+button[data-variant="default"] {
+  background: var(--gradient-aviation-primary) !important;
+  color: white !important;
+  border: none !important;
+}
+
+button[class*="border-input"],
+button[data-variant="outline"] {
+  border-color: var(--aviation-primary-500) !important;
+  color: var(--aviation-primary-600) !important;
+  background: transparent !important;
+}
+
+button[data-variant="outline"]:hover {
+  background: var(--aviation-primary-50) !important;
+  border-color: var(--aviation-primary-600) !important;
+}
+
+button[data-variant="secondary"] {
+  background: var(--aviation-neutral-100) !important;
+  color: var(--aviation-neutral-900) !important;
+}
+
+button[data-variant="ghost"]:hover {
+  background: var(--aviation-neutral-100) !important;
+  color: var(--aviation-neutral-900) !important;
+}
+
+/* Select Components */
+button[role="combobox"],
+[data-slot="select-trigger"] {
+  border-color: var(--aviation-neutral-300) !important;
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Badge Components */
+[data-slot="badge"],
+span[class*="inline-flex"][class*="items-center"][class*="rounded-full"] {
+  background: var(--aviation-primary-50) !important;
+  color: var(--aviation-primary-800) !important;
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Alert Components */
+[data-slot="alert"],
+div[role="alert"] {
+  border-color: var(--aviation-neutral-200) !important;
+  background: var(--aviation-neutral-50) !important;
+  font-family: var(--font-aviation-sans) !important;
+}
+
+/* Table Components */
+table[class*="w-full"] {
+  font-family: var(--font-aviation-sans) !important;
+}
+
+table th {
+  background: var(--aviation-neutral-50) !important;
+  color: var(--aviation-neutral-900) !important;
+  font-weight: 600 !important;
+}
+
+table tr:hover {
+  background: var(--aviation-primary-50) !important;
+}
+
+/* Progress Components */
+[data-slot="progress"],
+div[class*="relative"][class*="overflow-hidden"][class*="rounded-full"] {
+  background: var(--aviation-neutral-200) !important;
+}
+
+[data-slot="progress-indicator"],
+div[class*="h-full"][class*="flex-1"][class*="transition-all"] {
+  background: var(--gradient-aviation-primary) !important;
+}
+
+/* Tabs Components */
+[data-slot="tabs-list"],
+div[class*="inline-flex"][class*="items-center"][class*="justify-center"] {
+  background: var(--aviation-neutral-100) !important;
+  border-radius: var(--radius-aviation-lg) !important;
+}
+
+button[data-slot="tabs-trigger"],
+button[role="tab"] {
+  font-family: var(--font-aviation-sans) !important;
+  color: var(--aviation-neutral-600) !important;
+}
+
+button[data-slot="tabs-trigger"][data-state="active"],
+button[role="tab"][data-state="active"] {
+  background: white !important;
+  color: var(--aviation-neutral-900) !important;
+  box-shadow: var(--shadow-aviation-sm) !important;
+}
+
+/* Separator */
+[data-slot="separator"],
+hr {
+  background-color: var(--aviation-neutral-200) !important;
+  border-color: var(--aviation-neutral-200) !important;
+}
+
+/* Input Focus States */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: 2px solid var(--aviation-primary-500) !important;
+  outline-offset: 2px !important;
 }
 
 @theme inline {
@@ -151,96 +553,178 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  /* Aviation Theme - Light Mode */
-  --background: oklch(0.98 0.005 220);
-  --foreground: oklch(0.15 0.08 235);
-  --card: oklch(0.99 0.003 230);
-  --card-foreground: oklch(0.15 0.08 235);
-  --popover: oklch(0.99 0.003 230);
-  --popover-foreground: oklch(0.15 0.08 235);
-  --primary: oklch(0.45 0.15 235);
-  --primary-foreground: oklch(0.98 0.005 220);
-  --secondary: oklch(0.85 0.02 240);
-  --secondary-foreground: oklch(0.25 0.06 235);
-  --muted: oklch(0.9 0.015 235);
-  --muted-foreground: oklch(0.5 0.04 235);
-  --accent: oklch(0.55 0.12 200);
-  --accent-foreground: oklch(0.95 0.005 220);
-  --destructive: oklch(0.6 0.2 25);
-  --border: oklch(0.85 0.02 235);
-  --input: oklch(0.85 0.02 235);
-  --ring: oklch(0.45 0.15 235);
+  /* ========================================
+   * AVIATION DESIGN SYSTEM - Premium Colors
+   * Inspired by Embraer, NASA, Boeing
+   * ======================================== */
   
-  /* Aviation specific colors */
-  --aviation-primary: oklch(0.3 0.15 235);
-  --aviation-secondary: oklch(0.7 0.08 200);
-  --aviation-accent: oklch(0.6 0.12 180);
-  --aviation-hud: oklch(0.75 0.1 120);
-  --aviation-glass: oklch(0.95 0.02 235 / 0.1);
+  /* Aviation Blue Spectrum - Embraer/Boeing Inspired */
+  --aviation-primary-50: #eff6ff;
+  --aviation-primary-100: #dbeafe;
+  --aviation-primary-200: #bfdbfe;
+  --aviation-primary-300: #93c5fd;
+  --aviation-primary-400: #60a5fa;
+  --aviation-primary-500: #3b82f6;  /* Main Aviation Blue */
+  --aviation-primary-600: #1e40af;  /* Deep Aviation Blue */
+  --aviation-primary-700: #1d4ed8;
+  --aviation-primary-800: #1e3a8a;
+  --aviation-primary-900: #172554;
+
+  /* NASA Orange Accent */
+  --aviation-accent-50: #fff7ed;
+  --aviation-accent-100: #ffedd5;
+  --aviation-accent-200: #fed7aa;
+  --aviation-accent-300: #fdba74;
+  --aviation-accent-400: #fb923c;
+  --aviation-accent-500: #f97316;  /* NASA Orange */
+  --aviation-accent-600: #ea580c;
+  --aviation-accent-700: #c2410c;
+
+  /* Technical Silver/Gray - Aircraft Materials */
+  --aviation-neutral-50: #f8fafc;
+  --aviation-neutral-100: #f1f5f9;
+  --aviation-neutral-200: #e2e8f0;
+  --aviation-neutral-300: #cbd5e1;
+  --aviation-neutral-400: #94a3b8;
+  --aviation-neutral-500: #64748b;
+  --aviation-neutral-600: #475569;
+  --aviation-neutral-700: #334155;
+  --aviation-neutral-800: #1e293b;
+  --aviation-neutral-900: #0f172a;
+
+  /* Status Colors - Aviation Safety Standards */
+  --aviation-success-500: #10b981;  /* Green - All Clear */
+  --aviation-warning-500: #f59e0b;  /* Amber - Caution */
+  --aviation-danger-500: #ef4444;   /* Red - Critical Alert */
+  --aviation-info-500: #06b6d4;     /* Cyan - Information */
+
+  /* Premium Gradients */
+  --gradient-aviation-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  --gradient-aviation-accent: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  --gradient-aviation-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --gradient-aviation-light: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+  /* Spacing Scale - 8px Grid System */
+  --space-aviation-1: 0.25rem;   /* 4px */
+  --space-aviation-2: 0.5rem;    /* 8px */
+  --space-aviation-3: 0.75rem;   /* 12px */
+  --space-aviation-4: 1rem;      /* 16px */
+  --space-aviation-5: 1.25rem;   /* 20px */
+  --space-aviation-6: 1.5rem;    /* 24px */
+  --space-aviation-8: 2rem;      /* 32px */
+  --space-aviation-10: 2.5rem;   /* 40px */
+  --space-aviation-12: 3rem;     /* 48px */
+  --space-aviation-16: 4rem;     /* 64px */
+  --space-aviation-20: 5rem;     /* 80px */
+
+  /* Border Radius - Subtle, Professional */
+  --radius-aviation-sm: 0.375rem;  /* 6px */
+  --radius-aviation-md: 0.5rem;    /* 8px */
+  --radius-aviation-lg: 0.75rem;   /* 12px */
+  --radius-aviation-xl: 1rem;      /* 16px */
+
+  /* Shadows - Premium Depth */
+  --shadow-aviation-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-aviation-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -1px rgba(15, 23, 42, 0.06);
+  --shadow-aviation-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
+  --shadow-aviation-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
+
+  /* Font Sizes - Technical Hierarchy */
+  --text-aviation-xs: 0.75rem;    /* 12px */
+  --text-aviation-sm: 0.875rem;   /* 14px */
+  --text-aviation-base: 1rem;     /* 16px */
+  --text-aviation-lg: 1.125rem;   /* 18px */
+  --text-aviation-xl: 1.25rem;    /* 20px */
+  --text-aviation-2xl: 1.5rem;    /* 24px */
+  --text-aviation-3xl: 1.875rem;  /* 30px */
+  --text-aviation-4xl: 2.25rem;   /* 36px */
+  --text-aviation-5xl: 3rem;      /* 48px */
+
+  /* Font Families */
+  --font-aviation-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-aviation-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Fira Code', monospace;
+  
+  /* Shadcn/UI Compatibility */
+  --radius: 0.625rem;
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+  --primary: 30 64 175;
+  --primary-foreground: 248 250 252;
+  --secondary: 241 245 249;
+  --secondary-foreground: 51 65 85;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 249 115 22;
+  --accent-foreground: 248 250 252;
+  --destructive: 239 68 68;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 30 64 175;
   
   /* Chart colors - Aviation themed */
-  --chart-1: oklch(0.55 0.15 235);
-  --chart-2: oklch(0.6 0.12 200);
-  --chart-3: oklch(0.65 0.1 180);
-  --chart-4: oklch(0.7 0.08 160);
-  --chart-5: oklch(0.75 0.06 140);
+  --chart-1: 59 130 246;
+  --chart-2: 249 115 22;
+  --chart-3: 16 185 129;
+  --chart-4: 245 158 11;
+  --chart-5: 6 182 212;
   
   /* Sidebar colors */
-  --sidebar: oklch(0.15 0.08 235);
-  --sidebar-foreground: oklch(0.9 0.02 220);
-  --sidebar-primary: oklch(0.45 0.15 235);
-  --sidebar-primary-foreground: oklch(0.98 0.005 220);
-  --sidebar-accent: oklch(0.25 0.06 235);
-  --sidebar-accent-foreground: oklch(0.9 0.02 220);
-  --sidebar-border: oklch(0.25 0.06 235);
-  --sidebar-ring: oklch(0.45 0.15 235);
+  --sidebar: 15 23 42;
+  --sidebar-foreground: 248 250 252;
+  --sidebar-primary: 59 130 246;
+  --sidebar-primary-foreground: 248 250 252;
+  --sidebar-accent: 30 41 59;
+  --sidebar-accent-foreground: 248 250 252;
+  --sidebar-border: 30 41 59;
+  --sidebar-ring: 59 130 246;
 }
 
 .dark {
-  /* Aviation Theme - Dark Mode */
-  --background: oklch(0.08 0.05 235);
-  --foreground: oklch(0.95 0.02 220);
-  --card: oklch(0.12 0.06 235);
-  --card-foreground: oklch(0.95 0.02 220);
-  --popover: oklch(0.12 0.06 235);
-  --popover-foreground: oklch(0.95 0.02 220);
-  --primary: oklch(0.65 0.15 200);
-  --primary-foreground: oklch(0.08 0.05 235);
-  --secondary: oklch(0.2 0.04 235);
-  --secondary-foreground: oklch(0.8 0.03 220);
-  --muted: oklch(0.15 0.04 235);
-  --muted-foreground: oklch(0.6 0.03 220);
-  --accent: oklch(0.4 0.08 180);
-  --accent-foreground: oklch(0.95 0.02 220);
-  --destructive: oklch(0.5 0.15 25);
-  --border: oklch(0.2 0.04 235);
-  --input: oklch(0.2 0.04 235);
-  --ring: oklch(0.65 0.15 200);
+  /* ========================================
+   * AVIATION DESIGN SYSTEM - Dark Mode
+   * Professional Night Operations Theme
+   * ======================================== */
   
-  /* Aviation specific colors - Dark mode */
-  --aviation-primary: oklch(0.7 0.15 200);
-  --aviation-secondary: oklch(0.5 0.08 180);
-  --aviation-accent: oklch(0.6 0.12 160);
-  --aviation-hud: oklch(0.7 0.15 120);
-  --aviation-glass: oklch(0.95 0.05 220 / 0.05);
+  /* Shadcn/UI Dark Mode Compatibility */
+  --background: 15 23 42;
+  --foreground: 248 250 252;
+  --card: 30 41 59;
+  --card-foreground: 248 250 252;
+  --popover: 30 41 59;
+  --popover-foreground: 248 250 252;
+  --primary: 96 165 250;
+  --primary-foreground: 15 23 42;
+  --secondary: 51 65 85;
+  --secondary-foreground: 226 232 240;
+  --muted: 51 65 85;
+  --muted-foreground: 148 163 184;
+  --accent: 251 146 60;
+  --accent-foreground: 248 250 252;
+  --destructive: 220 38 38;
+  --border: 51 65 85;
+  --input: 51 65 85;
+  --ring: 96 165 250;
   
   /* Chart colors - Dark mode */
-  --chart-1: oklch(0.6 0.15 200);
-  --chart-2: oklch(0.55 0.12 180);
-  --chart-3: oklch(0.5 0.1 160);
-  --chart-4: oklch(0.65 0.08 140);
-  --chart-5: oklch(0.7 0.06 120);
+  --chart-1: 96 165 250;
+  --chart-2: 251 146 60;
+  --chart-3: 52 211 153;
+  --chart-4: 251 191 36;
+  --chart-5: 34 211 238;
   
   /* Sidebar colors - Dark mode */
-  --sidebar: oklch(0.12 0.06 235);
-  --sidebar-foreground: oklch(0.9 0.02 220);
-  --sidebar-primary: oklch(0.65 0.15 200);
-  --sidebar-primary-foreground: oklch(0.08 0.05 235);
-  --sidebar-accent: oklch(0.2 0.04 235);
-  --sidebar-accent-foreground: oklch(0.8 0.03 220);
-  --sidebar-border: oklch(0.2 0.04 235);
-  --sidebar-ring: oklch(0.65 0.15 200);
+  --sidebar: 30 41 59;
+  --sidebar-foreground: 248 250 252;
+  --sidebar-primary: 96 165 250;
+  --sidebar-primary-foreground: 15 23 42;
+  --sidebar-accent: 51 65 85;
+  --sidebar-accent-foreground: 226 232 240;
+  --sidebar-border: 51 65 85;
+  --sidebar-ring: 96 165 250;
 }
 
 @layer base {
@@ -249,5 +733,13 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-aviation-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Apply monospace font to technical elements */
+  code, pre, .font-mono, [data-technical="true"] {
+    font-family: var(--font-aviation-mono);
   }
 }
