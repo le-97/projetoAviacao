@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Embraer Colors */
+    --embraer-blue-primary: #0E1C59;
+    --embraer-blue-dark: #0A1440;
+    --embraer-blue-light: #1A2D7A;
+    --embraer-accent: #003DA5;
+
+    /* NASA-inspired */
+    --nasa-red: #FC3D21;
+
+    /* Functional Colors */
+    --success-green: #10B981;
+    --warning-amber: #F59E0B;
+    --error-red: #EF4444;
+  }
+
+  * {
+    @apply border-neutral-200;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-700 antialiased m-0 min-h-screen;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold text-neutral-900;
+  }
+}
+
+@layer components {
+  .btn-embraer {
+    @apply bg-[#0E1C59] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#0A1440] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#003DA5] focus:ring-offset-2;
+  }
+
+  .card-embraer {
+    @apply bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+}
