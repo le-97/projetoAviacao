@@ -16,7 +16,7 @@ class TestHealthEndpoints:
         data = response.json()
         assert data["service"] == "Enhanced Aviation Compliance Microservice"
         assert data["status"] == "healthy"
-        assert data["version"] == "1.0.0"
+        assert data["version"] == "2.0.0"
         assert data["docs"] == "/docs"
         assert data["redoc"] == "/redoc"
 
@@ -27,8 +27,8 @@ class TestHealthEndpoints:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
-        assert data["service"] == "enhanced-compliance-microservice"
-        assert data["version"] == "1.0.0"
+        assert data["service"] == "Aviation Compliance API"
+        assert data["version"] == "2.0.0"
         assert "E190" in data["supported_models"]
         assert "E195" in data["supported_models"]
         assert "BRAZIL" in data["supported_countries"]
@@ -59,8 +59,8 @@ class TestHealthEndpoints:
         assert response.headers["content-type"] == "application/json"
         
         data = response.json()
-        assert data["info"]["title"] == "Aviation Compliance Microservice API"
-        assert data["info"]["version"] == "1.0.0"
+        assert data["info"]["title"] == "Aviation Compliance API"
+        assert data["info"]["version"] == "2.0.0"
         assert "/compliance/check-compliance" in data["paths"]
         assert "/" in data["paths"]
         assert "/health" in data["paths"]
