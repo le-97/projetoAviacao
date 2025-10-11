@@ -19,6 +19,55 @@ export default {
     },
     extend: {
       colors: {
+        // Embraer Official Brand Colors
+        embraer: {
+          'blue-primary': '#0E1C59',
+          'blue-dark': '#0A1440',
+          'blue-light': '#1A2D7A',
+          'accent': '#003DA5',
+        },
+        // NASA-Inspired Functional Colors
+        nasa: {
+          red: '#FC3D21',
+        },
+        // Functional Colors
+        success: {
+          DEFAULT: '#10B981',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+        },
+        warning: {
+          DEFAULT: '#F59E0B',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
+        },
+        error: {
+          DEFAULT: '#EF4444',
+          50: '#FEF2F2',
+          100: '#FEE2E2',
+          500: '#EF4444',
+          600: '#DC2626',
+          700: '#B91C1C',
+        },
+        // Neutral Scale
+        neutral: {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+        },
         aviation: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -64,6 +113,23 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+      },
+      fontSize: {
+        'h1': ['3.75rem', { lineHeight: '1.1', fontWeight: '700' }],
+        'h2': ['3rem', { lineHeight: '1.2', fontWeight: '600' }],
+        'h3': ['2.25rem', { lineHeight: '1.3', fontWeight: '600' }],
+        'h4': ['1.875rem', { lineHeight: '1.4', fontWeight: '600' }],
+        'h5': ['1.5rem', { lineHeight: '1.5', fontWeight: '500' }],
+        'h6': ['1.25rem', { lineHeight: '1.5', fontWeight: '500' }],
+        'body-large': ['1.125rem', { lineHeight: '1.75', fontWeight: '400' }],
+        'body': ['1rem', { lineHeight: '1.625', fontWeight: '400' }],
+        'body-small': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
+        'caption': ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }],
+        'overline': ['0.75rem', { lineHeight: '1.2', fontWeight: '600', letterSpacing: '0.05em' }],
       },
       borderRadius: {
         lg: "var(--radius)",

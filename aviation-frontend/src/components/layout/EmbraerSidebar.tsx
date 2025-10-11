@@ -11,7 +11,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
-interface SidebarProps {
+interface EmbraerSidebarProps {
   collapsed: boolean;
   onToggle: () => void;
 }
@@ -44,7 +44,7 @@ const navigation = [
   },
 ];
 
-export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export default function EmbraerSidebar({ collapsed, onToggle }: EmbraerSidebarProps) {
   const location = useLocation();
 
   return (

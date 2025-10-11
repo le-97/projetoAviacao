@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plane, Sparkles, Shield, BarChart3 } from 'lucide-react';
 import AircraftComplianceValidator from './pages/AircraftComplianceValidator';
 import AIUIShowcase from './components/ai/AIUIShowcase';
+import EmbraerLayout from './components/layout/EmbraerLayout';
+import EmbraerDashboard from './pages/EmbraerDashboard';
+import AircraftCatalog from './pages/AircraftCatalog';
+import AircraftDetails from './pages/AircraftDetails';
 import './App.css';
 
-type Page = 'compliance' | 'showcase';
+type Page = 'compliance' | 'showcase' | 'embraer';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('compliance');
@@ -24,6 +29,12 @@ function App() {
       label: 'Showcase de IA', 
       icon: Sparkles,
       description: 'Galeria de componentes gerados por IA'
+    },
+    { 
+      id: 'embraer' as Page, 
+      label: 'Sistema Embraer', 
+      icon: Plane,
+      description: 'Sistema completo de compliance Embraer'
     }
   ];
 
@@ -33,6 +44,19 @@ function App() {
         return <AircraftComplianceValidator />;
       case 'showcase':
         return <AIUIShowcase />;
+      case 'embraer':
+        return (
+          <Routes>
+            <Route path="/" element={<EmbraerLayout />}>
+              <Route index element={<EmbraerDashboard />} />
+              <Route path="aeronaves" element={<AircraftCatalog />} />
+              <Route path="aeronaves/:id" element={<AircraftDetails />} />
+              <Route path="compliance/verificar" element={<div className="p-12 text-center"><h2 className="text-2xl font-bold">Verificador de Compliance</h2><p className="text-neutral-600 mt-2">Em desenvolvimento</p></div>} />
+              <Route path="regulamentacoes" element={<div className="p-12 text-center"><h2 className="text-2xl font-bold">Regulamentações</h2><p className="text-neutral-600 mt-2">Em desenvolvimento</p></div>} />
+              <Route path="historico" element={<div className="p-12 text-center"><h2 className="text-2xl font-bold">Histórico</h2><p className="text-neutral-600 mt-2">Em desenvolvimento</p></div>} />
+            </Route>
+          </Routes>
+        );
       default:
         return <AircraftComplianceValidator />;
     }

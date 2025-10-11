@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import VariantSelector from './components/VariantSelector';
-import Sidebar from './components/layout/Sidebar';
-import TopBar from './components/layout/TopBar';
+// import Sidebar from './components/layout/Sidebar';
+// import TopBar from './components/layout/TopBarOld';
 import Dashboard from './pages/Dashboard';
 import AircraftPage from './pages/AircraftPage';
 import AviationDemo from './pages/AviationDemo';
@@ -17,7 +17,7 @@ import ShadcnShowcase from './pages/ShadcnShowcase';
 
 function App() {
   const [selectedVariant, setSelectedVariant] = useState<'military' | 'modern' | 'futuristic' | null>(null);
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [currentPage] = useState('dashboard');
 
   // Se não tiver variante selecionada, mostra o seletor
   if (!selectedVariant) {
@@ -156,16 +156,16 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen flex ${
-      selectedVariant === 'military' ? 'bg-slate-900' :
+    <div className={`min-h-screen flex ${selectedVariant === 'military' ? 'bg-slate-900' :
       selectedVariant === 'modern' ? 'bg-gray-50' :
-      'bg-slate-900'
-    }`}>
-      <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
-      
+        'bg-slate-900'
+      }`}>
+      {/* Temporarily commented for deployment */}
+      {/* <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} /> */}
+
       <div className="flex-1 flex flex-col">
-        <TopBar currentPage={currentPage} />
-        
+        {/* <TopBar currentPage={currentPage} /> */}
+
         <main className="flex-1 p-6 overflow-auto">
           {renderCurrentPage()}
         </main>
