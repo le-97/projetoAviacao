@@ -125,46 +125,6 @@ export function EmbraerDashboard() {
                     </div>
                     <GitHubMetrics />
                 </motion.div>
-
-                {/* GitHub Stats Grid - Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    <StatsCard
-                        title="COMMITS"
-                        value={49}
-                        subtitle="Total de commits"
-                        icon={Activity}
-                        iconColor="text-green-600"
-                        iconBgColor="bg-green-100"
-                        trend={{ value: "+100%", isPositive: true }}
-                    />
-
-                    <StatsCard
-                        title="LINHAS DE CÓDIGO"
-                        value="511K"
-                        subtitle="TypeScript + JSON"
-                        icon={FileCheck}
-                        iconColor="text-blue-600"
-                        iconBgColor="bg-blue-100"
-                    />
-
-                    <StatsCard
-                        title="CONTRIBUIDORES"
-                        value={3}
-                        subtitle="Desenvolvedores ativos"
-                        icon={Users}
-                        iconColor="text-purple-600"
-                        iconBgColor="bg-purple-100"
-                    />
-
-                    <StatsCard
-                        title="ARQUIVOS"
-                        value="11.6K"
-                        subtitle="Total de arquivos"
-                        icon={Shield}
-                        iconColor="text-orange-600"
-                        iconBgColor="bg-orange-100"
-                    />
-                </div>
             </div>
         </div>
     );
