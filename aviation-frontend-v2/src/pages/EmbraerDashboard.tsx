@@ -24,15 +24,16 @@ export function EmbraerDashboard() {
             {/* Hero Carousel */}
             <HeroCarousel />
 
-            {/* Elegant Background Pattern Below Hero */}
-            <div className="absolute top-[400px] left-0 right-0 h-[1200px] pointer-events-none z-0">
-                {/* Subtle gradient overlay - more visible */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0E1C59]/12 via-[#003DA5]/8 to-transparent" />
+            {/* Sky Background Image Below Hero */}
+            <div className="absolute top-[400px] left-0 right-0 h-[1400px] pointer-events-none z-0 overflow-hidden">
+                {/* Sky image with subtle overlay */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+                    style={{ backgroundImage: 'url(/BG/envato-labs-ai-4884b2bb-306c-4085-b4d6-6e69a514dae9.jpg)' }}
+                />
 
-                {/* Soft radial accents - stronger but still elegant */}
-                <div className="absolute top-0 left-[20%] w-[700px] h-[700px] bg-[#003DA5]/15 rounded-full blur-3xl" />
-                <div className="absolute top-32 right-[15%] w-[500px] h-[500px] bg-[#0E1C59]/12 rounded-full blur-3xl" />
-                <div className="absolute top-[500px] left-[40%] w-[600px] h-[600px] bg-[#003DA5]/10 rounded-full blur-3xl" />
+                {/* Soft gradient overlay to blend with page */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white/80" />
             </div>
 
             {/* Content Section */}
