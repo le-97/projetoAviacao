@@ -10,6 +10,7 @@ import { StatsCard } from '../components/StatsCard';
 import { AircraftCard } from '../components/AircraftCard';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { GitHubMetrics } from '../components/GitHubMetrics';
+import { TechStackInfographic } from '../components/TechStackInfographic';
 import { embraerAircraft } from '../data/aircraftData';
 import type { Aircraft } from '../types/aircraft';
 
@@ -125,6 +126,15 @@ export function EmbraerDashboard() {
                     </div>
                     <GitHubMetrics />
                 </motion.div>
+
+                {/* Tech Stack Infographic */}
+                <section className="mb-12">
+                    <div className="bg-gradient-to-r from-[#0E1C59] to-[#003DA5] rounded-2xl p-6 text-white mb-6">
+                        <h3 className="text-2xl font-semibold">STACK TECNOLÓGICA DO PROJETO</h3>
+                        <p className="text-blue-100">Visão geral das tecnologias utilizadas</p>
+                    </div>
+                    <TechStackInfographic />
+                </section>
             </div>
         </div>
     );
