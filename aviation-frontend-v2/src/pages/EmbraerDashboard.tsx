@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
     Plane,
     Activity,
     Users,
-    Shield
+    Shield,
+    FileCheck
 } from 'lucide-react';
 import { StatsCard } from '../components/StatsCard';
 import { AircraftCard } from '../components/AircraftCard';
@@ -32,8 +34,19 @@ export function EmbraerDashboard() {
                 className="mb-8"
             >
                 <div className="bg-gradient-to-r from-[#0E1C59] to-[#003DA5] rounded-2xl p-8 text-white">
-                    <h1 className="text-4xl font-bold mb-2">EMBRAER DASHBOARD</h1>
-                    <p className="text-blue-100 text-lg">Monitoramento de Aeronaves Embraer em Tempo Real</p>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <h1 className="text-4xl font-bold mb-2">EMBRAER DASHBOARD</h1>
+                            <p className="text-blue-100 text-lg">Monitoramento de Aeronaves Embraer em Tempo Real</p>
+                        </div>
+                        <Link
+                            to="/compliance"
+                            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl flex items-center gap-2 transition-all hover:scale-105"
+                        >
+                            <FileCheck className="w-5 h-5" />
+                            Verificar Conformidade
+                        </Link>
+                    </div>
                 </div>
             </motion.div>
 
