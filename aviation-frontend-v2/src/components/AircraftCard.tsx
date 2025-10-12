@@ -10,14 +10,14 @@ interface AircraftCardProps {
 
 export function AircraftCard({ aircraft, index }: AircraftCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    
+
     // Parallax effect
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-    
+
     const mouseXSpring = useSpring(x, { damping: 30, stiffness: 200 });
     const mouseYSpring = useSpring(y, { damping: 30, stiffness: 200 });
-    
+
     const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['7.5deg', '-7.5deg']);
     const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-7.5deg', '7.5deg']);
 
@@ -38,7 +38,7 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
         x.set(0);
         y.set(0);
     };
-    
+
     const getCategoryBadgeColor = (category: string) => {
         switch (category) {
             case 'commercial':
@@ -73,13 +73,13 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
             <div className="relative bg-white/70 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]">
                 {/* Animated gradient background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
+
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 </div>
                 {/* Image with Parallax */}
-                <motion.div 
+                <motion.div
                     className="relative h-48 overflow-hidden bg-gradient-to-br from-neutral-100 to-neutral-200"
                     style={{
                         transform: isHovered ? 'translateZ(20px)' : 'translateZ(0px)',
@@ -94,13 +94,13 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
                     />
                     {/* Glass overlay on image */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-                    
+
                     <div className="absolute top-4 right-4">
                         <span className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg ${getCategoryBadgeColor(aircraft.category)}`}>
                             {aircraft.categoryLabel || aircraft.category}
                         </span>
                     </div>
-                    
+
                     {/* Badge if exists */}
                     {aircraft.badge && (
                         <div className="absolute top-4 left-4">
@@ -112,7 +112,7 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
                 </motion.div>
 
                 {/* Content with Glass effect */}
-                <motion.div 
+                <motion.div
                     className="relative p-6 bg-white/40 backdrop-blur-sm"
                     style={{
                         transform: isHovered ? 'translateZ(30px)' : 'translateZ(0px)',

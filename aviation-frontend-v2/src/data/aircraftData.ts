@@ -9,8 +9,8 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
     badge: 'Nova Geração',
-    image: '/planes/E175-E2.png',
-    heroImage: '/planes/E175-E2.png',
+    image: 'https://www.embraer.com/media/kkim0aol/commercial-jets-ejets-e2.jpg',
+    heroImage: 'https://www.embraer.com/media/kkim0aol/commercial-jets-ejets-e2.jpg',
     description: 'O jato regional mais eficiente da categoria de 80 assentos',
     specs: {
       capacity: '80-90 passageiros',
@@ -53,7 +53,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
     badge: 'Nova Geração',
-    image: '/planes/E190-E2.png',
+    image: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
     heroImage: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
     description: 'Eficiência e conforto para rotas regionais de médio alcance',
     specs: {
