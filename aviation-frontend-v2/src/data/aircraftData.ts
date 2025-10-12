@@ -247,7 +247,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Entry Jet',
-    image: '/planes/Phenom 100EV.jpg',
+    image: '/planes/phenom100.png',
     description: 'O jato executivo leve mais vendido da década',
     specs: {
       capacity: '4-6 passageiros',
