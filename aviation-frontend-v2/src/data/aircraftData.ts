@@ -54,7 +54,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryColor: '#0E1C59',
     badge: 'Nova Geração',
     image: '/planes/E190-E2.png',
-    heroImage: '/planes/E195-E2.png',
+    heroImage: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
     description: 'Eficiência e conforto para rotas regionais de médio alcance',
     specs: {
       capacity: '97-114 passageiros',
@@ -97,8 +97,8 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
     badge: 'Best Seller',
-    image: '/planes/E195-E2.png',
-    heroImage: '/planes/E195-E2.png',
+    image: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
+    heroImage: 'https://www.embraer.com/media/4yrayzt0/e-jets-e2_interior_economy-european_05.jpg',
     description: 'O jato regional mais silencioso e eficiente da categoria',
     specs: {
       capacity: '120-146 passageiros',
@@ -141,7 +141,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E170.jpg',
+    image: 'https://www.embraer.com/media/hdsjnnbp/commercial-jets-interior-4.jpg',
     description: 'Jato regional compacto e eficiente',
     specs: {
       capacity: '70-80 passageiros',
@@ -167,7 +167,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E175.jpg',
+    image: 'https://www.embraer.com/media/kkim0aol/commercial-jets-ejets-e2.jpg',
     description: 'O jato regional mais popular do mundo',
     specs: {
       capacity: '78-88 passageiros',
@@ -193,7 +193,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E195-E2.png',
+    image: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
     description: 'Versatilidade e eficiência para 100 passageiros',
     specs: {
       capacity: '96-114 passageiros',
@@ -219,7 +219,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E195-E2.png',
+    image: 'https://www.embraer.com/media/25ldpogk/commercial-e-jets-e2-e195-render-resized.webp',
     description: 'Capacidade e conforto para rotas regionais',
     specs: {
       capacity: '106-124 passageiros',
@@ -247,7 +247,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Entry Jet',
-    image: '/planes/Phenom 100EV.jpg',
+    image: 'https://www.embraer.com/media/qfbhxqyz/ej-phenom-100ev-flying-over-beach-4k.jpg',
     description: 'O jato executivo leve mais vendido da década',
     specs: {
       capacity: '4-6 passageiros',
@@ -274,7 +274,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Best Seller',
-    image: '/planes/Phenom 300E.jpg',
+    image: 'https://www.embraer.com/media/0mzfepqn/ej-phenom-300e-flying-over-desert-4k.jpg',
     description: 'O jato executivo leve mais entregue do mundo',
     specs: {
       capacity: '6-11 passageiros',
@@ -301,7 +301,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Midsize',
-    image: '/planes/Praetor 500.jpg',
+    image: 'https://www.embraer.com/media/3wajngdt/ej-praetor-500-flying-over-mountains-4k.jpg',
     description: 'O jato médio mais disruptivo do mercado',
     specs: {
       capacity: '7-9 passageiros',
@@ -328,7 +328,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Super Midsize',
-    image: '/planes/Praetor 600.jpg',
+    image: 'https://www.embraer.com/media/hcynxvpz/ej-praetor-600-flying-over-sea-4k.jpg',
     description: 'O jato executivo mais tecnológico e confortável',
     specs: {
       capacity: '8-12 passageiros',
@@ -356,7 +356,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Defesa',
     categoryColor: '#10B981',
     badge: 'Multi-missão',
-    image: '/planes/KC-390 Millennium.jpg',
+    image: 'https://www.embraer.com/media/ikobi0ui/ds-kc-390-millennium-flying-over-the-city-4k.jpg',
     description: 'Cargueiro militar multi-missão de nova geração',
     specs: {
       capacity: '80 tropas ou 26 ton carga',
@@ -383,7 +383,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Defesa',
     categoryColor: '#10B981',
     badge: 'Ataque Leve',
-    image: '/planes/A-29 Super Tucano.jpg',
+    image: 'https://www.embraer.com/media/mccfvbr1/ds-a-29-super-tucano-flying-over-farm-4k.jpg',
     description: 'Aeronave de ataque leve e treinamento avançado',
     specs: {
       capacity: '2 tripulantes',
@@ -409,7 +409,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'defense',
     categoryLabel: 'Defesa',
     categoryColor: '#10B981',
-    image: '/planes/KC-390 Millennium.jpg',
+    image: 'https://www.embraer.com/media/ikobi0ui/ds-kc-390-millennium-flying-over-the-city-4k.jpg',
     description: 'Versão cargueiro tático do KC-390',
     specs: {
       capacity: '80 tropas ou 26 ton carga',
@@ -437,7 +437,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Agrícola',
     categoryColor: '#F59E0B',
     badge: 'Sustentável',
-    image: '/planes/EMB-202 Ipanema.jpg',
+    image: 'https://www.embraer.com/media/yxrjuvcu/ag-ipanema-front-aerial-view-4k.jpg',
     description: 'Aeronave agrícola movida a etanol',
     specs: {
       capacity: '1 piloto',
