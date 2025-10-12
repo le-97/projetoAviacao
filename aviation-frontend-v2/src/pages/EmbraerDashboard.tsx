@@ -130,7 +130,7 @@ export function EmbraerDashboard() {
                 {/* Tech Stack Infographic */}
                 <section className="mb-12">
                     <div className="bg-gradient-to-r from-[#0E1C59] to-[#003DA5] rounded-2xl p-6 text-white mb-6">
-                        <h3 className="text-2xl font-semibold">STACK TECNOLÓGICA DO PROJETO</h3>
+                        <h3 className="text-2xl font-semibold text-white">STACK TECNOLÓGICA DO PROJETO</h3>
                         <p className="text-blue-100">Visão geral das tecnologias utilizadas</p>
                     </div>
                     <TechStackInfographic />
