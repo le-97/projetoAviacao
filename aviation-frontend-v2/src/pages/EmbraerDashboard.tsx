@@ -42,8 +42,8 @@ export function EmbraerDashboard() {
                     <div className="bg-gradient-to-r from-[#0E1C59] to-[#003DA5] rounded-2xl p-8 text-white">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h1 className="text-4xl font-bold mb-2">EMBRAER DASHBOARD</h1>
-                                <p className="text-blue-100 text-lg">Monitoramento de Aeronaves Embraer em Tempo Real</p>
+                                <h1 className="text-4xl font-bold mb-2 text-white">EMBRAER DASHBOARD</h1>
+                                <p className="text-blue-100 text-lg">Prova de conceito para verificação de conformidade de aeronaves da EMBRAER</p>
                             </div>
                             <Link
                                 to="/compliance"
