@@ -119,9 +119,9 @@ export function EmbraerDashboard() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="mb-12"
                 >
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-neutral-900">Métricas do Repositório GitHub</h2>
-                        <p className="text-neutral-600 mt-1">Estatísticas em tempo real do projeto</p>
+                    <div className="bg-gradient-to-r from-[#0E1C59] to-[#003DA5] rounded-2xl p-8 text-white mb-6">
+                        <h2 className="text-4xl font-bold mb-2 text-white">MÉTRICAS DO REPOSITÓRIO GITHUB</h2>
+                        <p className="text-blue-100 text-lg">Estatísticas em tempo real do projeto</p>
                     </div>
                     <GitHubMetrics />
                 </motion.div>
