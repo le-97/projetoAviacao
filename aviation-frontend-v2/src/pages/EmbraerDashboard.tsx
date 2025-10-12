@@ -20,23 +20,9 @@ export function EmbraerDashboard() {
     const executiveAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'executive');
     const defenseAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'defense');
     const agricultureAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'agriculture'); return (
-        <div className="min-h-screen bg-neutral-50 relative">
-            {/* Animated Sky Background - Full Page */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div
-                    className="absolute inset-0 bg-cover bg-center opacity-50 animate-clouds-fast"
-                    style={{
-                        backgroundImage: 'url(/BG/envato-labs-ai-4884b2bb-306c-4085-b4d6-6e69a514dae9.jpg)',
-                        backgroundSize: '130%'
-                    }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-white/60" />
-            </div>
-
+        <div className="min-h-screen bg-neutral-50">
             {/* Hero Carousel */}
-            <div className="relative z-10">
-                <HeroCarousel />
-            </div>
+            <HeroCarousel />
 
             {/* Content Section */}
             <div className="p-6">
