@@ -1,38 +1,45 @@
 export interface Aircraft {
     id: string;
     model: string;
-    manufacturer: string;
+    manufacturer?: string;
     category: 'commercial' | 'executive' | 'defense' | 'agriculture';
-    type: string;
+    categoryLabel?: string;
+    categoryColor?: string;
+    badge?: string;
+    image?: string;
+    heroImage?: string;
+    specs?: any;
+    type?: string;
     capacity?: {
         passengers?: number;
         cargo?: string;
     };
-    performance: {
+    performance?: {
         maxSpeed: string;
         range: string;
         ceiling?: string;
         cruiseSpeed?: string;
     };
-    dimensions: {
+    dimensions?: {
         wingspan: string;
         length: string;
         height: string;
     };
-    engines: {
+    engines?: {
         type: string;
         count: number;
         manufacturer?: string;
     };
-    weights: {
+    weights?: {
         maxTakeoff: string;
         empty?: string;
         maxLanding?: string;
     };
-    images: {
+    images?: {
         primary: string;
         gallery?: string[];
     };
+    technologicalFeatures?: any[];
     specifications?: {
         fuelCapacity?: string;
         maxPayload?: string;
@@ -41,9 +48,10 @@ export interface Aircraft {
     };
     description: string;
     features?: string[];
+    highlights?: any[];
     certifications?: string[];
     yearIntroduced?: number;
-    status: 'active' | 'production' | 'development' | 'retired';
+    status: 'active' | 'production' | 'development' | 'retired' | 'operational';
 }
 
 export interface AircraftCategory {

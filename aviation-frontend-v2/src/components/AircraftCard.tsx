@@ -33,7 +33,7 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
             {/* Image */}
             <div className="relative h-48 overflow-hidden bg-neutral-100">
                 <img
-                    src={aircraft.images.primary}
+                    src={aircraft.images?.primary || aircraft.image || ''}
                     alt={aircraft.model}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
@@ -64,15 +64,17 @@ export function AircraftCard({ aircraft, index }: AircraftCardProps) {
                             <span className="text-sm text-neutral-600">{aircraft.capacity.passengers} pax</span>
                         </div>
                     )}
-                    <div className="flex items-center gap-2">
-                        <Gauge className="w-4 h-4 text-neutral-400" />
-                        <span className="text-sm text-neutral-600">{aircraft.performance.range}</span>
-                    </div>
+                    {aircraft.performance?.range && (
+                        <div className="flex items-center gap-2">
+                            <Gauge className="w-4 h-4 text-neutral-400" />
+                            <span className="text-sm text-neutral-600">{aircraft.performance.range}</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}
                 <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
-                    <span className="tech-data">{aircraft.performance.maxSpeed}</span>
+                    <span className="tech-data">{aircraft.performance?.maxSpeed || 'N/A'}</span>
                     <span className="badge-success">Operacional</span>
                 </div>
             </div>
