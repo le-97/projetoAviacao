@@ -141,7 +141,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E170.jpg',
+    image: '/planes/E170.png',
     description: 'Jato regional compacto e eficiente',
     specs: {
       capacity: '70-80 passageiros',
@@ -167,7 +167,7 @@ export const embraerAircraft: Aircraft[] = [
     category: 'commercial',
     categoryLabel: 'Aviação Comercial',
     categoryColor: '#0E1C59',
-    image: '/planes/E175.jpg',
+    image: '/planes/E175.png',
     description: 'O jato regional mais popular do mundo',
     specs: {
       capacity: '78-88 passageiros',
