@@ -46,3 +46,23 @@
     @apply bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-200;
   }
 }
+
+@layer utilities {
+  @keyframes clouds {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-clouds {
+    animation: clouds 60s ease-in-out infinite;
+  }
+}
