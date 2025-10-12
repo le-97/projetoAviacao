@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-    Plane,
     Activity,
     Users,
     Shield,
@@ -10,18 +9,11 @@ import {
 import { StatsCard } from '../components/StatsCard';
 import { AircraftCard } from '../components/AircraftCard';
 import { HeroCarousel } from '../components/HeroCarousel';
+import { GitHubMetrics } from '../components/GitHubMetrics';
 import { embraerAircraft } from '../data/aircraftData';
 import type { Aircraft } from '../types/aircraft';
 
 export function EmbraerDashboard() {
-    // Calculate statistics
-    const stats = {
-        total: embraerAircraft.length,
-        commercial: embraerAircraft.filter((a: Aircraft) => a.category === 'commercial').length,
-        executive: embraerAircraft.filter((a: Aircraft) => a.category === 'executive').length,
-        defense: embraerAircraft.filter((a: Aircraft) => a.category === 'defense').length,
-        agriculture: embraerAircraft.filter((a: Aircraft) => a.category === 'agriculture').length,
-    };
 
     const commercialAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'commercial');
     const executiveAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'executive');
@@ -55,46 +47,6 @@ export function EmbraerDashboard() {
                         </div>
                     </div>
                 </motion.div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <StatsCard
-                        title="FROTA TOTAL"
-                        value={stats.total}
-                        subtitle="100% disponíveis"
-                        icon={Plane}
-                        iconColor="text-green-600"
-                        iconBgColor="bg-green-100"
-                        trend={{ value: "+100%", isPositive: true }}
-                    />
-
-                    <StatsCard
-                        title="COMERCIAIS"
-                        value={stats.commercial}
-                        subtitle="E-Jets E2 + Legacy"
-                        icon={Activity}
-                        iconColor="text-blue-600"
-                        iconBgColor="bg-blue-100"
-                    />
-
-                    <StatsCard
-                        title="EXECUTIVOS"
-                        value={stats.executive}
-                        subtitle="Phenom & Praetor"
-                        icon={Users}
-                        iconColor="text-purple-600"
-                        iconBgColor="bg-purple-100"
-                    />
-
-                    <StatsCard
-                        title="DEFESA"
-                        value={stats.defense}
-                        subtitle="KC-390 & A-29"
-                        icon={Shield}
-                        iconColor="text-orange-600"
-                        iconBgColor="bg-orange-100"
-                    />
-                </div>
 
                 {/* Commercial Aircraft Section */}
                 <section className="mb-12">
@@ -160,28 +112,59 @@ export function EmbraerDashboard() {
                     </div>
                 </section>
 
-                {/* Performance Metrics */}
-                <section className="card-embraer p-8">
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-6">Métricas de Performance</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div>
-                            <p className="text-sm text-neutral-500 mb-2">Disponibilidade da Frota</p>
-                            <p className="text-3xl font-bold text-green-600">100%</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-neutral-500 mb-2">Horas de Voo Total</p>
-                            <p className="text-3xl font-bold text-blue-600 font-mono">12,450h</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-neutral-500 mb-2">Eficiência Operacional</p>
-                            <p className="text-3xl font-bold text-orange-600">96%</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-neutral-500 mb-2">Satisfação</p>
-                            <p className="text-3xl font-bold text-purple-600">4.9★</p>
-                        </div>
+                {/* GitHub Metrics Section with Shadcn UI - Before Footer */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mb-12"
+                >
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold text-neutral-900">Métricas do Repositório GitHub</h2>
+                        <p className="text-neutral-600 mt-1">Estatísticas em tempo real do projeto</p>
                     </div>
-                </section>
+                    <GitHubMetrics />
+                </motion.div>
+
+                {/* GitHub Stats Grid - Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <StatsCard
+                        title="COMMITS"
+                        value={49}
+                        subtitle="Total de commits"
+                        icon={Activity}
+                        iconColor="text-green-600"
+                        iconBgColor="bg-green-100"
+                        trend={{ value: "+100%", isPositive: true }}
+                    />
+
+                    <StatsCard
+                        title="LINHAS DE CÓDIGO"
+                        value="511K"
+                        subtitle="TypeScript + JSON"
+                        icon={FileCheck}
+                        iconColor="text-blue-600"
+                        iconBgColor="bg-blue-100"
+                    />
+
+                    <StatsCard
+                        title="CONTRIBUIDORES"
+                        value={3}
+                        subtitle="Desenvolvedores ativos"
+                        icon={Users}
+                        iconColor="text-purple-600"
+                        iconBgColor="bg-purple-100"
+                    />
+
+                    <StatsCard
+                        title="ARQUIVOS"
+                        value="11.6K"
+                        subtitle="Total de arquivos"
+                        icon={Shield}
+                        iconColor="text-orange-600"
+                        iconBgColor="bg-orange-100"
+                    />
+                </div>
             </div>
         </div>
     );
