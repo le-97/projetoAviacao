@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { generateComplianceReport as generateLocalReport } from '../data/complianceEngine';
 
 // Configuração base da API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -10,6 +11,9 @@ const apiClient = axios.create({
         'Content-Type': 'application/json',
     },
 });
+
+// Flag para forçar uso do sistema local
+const USE_LOCAL_COMPLIANCE = import.meta.env.VITE_USE_LOCAL_COMPLIANCE !== 'false';
 
 // Tipos
 export interface ComplianceCheck {
@@ -65,24 +69,43 @@ export interface AircraftModel {
 
 /**
  * Verifica conformidade de uma aeronave para um país específico
+ * Usa sistema local completo se API não estiver disponível
  */
 export async function checkCompliance(
     model: string,
     country: string
 ): Promise<ComplianceReport> {
+    // Tenta usar sistema local primeiro se configurado
+    if (USE_LOCAL_COMPLIANCE) {
+        try {
+            console.log('Usando sistema de conformidade local completo');
+            return generateLocalReport(model, country);
+        } catch (error) {
+            console.error('Erro no sistema local:', error);
+            throw error;
+        }
+    }
+
+    // Fallback para API
     try {
         const response = await apiClient.get<ComplianceReport>(
             `/compliance/check/${encodeURIComponent(model)}/${encodeURIComponent(country)}`
         );
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw new Error(
-                error.response?.data?.error?.message ||
-                'Erro ao verificar conformidade'
-            );
+        // Se API falhar, tenta sistema local
+        console.log('API indisponível, usando sistema local');
+        try {
+            return generateLocalReport(model, country);
+        } catch (localError) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(
+                    error.response?.data?.error?.message ||
+                    'Erro ao verificar conformidade'
+                );
+            }
+            throw error;
         }
-        throw error;
     }
 }
 
