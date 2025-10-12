@@ -25,13 +25,14 @@ export function EmbraerDashboard() {
             <HeroCarousel />
 
             {/* Elegant Background Pattern Below Hero */}
-            <div className="absolute top-[500px] left-0 right-0 h-[800px] pointer-events-none">
-                {/* Subtle gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0E1C59]/5 via-[#003DA5]/3 to-transparent" />
+            <div className="absolute top-[400px] left-0 right-0 h-[1200px] pointer-events-none z-0">
+                {/* Subtle gradient overlay - more visible */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0E1C59]/12 via-[#003DA5]/8 to-transparent" />
 
-                {/* Soft radial accents - no mosaico */}
-                <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#003DA5]/8 rounded-full blur-3xl" />
-                <div className="absolute top-48 right-1/4 w-[400px] h-[400px] bg-[#0E1C59]/8 rounded-full blur-3xl" />
+                {/* Soft radial accents - stronger but still elegant */}
+                <div className="absolute top-0 left-[20%] w-[700px] h-[700px] bg-[#003DA5]/15 rounded-full blur-3xl" />
+                <div className="absolute top-32 right-[15%] w-[500px] h-[500px] bg-[#0E1C59]/12 rounded-full blur-3xl" />
+                <div className="absolute top-[500px] left-[40%] w-[600px] h-[600px] bg-[#003DA5]/10 rounded-full blur-3xl" />
             </div>
 
             {/* Content Section */}
