@@ -62,7 +62,28 @@
     }
   }
 
+  @keyframes clouds-fast {
+    0% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.05);
+    }
+
+    100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+  }
+
   .animate-clouds {
     animation: clouds 60s ease-in-out infinite;
+  }
+
+  .animate-clouds-fast {
+    animation: clouds-fast 30s ease-in-out infinite;
   }
 }
