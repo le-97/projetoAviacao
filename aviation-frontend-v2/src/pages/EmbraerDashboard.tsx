@@ -20,24 +20,12 @@ export function EmbraerDashboard() {
     const executiveAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'executive');
     const defenseAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'defense');
     const agricultureAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'agriculture'); return (
-        <div className="min-h-screen bg-neutral-50 relative overflow-hidden">
+        <div className="min-h-screen bg-neutral-50">
             {/* Hero Carousel */}
             <HeroCarousel />
 
-            {/* Sky Background Image Below Hero */}
-            <div className="absolute top-[400px] left-0 right-0 h-[1400px] pointer-events-none z-0 overflow-hidden">
-                {/* Sky image with subtle overlay */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-                    style={{ backgroundImage: 'url(/BG/envato-labs-ai-4884b2bb-306c-4085-b4d6-6e69a514dae9.jpg)' }}
-                />
-
-                {/* Soft gradient overlay to blend with page */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white/80" />
-            </div>
-
             {/* Content Section */}
-            <div className="relative p-6 z-10">
+            <div className="p-6">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
