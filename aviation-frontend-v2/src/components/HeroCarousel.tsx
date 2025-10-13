@@ -38,7 +38,13 @@ export function HeroCarousel() {
     const currentAircraft = embraerAircraft[currentIndex];
 
     return (
-        <div className="relative h-[600px] overflow-hidden bg-gradient-to-br from-[#0E1C59] via-[#003DA5] to-[#0E1C59]">
+        <div
+            className="relative h-[600px] overflow-hidden"
+            style={{
+                backgroundColor: '#0E1C59',
+                isolation: 'isolate'
+            }}
+        >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div className="absolute inset-0" style={{
