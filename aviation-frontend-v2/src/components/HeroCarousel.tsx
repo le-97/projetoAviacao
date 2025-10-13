@@ -37,17 +37,15 @@ export function HeroCarousel() {
             className="relative w-full h-[600px] overflow-hidden"
             style={{
                 backgroundColor: '#0E1C59',
-                backgroundImage: 'linear-gradient(135deg, #0E1C59 0%, #003DA5 50%, #0E1C59 100%)',
                 isolation: 'isolate',
                 zIndex: 100
             }}
         >
-            {/* Opaque Solid Background - Complete isolation */}
+            {/* Solid Dark Blue Background - Complete isolation */}
             <div
                 className="absolute inset-0"
                 style={{
                     backgroundColor: '#0E1C59',
-                    backgroundImage: 'linear-gradient(135deg, #0E1C59 0%, #003DA5 50%, #0E1C59 100%)',
                     zIndex: 1
                 }}
             />
