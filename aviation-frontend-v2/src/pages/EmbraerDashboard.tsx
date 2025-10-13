@@ -21,13 +21,13 @@ export function EmbraerDashboard() {
     const defenseAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'defense');
     const agricultureAircraft = embraerAircraft.filter((a: Aircraft) => a.category === 'agriculture'); return (
         <div className="min-h-screen bg-neutral-50">
-            {/* Hero Carousel - Isolated with own background */}
-            <div className="relative isolate">
+            {/* Hero Carousel - Isolated with own background and HIGHEST z-index */}
+            <div className="relative z-[9999] isolate">
                 <HeroCarousel />
             </div>
 
             {/* Content Section */}
-            <div className="relative p-6 bg-neutral-50">
+            <div className="relative z-10 p-6 bg-neutral-50">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
