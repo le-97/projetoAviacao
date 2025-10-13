@@ -38,9 +38,12 @@ export function HeroCarousel() {
     const currentAircraft = embraerAircraft[currentIndex];
 
     return (
-        <div className="relative h-[600px] overflow-hidden bg-gradient-to-br from-[#0E1C59] via-[#003DA5] to-[#0E1C59]">
+        <div className="relative h-[600px] overflow-hidden bg-gradient-to-br from-[#0E1C59] via-[#003DA5] to-[#0E1C59] isolate">
+            {/* Solid Background Layer - Prevents external backgrounds from showing through */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0E1C59] via-[#003DA5] to-[#0E1C59] z-0" />
+
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 opacity-5 z-[1]">
                 <div className="absolute inset-0" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                 }} />
@@ -54,7 +57,7 @@ export function HeroCarousel() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.7, ease: 'easeInOut' }}
-                    className="absolute inset-0 flex items-center justify-center"
+                    className="absolute inset-0 flex items-center justify-center z-[2]"
                 >
                     {/* Glass Container */}
                     <div className="relative w-full h-full flex items-center justify-center px-8">
@@ -144,7 +147,7 @@ export function HeroCarousel() {
             {/* Navigation Buttons */}
             <button
                 onClick={handlePrevious}
-                className="absolute left-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-full border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-xl z-10"
+                className="absolute left-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-full border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-xl z-[30]"
                 aria-label="Previous aircraft"
             >
                 <ChevronLeft className="w-6 h-6 text-white" />
@@ -152,21 +155,21 @@ export function HeroCarousel() {
 
             <button
                 onClick={handleNext}
-                className="absolute right-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-full border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-xl z-10"
+                className="absolute right-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 backdrop-blur-xl rounded-full border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-xl z-[30]"
                 aria-label="Next aircraft"
             >
                 <ChevronRight className="w-6 h-6 text-white" />
             </button>
 
             {/* Dots Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-[30]">
                 {embraerAircraft.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => handleDotClick(index)}
                         className={`transition-all ${index === currentIndex
-                                ? 'w-12 h-2 bg-white'
-                                : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+                            ? 'w-12 h-2 bg-white'
+                            : 'w-2 h-2 bg-white/40 hover:bg-white/60'
                             } rounded-full`}
                         aria-label={`Go to aircraft ${index + 1}`}
                     />
