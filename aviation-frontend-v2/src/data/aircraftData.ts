@@ -274,7 +274,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Best Seller',
-    image: '/planes/Phenom 300E.jpg',
+    image: '/planes/phenom300e.png',
     description: 'O jato executivo leve mais entregue do mundo',
     specs: {
       capacity: '6-11 passageiros',
@@ -301,7 +301,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Midsize',
-    image: '/planes/Praetor 500.jpg',
+    image: '/planes/praetor500.png',
     description: 'O jato médio mais disruptivo do mercado',
     specs: {
       capacity: '7-9 passageiros',
@@ -328,7 +328,7 @@ export const embraerAircraft: Aircraft[] = [
     categoryLabel: 'Aviação Executiva',
     categoryColor: '#003DA5',
     badge: 'Super Midsize',
-    image: '/planes/Praetor 600.jpg',
+    image: '/planes/praetor600.png',
     description: 'O jato executivo mais tecnológico e confortável',
     specs: {
       capacity: '8-12 passageiros',

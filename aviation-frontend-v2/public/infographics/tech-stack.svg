@@ -1,90 +1,116 @@
 <svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="headerGradient" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0E1C59"/>
       <stop offset="100%" stop-color="#003DA5"/>
     </linearGradient>
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0E1C59" flood-opacity="0.2"/>
+    <linearGradient id="badgeGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A5B4FC"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#0E1C59" flood-opacity="0.18"/>
+    </filter>
+    <filter id="cardShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="#0E1C59" flood-opacity="0.12"/>
     </filter>
     <style>
-      .title{font:700 56px 'Segoe UI',Roboto,Arial,sans-serif;fill:#0E1C59}
-      .subtitle{font:500 24px 'Segoe UI',Roboto,Arial,sans-serif;fill:#1f2937}
+      .title{font:700 54px 'Segoe UI',Roboto,Arial,sans-serif;fill:#ffffff}
+      .subtitle{font:500 24px 'Segoe UI',Roboto,Arial,sans-serif;fill:#DBEAFE}
       .section-title{font:700 22px 'Segoe UI',Roboto,Arial,sans-serif;fill:#0E1C59}
       .item{font:500 18px 'Segoe UI',Roboto,Arial,sans-serif;fill:#111827}
       .chip{font:600 14px 'Segoe UI',Roboto,Arial,sans-serif;fill:#0E1C59}
+      .tag{font:600 16px 'Segoe UI',Roboto,Arial,sans-serif;fill:#0E1C59}
     </style>
   </defs>
 
-  <!-- Header Card -->
-  <rect x="40" y="40" rx="20" ry="20" width="1520" height="140" fill="url(#g1)" filter="url(#shadow)"/>
-  <text x="80" y="110" class="title" fill="#fff">Aviation Frontend V2 — Tech Stack</text>
-  <text x="80" y="150" class="subtitle" fill="#DBEAFE">React + TypeScript • Vite (Rolldown) • Tailwind • Azure Static Web Apps</text>
+  <!-- Header -->
+  <rect x="60" y="60" rx="28" ry="28" width="1480" height="150" fill="url(#headerGradient)" filter="url(#softShadow)"/>
+  <text x="120" y="130" class="title">Projeto Aviacao · Tech Stack 2025</text>
+  <text x="120" y="172" class="subtitle">Frontend moderno focado em experiência imersiva e deploy contínuo na Azure</text>
 
-  <!-- Grid Background -->
-  <g transform="translate(40,220)">
-    <!-- Column 1 -->
+  <!-- Legend -->
+  <g transform="translate(60,240)">
+    <rect x="0" y="0" width="1480" height="80" rx="18" fill="#FFFFFF" filter="url(#cardShadow)"/>
+    <g transform="translate(40,24)">
+      <rect x="0" y="0" width="150" height="32" rx="16" fill="url(#badgeGradient)"/>
+      <text x="20" y="22" class="tag">Equipe Frontend</text>
+    </g>
+    <text x="220" y="33" class="item" fill="#374151">React 19 • TypeScript 5.9 • Vite 7 (Rolldown) • Tailwind 4.1 • Azure Static Web Apps</text>
+  </g>
+
+  <!-- Grid -->
+  <g transform="translate(60,360)">
+    <!-- Col 1 Row 1 -->
     <g>
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">Core Framework & Language</text>
-      <text x="24" y="72" class="item">• React 19.1.1</text>
-      <text x="24" y="104" class="item">• TypeScript 5.9.3</text>
-      <text x="24" y="136" class="item">• Vite 7.1.14 (Rolldown)</text>
-      <text x="24" y="168" class="item">• Path Aliases (@ → ./src)</text>
-      <text x="24" y="200" class="chip">Dev server, fast HMR, ES modules</text>
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">Fundação Frontend</text>
+      <text x="28" y="82" class="item">• React 19.1.1 + Hooks</text>
+      <text x="28" y="116" class="item">• TypeScript 5.9 (strict)</text>
+      <text x="28" y="150" class="item">• Vite 7.1 (Rolldown) com HMR</text>
+      <text x="28" y="184" class="chip">Aliases: @ → ./src · ESLint + TS-ESLint</text>
     </g>
 
-    <!-- Column 2 -->
-    <g transform="translate(780,0)">
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">UI & Styling</text>
-      <text x="24" y="72" class="item">• Tailwind CSS 4.1.14 + PostCSS</text>
-      <text x="24" y="104" class="item">• Framer Motion 12.23.24</text>
-      <text x="24" y="136" class="item">• Lucide React 0.545.0</text>
-      <text x="24" y="168" class="item">• shadcn/ui (Card, Badge)</text>
-      <text x="24" y="200" class="chip">Brand colors: #0E1C59 → #003DA5</text>
+    <!-- Col 2 Row 1 -->
+    <g transform="translate(510,0)">
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">UI · Design System</text>
+      <text x="28" y="82" class="item">• Tailwind CSS 4.1 + PostCSS</text>
+      <text x="28" y="116" class="item">• shadcn/ui · lucide-react</text>
+      <text x="28" y="150" class="item">• Embraer Branding (#0E1C59)</text>
+      <text x="28" y="184" class="chip">Framer Motion 12 · Glassmorphism · Gradients</text>
     </g>
 
-    <!-- Column 3 -->
-    <g transform="translate(0,260)">
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">State & Data</text>
-      <text x="24" y="72" class="item">• TanStack React Query 5.90.2</text>
-      <text x="24" y="104" class="item">• Zustand 5.0.8</text>
-      <text x="24" y="136" class="item">• Axios 1.12.2</text>
-      <text x="24" y="200" class="chip">Caching, revalidation, optimistic updates</text>
+    <!-- Col 3 Row 1 -->
+    <g transform="translate(1020,0)">
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">State &amp; Data Layer</text>
+      <text x="28" y="82" class="item">• TanStack Query 5.90</text>
+      <text x="28" y="116" class="item">• Zustand 5 (store global)</text>
+      <text x="28" y="150" class="item">• Axios 1.12 · API REST Aviation</text>
+      <text x="28" y="184" class="chip">Sincronização com cache e revalidação</text>
     </g>
 
-    <!-- Column 4 -->
-    <g transform="translate(780,260)">
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">Routing</text>
-      <text x="24" y="72" class="item">• React Router DOM 7.9.4</text>
-      <text x="24" y="136" class="item">• Rotas: / (Dashboard), /compliance</text>
-      <text x="24" y="200" class="chip">Nested routes e navegação declarativa</text>
+    <!-- Col 1 Row 2 -->
+    <g transform="translate(0,230)">
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">Navegação &amp; UX</text>
+      <text x="28" y="82" class="item">• React Router DOM 7.9</text>
+      <text x="28" y="116" class="item">• Rotas: /, /compliance</text>
+      <text x="28" y="150" class="item">• Scroll suave e transições</text>
+      <text x="28" y="184" class="chip">Acessibilidade, foco no teclado</text>
     </g>
 
-    <!-- Column 5 -->
-    <g transform="translate(0,520)">
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">Tooling & Quality</text>
-      <text x="24" y="72" class="item">• ESLint 9 + TS-ESLint</text>
-      <text x="24" y="104" class="item">• @vitejs/plugin-react</text>
-      <text x="24" y="136" class="item">• class-variance-authority, clsx, tailwind-merge</text>
-      <text x="24" y="200" class="chip">DX aprimorada e padrões de código</text>
+    <!-- Col 2 Row 2 -->
+    <g transform="translate(510,230)">
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">Developer Experience</text>
+      <text x="28" y="82" class="item">• class-variance-authority · clsx</text>
+      <text x="28" y="116" class="item">• tailwind-merge · pnpm scripts</text>
+      <text x="28" y="150" class="item">• Storytelling visual do Hero</text>
+      <text x="28" y="184" class="chip">DX refinada · padrões consistentes</text>
     </g>
 
-    <!-- Column 6 -->
-    <g transform="translate(780,520)">
-      <rect x="0" y="0" width="740" height="240" rx="16" fill="#ffffff" filter="url(#shadow)"/>
-      <text x="24" y="36" class="section-title">Build & Deploy</text>
-      <text x="24" y="72" class="item">• Rolldown Vite 7.1.14</text>
-      <text x="24" y="104" class="item">• Azure Static Web Apps CLI 2.0.7</text>
-      <text x="24" y="136" class="item">• Public assets em /public (planes/, infographics/)</text>
-      <text x="24" y="200" class="chip">CI/CD manual com deploy token</text>
+    <!-- Col 3 Row 2 -->
+    <g transform="translate(1020,230)">
+      <rect x="0" y="0" width="460" height="200" rx="20" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="44" class="section-title">Build · Deploy · Monitoring</text>
+      <text x="28" y="82" class="item">• Vite build otimizado (481 KB)</text>
+      <text x="28" y="116" class="item">• Azure Static Web Apps CLI 2.0.7</text>
+      <text x="28" y="150" class="item">• Deploy manual via GitHub main</text>
+      <text x="28" y="184" class="chip">Preview: purple-forest-0e3ce441e</text>
+    </g>
+
+    <!-- Full width row -->
+    <g transform="translate(0,460)">
+      <rect x="0" y="0" width="1480" height="200" rx="22" fill="#FFFFFF" filter="url(#cardShadow)"/>
+      <text x="28" y="50" class="section-title">Assets · Observabilidade · Próximos Passos</text>
+      <text x="28" y="90" class="item">• Assets dedicados em public/planes e public/infographics</text>
+      <text x="28" y="130" class="item">• Dashboard GitHub Metrics · relatórios automatizados</text>
+      <text x="28" y="170" class="item">• Roadmap: testes e2e (Playwright), monitoramento Azure App Insights</text>
     </g>
   </g>
 
-  <!-- Footer note -->
-  <text x="800" y="880" text-anchor="middle" class="subtitle" fill="#6b7280">Atualizado em 2025-10-12 · Projeto: projetoAviacao</text>
+  <!-- Footer -->
+  <text x="800" y="840" text-anchor="middle" class="subtitle" fill="#6B7280">Atualizado em 2025-10-12 · Repositório: le-97/projetoAviacao · Ambiente: Azure Static Web Apps</text>
 </svg>
