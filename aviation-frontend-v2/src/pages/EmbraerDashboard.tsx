@@ -34,7 +34,7 @@ export function EmbraerDashboard() {
                 style={{
                     position: 'relative',
                     zIndex: 1000,
-                    isolation: 'isolate'
+                    isolation: 'isolate',
                 }}
             >
                 <HeroCarousel />
@@ -46,7 +46,8 @@ export function EmbraerDashboard() {
                 style={{
                     position: 'relative',
                     zIndex: 10,
-                    backgroundColor: '#fafafa'
+                    backgroundColor: '#fafafa',
+                    borderTop: '4px solid #0E1C59', // clear separation
                 }}
             >
                 {/* Header */}
