@@ -1,0 +1,65 @@
+# PRD: Correção e Otimização dos GitHub Actions
+
+## Contexto
+Os GitHub Actions workflows estão falhando no repositório projetoAviacao. O projeto foi migrado de `aviation-frontend` para `aviation-frontend-v2`, mas os workflows ainda referenciam o diretório antigo.
+
+## Problema Atual
+1. **Workflows não estão sendo disparados na branch main** - Os workflows estão configurados para a branch `003-projeto-de-microservi` ou para o diretório antigo `aviation-frontend`
+2. **Caminhos incorretos** - Os workflows apontam para `/aviation-frontend` mas o projeto está em `/aviation-frontend-v2`
+3. **Workflows duplicados** - Existem múltiplos workflows com funcionalidades sobrepostas
+4. **Testes E2E falhando** - Playwright e testes podem não estar configurados corretamente
+
+## Objetivos
+1. Atualizar todos os workflows para funcionarem com a branch `main` e o diretório `aviation-frontend-v2`
+2. Remover ou desabilitar workflows desatualizados
+3. Garantir que o deploy para Azure Static Web Apps funcione corretamente
+4. Otimizar os workflows para execução mais rápida
+5. Configurar testes E2E apropriadamente (ou removê-los se não necessários)
+
+## Requisitos Técnicos
+
+### 1. Atualização de Paths
+- Alterar `aviation-frontend` para `aviation-frontend-v2` em todos os workflows
+- Atualizar `WORKING_DIRECTORY` para `./aviation-frontend-v2`
+- Corrigir `app_location` no Azure Static Web Apps Deploy
+
+### 2. Atualização de Branches
+- Configurar workflows para disparar na branch `main`
+- Manter compatibilidade com PRs para `main`
+
+### 3. Simplificação de Workflows
+- Manter apenas workflows essenciais:
+  - `azure-static-web-apps.yml` - Deploy principal para Azure
+  - `frontend-ci-cd.yml` - CI/CD com testes (se necessário)
+- Desabilitar ou remover workflows obsoletos
+
+### 4. Otimizações
+- Usar cache do npm adequadamente
+- Remover jobs desnecessários (E2E, Lighthouse) se não houver testes implementados
+- Simplificar para apenas: lint → build → deploy
+
+### 5. Configuração de Secrets
+- Verificar que `AZURE_STATIC_WEB_APPS_API_TOKEN` está configurado
+- Verificar secrets necessários para o build (VITE_API_URL, etc)
+
+## Critérios de Sucesso
+1. Workflows executam com sucesso ao fazer push na branch `main`
+2. Deploy automático para Azure Static Web Apps funciona
+3. Lint e build passam sem erros
+4. Tempo total de CI/CD reduzido
+5. Nenhum erro de "diretório não encontrado"
+
+## Estrutura de Arquivos
+```
+.github/
+  workflows/
+    azure-static-web-apps.yml (atualizado)
+    frontend-ci-cd.yml (simplificado ou removido)
+    [outros workflows desabilitados]
+```
+
+## Notas
+- O projeto usa Vite + React 19 + TypeScript
+- Build output está em `dist/`
+- ESLint já está configurado e funcionando localmente
+- Não há testes implementados ainda (vitest/playwright)
