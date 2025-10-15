@@ -433,7 +433,7 @@ function checkSecurityCompliance(
 ): { status: ComplianceCheck['status'], findings: string[], recommendations: string[], complianceScore: number } {
     const findings: string[] = [];
     const recommendations: string[] = [];
-    let complianceScore = score;
+    const complianceScore = score;
 
     if (aircraft.categoryLabel === 'Jatos Comerciais') {
         findings.push('Porta de cockpit reforçada conforme regulamentação pós-9/11');

@@ -8,7 +8,12 @@ export interface Aircraft {
     badge?: string;
     image?: string;
     heroImage?: string;
-    specs?: any;
+    specs?: {
+        capacity?: string;
+        range?: string;
+        speed?: string;
+        [key: string]: string | undefined;
+    };
     type?: string;
     capacity?: {
         passengers?: number;
@@ -39,7 +44,7 @@ export interface Aircraft {
         primary: string;
         gallery?: string[];
     };
-    technologicalFeatures?: any[];
+    technologicalFeatures?: string[];
     specifications?: {
         fuelCapacity?: string;
         maxPayload?: string;
@@ -48,7 +53,7 @@ export interface Aircraft {
     };
     description: string;
     features?: string[];
-    highlights?: any[];
+    highlights?: string[];
     certifications?: string[];
     yearIntroduced?: number;
     status: 'active' | 'production' | 'development' | 'retired' | 'operational';

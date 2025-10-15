@@ -1,12 +1,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-    Activity,
-    Users,
-    Shield,
     FileCheck
 } from 'lucide-react';
-import { StatsCard } from '../components/StatsCard';
 import { AircraftCard } from '../components/AircraftCard';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { GitHubMetrics } from '../components/GitHubMetrics';

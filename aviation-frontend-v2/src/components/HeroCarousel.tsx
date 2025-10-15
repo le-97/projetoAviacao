@@ -57,7 +57,7 @@ export function HeroCarousel() {
 
     const resolvedImage =
         includesOverride ||
-        imageOverrides[(currentAircraft as any)?.id] ||
+        (currentAircraft.id ? imageOverrides[currentAircraft.id as keyof typeof imageOverrides] : undefined) ||
         imageOverrides[currentAircraft.model as keyof typeof imageOverrides] ||
         currentAircraft.image;
 

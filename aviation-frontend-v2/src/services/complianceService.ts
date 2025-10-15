@@ -97,7 +97,7 @@ export async function checkCompliance(
         console.log('API indisponível, usando sistema local');
         try {
             return generateLocalReport(model, country);
-        } catch (localError) {
+        } catch {
             if (axios.isAxiosError(error)) {
                 throw new Error(
                     error.response?.data?.error?.message ||
@@ -142,7 +142,7 @@ export async function checkApiHealth(): Promise<boolean> {
     try {
         const response = await apiClient.get('/health');
         return response.status === 200;
-    } catch (error) {
+    } catch {
         return false;
     }
 }
