@@ -2,10 +2,16 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches: [ 003-projeto-de-microservi ]
+    branches: [ main ]
+    paths:
+      - 'aviation-frontend-v2/**'
+      - '.github/workflows/azure-static-web-apps.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches: [ 003-projeto-de-microservi ]
+    branches: [ main ]
+    paths:
+      - 'aviation-frontend-v2/**'
+  workflow_dispatch:
 
 jobs:
   build_and_deploy_job:
@@ -23,7 +29,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/aviation-frontend"
+          app_location: "/aviation-frontend-v2"
           output_location: "dist"
           
   close_pull_request_job:

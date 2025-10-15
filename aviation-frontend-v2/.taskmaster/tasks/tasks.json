@@ -2,90 +2,123 @@
   "master": {
     "tasks": [
       {
-        "id": 1,
+        "id": "1",
         "title": "Auditar workflows do GitHub Actions",
         "description": "Identificar todos os workflows existentes e seu status atual",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
         "dependencies": [],
         "details": "- Listar todos os workflows em .github/workflows/\n- Identificar quais estão ativos/inativos\n- Documentar propósito de cada workflow\n- Identificar workflows duplicados ou obsoletos\n- Analisar os triggers (branches, paths)\n- Verificar quais workflows são executados na branch main",
-        "testStrategy": "Revisar manualmente cada arquivo .yml e verificar última execução no GitHub Actions"
+        "testStrategy": "Revisar manualmente cada arquivo .yml e verificar última execução no GitHub Actions",
+        "updatedAt": "2025-10-15T08:11:39.159Z",
+        "subtasks": []
       },
       {
-        "id": 2,
+        "id": "2",
         "title": "Corrigir paths nos workflows principais",
         "description": "Atualizar referências de aviation-frontend para aviation-frontend-v2",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
-        "dependencies": [1],
+        "dependencies": [
+          "1"
+        ],
         "details": "- Atualizar azure-static-web-apps.yml:\n  - Mudar app_location de '/aviation-frontend' para '/aviation-frontend-v2'\n  - Atualizar WORKING_DIRECTORY para './aviation-frontend-v2'\n  - Verificar output_location (deve ser 'dist')\n- Atualizar frontend-ci-cd.yml:\n  - Mudar paths de 'aviation-frontend/**' para 'aviation-frontend-v2/**'\n  - Atualizar WORKING_DIRECTORY para './aviation-frontend-v2'\n  - Atualizar cache-dependency-path para aviation-frontend-v2/package-lock.json",
-        "testStrategy": "Fazer push e verificar se workflows executam sem erros de 'directory not found'"
+        "testStrategy": "Fazer push e verificar se workflows executam sem erros de 'directory not found'",
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:17:02.788Z"
       },
       {
-        "id": 3,
+        "id": "3",
         "title": "Atualizar branches nos triggers",
         "description": "Configurar workflows para disparar na branch main",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
-        "dependencies": [1],
+        "dependencies": [
+          "1"
+        ],
         "details": "- azure-static-web-apps.yml:\n  - Mudar de '003-projeto-de-microservi' para 'main'\n  - Manter configuração para PRs\n- frontend-ci-cd.yml:\n  - Confirmar que já está configurado para 'main'\n  - Adicionar paths específicos para otimização\n- Verificar se há outros workflows que precisam de atualização",
-        "testStrategy": "Fazer push na main e verificar se workflows são disparados automaticamente"
+        "testStrategy": "Fazer push na main e verificar se workflows são disparados automaticamente",
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:17:12.403Z"
       },
       {
-        "id": 4,
+        "id": "4",
         "title": "Simplificar workflow de CI/CD",
         "description": "Remover jobs desnecessários e otimizar pipeline",
-        "status": "pending",
+        "status": "done",
         "priority": "medium",
-        "dependencies": [2, 3],
+        "dependencies": [
+          "2",
+          "3"
+        ],
         "details": "- Remover ou comentar jobs E2E (Playwright) se não houver testes implementados\n- Remover ou comentar job de Lighthouse se não for necessário\n- Simplificar para pipeline básico: lint → build → deploy\n- Verificar se testes unitários (Vitest) existem\n- Manter apenas jobs essenciais funcionais\n- Otimizar uso de cache do npm",
-        "testStrategy": "Executar workflow e verificar tempo total de execução reduzido"
+        "testStrategy": "Executar workflow e verificar tempo total de execução reduzido",
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:17:24.420Z"
       },
       {
-        "id": 5,
+        "id": "5",
         "title": "Verificar e configurar secrets do Azure",
         "description": "Garantir que secrets necessários estão configurados no GitHub",
         "status": "pending",
         "priority": "high",
-        "dependencies": [2],
+        "dependencies": [
+          "2"
+        ],
         "details": "- Verificar no GitHub Settings → Secrets:\n  - AZURE_STATIC_WEB_APPS_API_TOKEN (essencial)\n  - VITE_API_URL (opcional, para build)\n  - VITE_AZURE_AD_CLIENT_ID (opcional)\n  - VITE_AZURE_AD_TENANT_ID (opcional)\n- Documentar quais secrets são obrigatórios vs opcionais\n- Verificar se o token do Azure está válido e ativo",
-        "testStrategy": "Verificar no GitHub Settings e testar deploy manual se necessário"
+        "testStrategy": "Verificar no GitHub Settings e testar deploy manual se necessário",
+        "subtasks": []
       },
       {
-        "id": 6,
+        "id": "6",
         "title": "Desabilitar ou remover workflows obsoletos",
         "description": "Limpar workflows duplicados ou não utilizados",
         "status": "pending",
         "priority": "medium",
-        "dependencies": [1],
+        "dependencies": [
+          "1"
+        ],
         "details": "- Workflows candidatos para desabilitar/remover:\n  - azure-static-web-apps-kind-sand-0244d7a0f.yml (parece antigo)\n  - backend-ci-cd.yml (se não há backend no frontend-v2)\n  - complete-ci-cd.yml (se duplicado com frontend-ci-cd.yml)\n  - deploy-github-pages.yml (se usando Azure SWA)\n  - monitoring*.yml (se não implementado)\n  - development.yml, backup.yml, rollback.yml, release.yml (avaliar necessidade)\n- Mover workflows obsoletos para .github/workflows/_archived/ ou deletar\n- Desabilitar adicionando 'if: false' ou comentando on: triggers",
-        "testStrategy": "Verificar que workflows ativos executam corretamente e obsoletos não são disparados"
+        "testStrategy": "Verificar que workflows ativos executam corretamente e obsoletos não são disparados",
+        "subtasks": []
       },
       {
-        "id": 7,
+        "id": "7",
         "title": "Testar deploy completo para Azure",
         "description": "Validar que o workflow de deploy funciona end-to-end",
         "status": "pending",
         "priority": "high",
-        "dependencies": [2, 3, 5],
+        "dependencies": [
+          "2",
+          "3",
+          "5"
+        ],
         "details": "- Fazer commit e push das alterações dos workflows\n- Monitorar execução no GitHub Actions\n- Verificar logs de cada step\n- Confirmar que build é criado corretamente\n- Verificar que deploy para Azure Static Web Apps é bem-sucedido\n- Acessar URL do Azure para confirmar deploy\n- Testar que cache-busting está funcionando\n- Documentar tempo total de execução",
-        "testStrategy": "Workflow completa com sucesso e site está acessível em https://purple-forest-0e3ce441e.1.azurestaticapps.net"
+        "testStrategy": "Workflow completa com sucesso e site está acessível em https://purple-forest-0e3ce441e.1.azurestaticapps.net",
+        "subtasks": []
       },
       {
-        "id": 8,
+        "id": "8",
         "title": "Documentar configuração de CI/CD",
         "description": "Criar documentação sobre os workflows e seu funcionamento",
         "status": "pending",
         "priority": "low",
-        "dependencies": [7],
+        "dependencies": [
+          "7"
+        ],
         "details": "- Criar documento CI_CD.md ou atualizar README\n- Documentar:\n  - Quais workflows estão ativos e seus propósitos\n  - Como funciona o deploy para Azure\n  - Secrets necessários\n  - Como testar localmente antes do push\n  - Troubleshooting comum\n  - Tempo médio de execução\n- Incluir badges de status do GitHub Actions no README\n- Adicionar link para Actions no GitHub",
-        "testStrategy": "Revisar documentação com checklist completo"
+        "testStrategy": "Revisar documentação com checklist completo",
+        "subtasks": []
       }
     ],
     "metadata": {
-      "createdAt": "2025-10-15T00:00:00.000Z",
-      "lastModified": "2025-10-15T00:00:00.000Z",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "lastModified": "2025-10-15T08:17:24.422Z",
+      "taskCount": 8,
+      "completedCount": 4,
+      "tags": [
+        "master"
+      ]
     }
   }
 }
