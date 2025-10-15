@@ -75,10 +75,11 @@ export function HeroCarousel() {
                 isolation: 'isolate',
                 contain: 'paint layout',
                 mixBlendMode: 'normal',
-                borderBottom: '4px solid #0E1C59',
-                boxShadow: 'inset 0 1px 0 #0E1C59, inset 0 -1px 0 #0E1C59',
+                borderBottom: '8px solid #0E1C59',
+                boxShadow: 'inset 0 2px 0 #0E1C59, inset 0 -2px 0 #0E1C59',
                 backgroundImage: 'none',
-                marginBottom: '-2px',
+                marginBottom: '-8px',
+                paddingBottom: '8px',
             }}
         >
             {/* Solid background safety layers to avoid any light band */}

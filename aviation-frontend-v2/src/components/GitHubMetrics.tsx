@@ -25,7 +25,7 @@ export function GitHubMetrics() {
         {
             title: 'Contribuidores',
             value: '1',
-            description: 'Desenvolvedor ativo',
+            description: 'Desenvolvedora ativa',
             icon: Users,
             trend: 'Desenvolvimento solo',
             color: 'text-purple-600',
