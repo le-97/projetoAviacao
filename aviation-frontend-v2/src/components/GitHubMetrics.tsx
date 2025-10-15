@@ -24,10 +24,10 @@ export function GitHubMetrics() {
         },
         {
             title: 'Contribuidores',
-            value: '3',
-            description: 'Desenvolvedores ativos',
+            value: '1',
+            description: 'Desenvolvedor ativo',
             icon: Users,
-            trend: 'Equipe dedicada',
+            trend: 'Desenvolvimento solo',
             color: 'text-purple-600',
             bgColor: 'bg-purple-50',
         },
