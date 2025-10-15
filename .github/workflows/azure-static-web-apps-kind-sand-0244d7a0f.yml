@@ -1,13 +1,18 @@
-name: Azure Static Web Apps CI/CD
+# OBSOLETO - Workflow antigo gerado pelo Azure
+# Substituído por: azure-static-web-apps.yml
+# Desabilitado em: 2025-10-15
+name: Azure Static Web Apps CI/CD (OBSOLETO)
 
 on:
-  push:
-    branches:
-      - 003-projeto-de-microservi
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - 003-projeto-de-microservi
+  # Desabilitado - workflow não será executado
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - 003-projeto-de-microservi
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
+  #   branches:
+  #     - 003-projeto-de-microservi
 
 jobs:
   build_and_deploy_job:

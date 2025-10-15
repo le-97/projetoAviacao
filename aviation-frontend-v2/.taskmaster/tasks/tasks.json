@@ -60,27 +60,29 @@
         "id": "5",
         "title": "Verificar e configurar secrets do Azure",
         "description": "Garantir que secrets necessários estão configurados no GitHub",
-        "status": "pending",
+        "status": "done",
         "priority": "high",
         "dependencies": [
           "2"
         ],
         "details": "- Verificar no GitHub Settings → Secrets:\n  - AZURE_STATIC_WEB_APPS_API_TOKEN (essencial)\n  - VITE_API_URL (opcional, para build)\n  - VITE_AZURE_AD_CLIENT_ID (opcional)\n  - VITE_AZURE_AD_TENANT_ID (opcional)\n- Documentar quais secrets são obrigatórios vs opcionais\n- Verificar se o token do Azure está válido e ativo",
         "testStrategy": "Verificar no GitHub Settings e testar deploy manual se necessário",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:20:00.303Z"
       },
       {
         "id": "6",
         "title": "Desabilitar ou remover workflows obsoletos",
         "description": "Limpar workflows duplicados ou não utilizados",
-        "status": "pending",
+        "status": "done",
         "priority": "medium",
         "dependencies": [
           "1"
         ],
         "details": "- Workflows candidatos para desabilitar/remover:\n  - azure-static-web-apps-kind-sand-0244d7a0f.yml (parece antigo)\n  - backend-ci-cd.yml (se não há backend no frontend-v2)\n  - complete-ci-cd.yml (se duplicado com frontend-ci-cd.yml)\n  - deploy-github-pages.yml (se usando Azure SWA)\n  - monitoring*.yml (se não implementado)\n  - development.yml, backup.yml, rollback.yml, release.yml (avaliar necessidade)\n- Mover workflows obsoletos para .github/workflows/_archived/ ou deletar\n- Desabilitar adicionando 'if: false' ou comentando on: triggers",
         "testStrategy": "Verificar que workflows ativos executam corretamente e obsoletos não são disparados",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:22:50.285Z"
       },
       {
         "id": "7",
@@ -113,9 +115,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2025-10-15T08:17:24.422Z",
+      "lastModified": "2025-10-15T08:22:50.302Z",
       "taskCount": 8,
-      "completedCount": 4,
+      "completedCount": 6,
       "tags": [
         "master"
       ]

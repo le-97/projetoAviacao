@@ -1,12 +1,16 @@
-# Deploy para GitHub Pages
+# OBSOLETO - Deploy para GitHub Pages
+# Projeto usa Azure Static Web Apps, não GitHub Pages
+# Desabilitado em: 2025-10-15
 
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (OBSOLETO)
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  # Desabilitado - workflow não será executado
+  workflow_dispatch:
+  # push:
+  #   branches: [ main, master ]
+  # pull_request:
+  #   branches: [ main, master ]
 
 permissions:
   contents: read
