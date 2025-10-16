@@ -1,0 +1,184 @@
+# PRD: Correção de Bugs UI/UX - Aviation Frontend v2
+
+## Objetivo
+Identificar e corrigir todos os bugs de UI/UX, problemas de acessibilidade, responsividade e experiência do usuário no frontend da aplicação Aviation.
+
+## Contexto
+Aplicação React 19 + Vite/Rolldown + Tailwind CSS 4 + Framer Motion para visualização de aeronaves Embraer e verificação de conformidade regulatória.
+
+## Problemas Identificados
+
+### 1. RESPONSIVIDADE E MOBILE
+- Grid de cards não otimizado para mobile (4 colunas em telas pequenas)
+- Hero carousel pode ter problemas em dispositivos móveis
+- Botões e textos podem estar muito pequenos em mobile
+- Menu/navegação ausente para mobile
+- Touch targets podem estar abaixo de 44x44px (padrão iOS)
+
+### 2. ACESSIBILIDADE (A11Y)
+- Falta de labels ARIA em componentes interativos
+- Selects sem descrições adequadas para screen readers
+- Ausência de skip links para navegação por teclado
+- Contraste de cores pode não seguir WCAG 2.1 AA
+- Foco do teclado não visível em todos elementos
+- Imagens sem alt text descritivo
+- Sem suporte a preferências de movimento reduzido
+
+### 3. ESTADOS DE CARREGAMENTO E ERRO
+- Estado de loading genérico (apenas spinner)
+- Mensagens de erro pouco descritivas
+- Ausência de skeleton loaders para melhor UX
+- Feedback visual insuficiente em ações do usuário
+- Sem retry mechanism em caso de falhas
+- Console.error usado em produção (complianceService.ts)
+
+### 4. PERFORMANCE E OTIMIZAÇÃO
+- Imagens podem não estar otimizadas (lazy loading)
+- Animações podem causar layout shifts
+- Sem code splitting por rota
+- Bundle size não otimizado
+- Métricas do GitHub fazem chamadas em tempo real (pode ser lento)
+
+### 5. UX E USABILIDADE
+- Falta breadcrumbs para navegação
+- Sem indicação de página ativa no menu
+- Botão "Voltar" ausente na página de compliance
+- Campos de formulário sem validação em tempo real
+- Ausência de tooltips explicativos
+- Sem feedback de sucesso após verificação de conformidade
+
+### 6. INCONSISTÊNCIAS VISUAIS
+- Espaçamentos inconsistentes entre seções
+- Tamanhos de fonte variados sem padrão claro
+- Cores hardcoded em vez de usar design tokens
+- Falta de padronização nos componentes de badge
+- Cards de diferentes tamanhos dependendo do conteúdo
+
+### 7. MELHORIAS DE CÓDIGO
+- Arquivos .old e .backup devem ser removidos
+- Console.error em produção deve ser removido
+- Tipos TypeScript poderiam ser mais rigorosos
+- Falta de testes unitários e E2E
+- Documentação de componentes ausente
+
+### 8. SEO E META TAGS
+- Falta meta tags adequadas (Open Graph, Twitter Cards)
+- Título e descrição genéricos
+- Sem sitemap.xml
+- Faltam meta tags de robots
+- Schema.org markup ausente
+
+## Tarefas Propostas
+
+### TASK 1: Melhorar Responsividade Mobile
+- Ajustar grids para mobile (1 coluna em sm, 2 em md)
+- Implementar menu hamburger
+- Otimizar hero carousel para mobile
+- Aumentar touch targets para 44x44px mínimo
+- Testar em dispositivos reais (iPhone, Android)
+**Prioridade:** Alta
+**Complexidade:** 7
+
+### TASK 2: Implementar Acessibilidade (A11Y)
+- Adicionar labels ARIA em todos componentes
+- Implementar skip links
+- Verificar contraste de cores (WCAG 2.1 AA)
+- Adicionar focus visible em todos interativos
+- Implementar navegação por teclado completa
+- Adicionar alt text descritivo em imagens
+- Suportar prefers-reduced-motion
+**Prioridade:** Alta
+**Complexidade:** 8
+
+### TASK 3: Melhorar Estados de Loading e Erro
+- Criar skeleton loaders para cards
+- Implementar error boundaries
+- Melhorar mensagens de erro (mais descritivas)
+- Adicionar retry mechanism
+- Remover console.error de produção
+- Criar componentes de loading customizados
+**Prioridade:** Média
+**Complexidade:** 6
+
+### TASK 4: Otimizar Performance
+- Implementar lazy loading de imagens
+- Adicionar code splitting por rota
+- Otimizar bundle com análise
+- Implementar cache de métricas GitHub
+- Reduzir layout shifts com aspect ratios
+- Usar React.memo onde apropriado
+**Prioridade:** Média
+**Complexidade:** 7
+
+### TASK 5: Melhorar UX Geral
+- Adicionar breadcrumbs
+- Implementar indicador de página ativa
+- Adicionar botão "Voltar" em compliance
+- Validação em tempo real de formulários
+- Adicionar tooltips explicativos
+- Feedback de sucesso após ações
+- Implementar estado vazio (empty states)
+**Prioridade:** Alta
+**Complexidade:** 6
+
+### TASK 6: Padronizar Design System
+- Criar design tokens para cores
+- Padronizar espaçamentos (8px grid)
+- Padronizar tamanhos de fonte (scale)
+- Criar componentes de badge reutilizáveis
+- Documentar componentes no Storybook (futuro)
+- Criar guia de estilo visual
+**Prioridade:** Média
+**Complexidade:** 5
+
+### TASK 7: Limpeza de Código
+- Remover arquivos .old e .backup
+- Remover console.error de produção
+- Adicionar testes unitários (Vitest)
+- Adicionar testes E2E (Playwright)
+- Melhorar tipagem TypeScript
+- Documentar componentes principais
+**Prioridade:** Baixa
+**Complexidade:** 6
+
+### TASK 8: Implementar SEO
+- Adicionar React Helmet para meta tags
+- Implementar Open Graph tags
+- Adicionar Twitter Cards
+- Criar sitemap.xml
+- Adicionar robots.txt
+- Implementar Schema.org markup
+**Prioridade:** Baixa
+**Complexidade:** 4
+
+## Definição de Pronto (DoD)
+
+- Código sem erros de lint
+- Testes passando (quando implementados)
+- Responsivo em mobile, tablet, desktop
+- Acessível (WCAG 2.1 AA)
+- Performance score > 90 no Lighthouse
+- Code review aprovado
+- Documentação atualizada
+- Deploy em staging validado
+
+## Métricas de Sucesso
+
+- Lighthouse Performance: > 90
+- Lighthouse Accessibility: 100
+- Lighthouse Best Practices: 100
+- Lighthouse SEO: > 90
+- Core Web Vitals: Todos "Good"
+- Bundle size: < 500KB gzipped
+- Time to Interactive: < 3s
+- Zero console errors em produção
+
+## Stack Técnica
+- React 19.1.1
+- Vite (Rolldown 7.1.14)
+- TypeScript 5.9.3
+- Tailwind CSS 4.1.14
+- Framer Motion 12.23.24
+- React Router 7.9.4
+- Lucide React (ícones)
+- Zustand 5.0.8 (state)

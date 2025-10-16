@@ -1,0 +1,29 @@
+{
+	"meta": {
+		"generatedAt": "2025-10-15T08:54:49.224Z",
+		"tasksAnalyzed": 2,
+		"totalTasks": 8,
+		"analysisCount": 2,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 7,
+			"taskTitle": "Testar deploy completo para Azure",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Decompose the end-to-end deployment validation into actionable, verifiable steps, including monitoring GitHub Actions execution, detailed log analysis for each step, build artifact verification, Azure resource validation (Static Web Apps), thorough cache-busting tests, and final public URL accessibility checks. Also include a step for documenting the total execution time.",
+			"reasoning": "This task is high priority and 'in-progress,' indicating it's already undergoing a meticulous validation process. It involves critical end-to-end verification across multiple systems (GitHub Actions, Azure Static Web Apps) and includes specific, potentially tricky checks like cache-busting. While dependencies are marked as complete, the actual testing can uncover complex integration issues, requiring detailed monitoring, log analysis, and functional validation. The breadth of verification steps justifies a higher complexity score."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Documentar configuração de CI/CD",
+			"complexityScore": 4,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Outline the key sections for the CI/CD documentation, focusing on describing active workflows and their purposes, detailing the Azure deployment process, listing necessary secrets, providing guidance for local testing, common troubleshooting steps, and including average execution times. Also, define steps for adding GitHub Actions status badges and links to the README.",
+			"reasoning": "This documentation task has a pending status and low priority. It requires gathering information from existing workflows, understanding the deployment process, and clearly articulating it. While not technically complex in terms of implementation, it demands a comprehensive understanding of the CI/CD pipeline, accuracy, and good communication skills. Its dependency on Task 7 (successful deploy testing) ensures that the system being documented is stable, reducing rework, but the sheer volume of information to document (workflows, secrets, troubleshooting, local testing, performance) makes it more than a trivial task."
+		}
+	]
+}

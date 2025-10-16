@@ -2,7 +2,7 @@
   "master": {
     "tasks": [
       {
-        "id": "1",
+        "id": 1,
         "title": "Auditar workflows do GitHub Actions",
         "description": "Identificar todos os workflows existentes e seu status atual",
         "status": "done",
@@ -14,7 +14,7 @@
         "subtasks": []
       },
       {
-        "id": "2",
+        "id": 2,
         "title": "Corrigir paths nos workflows principais",
         "description": "Atualizar referências de aviation-frontend para aviation-frontend-v2",
         "status": "done",
@@ -28,7 +28,7 @@
         "updatedAt": "2025-10-15T08:17:02.788Z"
       },
       {
-        "id": "3",
+        "id": 3,
         "title": "Atualizar branches nos triggers",
         "description": "Configurar workflows para disparar na branch main",
         "status": "done",
@@ -42,7 +42,7 @@
         "updatedAt": "2025-10-15T08:17:12.403Z"
       },
       {
-        "id": "4",
+        "id": 4,
         "title": "Simplificar workflow de CI/CD",
         "description": "Remover jobs desnecessários e otimizar pipeline",
         "status": "done",
@@ -57,7 +57,7 @@
         "updatedAt": "2025-10-15T08:17:24.420Z"
       },
       {
-        "id": "5",
+        "id": 5,
         "title": "Verificar e configurar secrets do Azure",
         "description": "Garantir que secrets necessários estão configurados no GitHub",
         "status": "done",
@@ -71,7 +71,7 @@
         "updatedAt": "2025-10-15T08:20:00.303Z"
       },
       {
-        "id": "6",
+        "id": 6,
         "title": "Desabilitar ou remover workflows obsoletos",
         "description": "Limpar workflows duplicados ou não utilizados",
         "status": "done",
@@ -85,22 +85,23 @@
         "updatedAt": "2025-10-15T08:22:50.285Z"
       },
       {
-        "id": "7",
+        "id": 7,
         "title": "Testar deploy completo para Azure",
         "description": "Validar que o workflow de deploy funciona end-to-end",
-        "status": "pending",
+        "status": "in-progress",
         "priority": "high",
         "dependencies": [
           "2",
           "3",
           "5"
         ],
-        "details": "- Fazer commit e push das alterações dos workflows\n- Monitorar execução no GitHub Actions\n- Verificar logs de cada step\n- Confirmar que build é criado corretamente\n- Verificar que deploy para Azure Static Web Apps é bem-sucedido\n- Acessar URL do Azure para confirmar deploy\n- Testar que cache-busting está funcionando\n- Documentar tempo total de execução",
+        "details": "- Fazer commit e push das alterações dos workflows\n- Monitorar execução no GitHub Actions\n- Verificar logs de cada step\n- Confirmar que build é criado corretamente\n- Verificar que deploy para Azure Static Web Apps é bem-sucedido\n- Acessar URL do Azure para confirmar deploy\n- Testar que cache-busting está funcionando\n- Documentar tempo total de execução\n<info added on 2025-10-15T08:41:33.970Z>\n```json\n\"Teste de Deploy Iniciado (Commit: 03beebd, Branch: main).\\nAções Executadas:\\n- Workflows ativados: azure-static-web-apps.yml e frontend-ci-cd.yml.\\n- Checklist de verificação criado em azure-deploy-test.md.\\n- Configuração de AI (Gemini/Perplexity) definida em mcp.json.\\nStatus Atual: Aguardando execução e validação dos workflows.\"\n```\n</info added on 2025-10-15T08:41:33.970Z>",
         "testStrategy": "Workflow completa com sucesso e site está acessível em https://purple-forest-0e3ce441e.1.azurestaticapps.net",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2025-10-15T08:23:41.628Z"
       },
       {
-        "id": "8",
+        "id": 8,
         "title": "Documentar configuração de CI/CD",
         "description": "Criar documentação sobre os workflows e seu funcionamento",
         "status": "pending",
@@ -115,12 +116,201 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2025-10-15T08:22:50.302Z",
+      "lastModified": "2025-10-15T08:23:41.644Z",
       "taskCount": 8,
       "completedCount": 6,
       "tags": [
         "master"
-      ]
+      ],
+      "created": "2025-10-15T08:41:07.612Z",
+      "description": "Tasks for master context",
+      "updated": "2025-10-15T08:41:07.612Z"
+    }
+  },
+  "frontend-bugs": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Enhance Mobile Responsiveness and UX",
+        "description": "Adapt the application's layout for mobile devices by adjusting grids, implementing a hamburger menu, optimizing the hero carousel, and ensuring adequate touch target sizes for improved usability.",
+        "details": "This task involves a comprehensive overhaul of the application's responsiveness. \n1. **Grid System Adjustment:** Traverse the component tree, focusing on pages that use Material-UI's `<Grid container>`. Identify `<Grid item>` components and adjust their breakpoint props to ensure a single-column layout on small screens. For example, change `<Grid item md={6}>` to `<Grid item xs={12} md={6}>` to make items full-width on mobile (`xs`) and half-width on medium screens (`md`) and up. Pay special attention to components in `src/pages`.\n2. **Hamburger Menu Implementation:** Modify the main navigation component (likely `src/components/Navbar/Navbar.js` or a similar `AppBar` component). Use the `@mui/material/useMediaQuery` hook to detect mobile viewports (e.g., `theme.breakpoints.down('md')`). Conditionally render an `<IconButton>` with a `<MenuIcon>` for mobile, which will toggle a `<Drawer>` component containing the navigation links. The desktop navigation links should be hidden on mobile.\n3. **Hero Carousel Optimization:** In the `src/components/HeroCarousel/HeroCarousel.js` component, use the `sx` prop or media queries to adjust its appearance on mobile. This includes reducing font sizes for text overlays, ensuring images scale correctly without distortion, and simplifying or resizing navigation controls (arrows/dots) for better touch interaction.\n4. **Increase Touch Target Sizes:** To improve accessibility, ensure all interactive elements (buttons, icon buttons, links) have a minimum size of 44x44px. This can be achieved by applying a global style or by modifying the MUI theme. For example, in your `theme.js` file, you can set default props: `MuiButton: { styleOverrides: { root: { minWidth: '44px', minHeight: '44px' } } }` and `MuiIconButton: { styleOverrides: { root: { width: '44px', height: '44px' } } }`. Manually inspect other custom clickable components.",
+        "testStrategy": "1. **Grid & Layout Verification:** Use browser developer tools to emulate different device sizes (e.g., iPhone 12, Samsung Galaxy S20). Verify that grid layouts collapse to a single column on screen widths below the 'md' breakpoint (typically 900px in MUI). Ensure content reflows correctly without horizontal scrolling.\n2. **Navigation Testing:** On mobile viewports, confirm the hamburger icon is displayed and the main navigation links are hidden. Click the icon to test that the drawer menu opens smoothly. Verify all links within the drawer are functional and that the drawer can be closed correctly.\n3. **Carousel Interaction:** On a mobile emulator or real device, test the hero carousel's swipe functionality. Ensure the touch controls are responsive and easy to use. Check for any visual glitches during slide transitions.\n4. **Touch Target Inspection:** Use the browser's element inspector to hover over all buttons, icons, and other clickable UI elements. Confirm that their computed width and height are at least 44px by 44px.\n5. **Real Device Testing:** Perform a final validation pass on at least one physical iOS device (e.g., iPhone) and one Android device to confirm all responsive changes work as expected and identify any device-specific rendering issues.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement Loading and Error States",
+        "description": "Implement comprehensive loading and error handling states across the application, including skeleton loaders for grids, a global ErrorBoundary, and toast notifications for asynchronous operations.",
+        "details": "1. **Install Dependencies:** Add necessary libraries for error boundaries and notifications. Run `npm install react-error-boundary react-hot-toast`.\n\n2. **Global ErrorBoundary:**\n   - Create a new component `src/components/ErrorBoundary.jsx`.\n   - Use the `ErrorBoundary` component from `react-error-boundary`, configuring a `fallbackRender` prop. The fallback UI should display a user-friendly message ('Oops! Something went wrong.') and a 'Try Again' button that invokes the `resetErrorBoundary` function.\n   - In `src/App.jsx`, wrap the main application router (`<Routes>`) with your newly created `<ErrorBoundary>` to catch rendering errors globally.\n\n3. **Toast Notifications (react-hot-toast):**\n   - In `src/App.jsx`, import and render the `<Toaster />` component at the top level to enable global notifications.\n   - Configure it with `position: 'top-right'` and consistent styling via the `toastOptions` prop for a uniform look and feel.\n   - Create a service wrapper in `src/services/notificationService.js` with functions like `notifySuccess(message)` and `notifyError(message)`.\n   - Integrate these notification functions into your API handling logic (e.g., Axios interceptors or `finally()` blocks in service functions) to provide feedback on async operations.\n\n4. **Skeleton Loaders:**\n   - Based on the existing Material-UI grids, create a generic skeleton component in `src/components/skeletons/GridSkeletonLoader.jsx`.\n   - This component should use MUI's `<Skeleton variant='rectangular'>` and `<Grid>` components to mimic the layout of data-heavy pages.\n   - In pages that fetch data (e.g., flight logs, aircraft lists), introduce a `loading` state.\n   - Conditionally render the `<GridSkeletonLoader />` when `loading` is true, and the data grid once the fetch is complete.\n\n5. **Inline Errors with Retry:**\n   - For components responsible for their own data fetching, expand the state to include an `error` object.\n   - On API failure, set the `error` state.\n   - If `error` is not null, render a component-level message (e.g., 'Failed to load data.') and a 'Retry' button.\n   - The 'Retry' button's `onClick` handler should re-trigger the data fetching function.",
+        "testStrategy": "1. **ErrorBoundary Verification:** Create a test component that throws an error. Wrap it in the `ErrorBoundary` and use React Testing Library to assert that the fallback UI is rendered. Simulate a click on the 'Try Again' button and verify a re-render is attempted.\n\n2. **Skeleton Loader Testing:** Use browser developer tools to throttle the network to 'Slow 3G'. Navigate to a data-grid page and visually confirm that the skeleton loader appears and correctly mirrors the grid layout before the content loads.\n\n3. **Toast Notification Validation:**\n   - **Success:** Perform an action that should succeed (e.g., submit a valid form) and verify that a success toast appears.\n   - **Error:** Use a mock service worker (MSW) or network tab blocking to force an API call to fail. Trigger the call and confirm that a user-friendly error toast is displayed.\n\n4. **Inline Retry Logic:** Mock an API call to fail for a specific component. Verify the inline error message and 'Retry' button are shown. Click 'Retry', adjust the mock to succeed, and assert that the component now displays the fetched data.",
+        "status": "pending",
+        "dependencies": [
+          "1"
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement UX Enhancements: Back Button, Transitions, Breadcrumbs, and Tooltips",
+        "description": "Enhance user experience by adding a back button to the Compliance Checker, integrating smooth page transitions with Framer Motion, implementing clear navigation breadcrumbs, and adding informative tooltips to key interface elements.",
+        "details": "1. **Install Dependencies:** Begin by adding Framer Motion to the project: `npm install framer-motion`.\n\n2. **Back Button in ComplianceChecker:**\n   - Navigate to `src/pages/ComplianceChecker/ComplianceChecker.jsx`.\n   - Import the `useNavigate` hook from `react-router-dom` and the `ArrowBack` icon from `@mui/icons-material`.\n   - Add a Material-UI `<IconButton>` or `<Button startIcon={<ArrowBack />}>` at the top of the component's rendered output.\n   - Create an `onClick` handler for the button that calls `navigate(-1)` to return to the previous page in the browser history.\n\n3. **Smooth Page Transitions:**\n   - In `src/App.jsx`, import `AnimatePresence` from `framer-motion`.\n   - Wrap the main `<Routes>` component with `<AnimatePresence mode='wait'>` to ensure exit animations complete before new components enter.\n   - Create a reusable wrapper component, e.g., `src/components/motion/PageTransition.jsx`. This component will wrap its children in a `motion.div` with predefined animation variants for initial, animate, and exit states (e.g., fade and slide).\n   - Apply this `PageTransition` component as the root element for each page (e.g., in `Home.jsx`, `ComplianceChecker.jsx`).\n\n4. **Breadcrumbs Implementation:**\n   - Create a new component `src/components/navigation/Breadcrumbs.jsx`.\n   - Utilize the `useLocation` hook from `react-router-dom` to get the current path.\n   - Use Material-UI's `<Breadcrumbs>` component to structure the navigation trail.\n   - Write logic to parse the `location.pathname`, split it into segments, and map them to user-friendly names (e.g., 'compliance-checker' -> 'Compliance Checker').\n   - Render each segment as a `<Link>` component from `react-router-dom`, except for the last one which should be plain text.\n   - Integrate the `<BreadcrumbsComponent />` into the main application layout, likely within `App.jsx` or a shared `Layout.jsx` component, positioned below the main header.\n\n5. **Informative Tooltips:**\n   - Identify elements across the application that are icon-only or have complex functionality, such as buttons in the `ComplianceChecker`.\n   - Import the `<Tooltip>` component from `@mui/material`.\n   - Wrap the target elements (e.g., `<IconButton>`) with `<Tooltip title=\"Descriptive text here\">...</Tooltip>` to provide context on hover.",
+        "testStrategy": "1. **Back Button Verification:** Use React Testing Library to render the `ComplianceChecker` page within a memory router. Simulate a click on the 'Back' button and assert that the navigation function was called with `-1`.\n\n2. **Breadcrumbs Testing:** Render the `Breadcrumbs` component on a specific route (e.g., `/compliance-checker`). Assert that the rendered output contains the correct text and links (e.g., a link to '/' with text 'Home' and plain text 'Compliance Checker'). Simulate a click on a breadcrumb link and verify that the route changes accordingly.\n\n3. **Tooltip Testing:** Render a component containing an element wrapped in a `<Tooltip>`. Use `@testing-library/user-event` to simulate a `hover` event on the element. Use `findByText` to assert that the tooltip's content appears in the document.\n\n4. **Transition Verification (Manual):** Manually navigate between different pages in the application. Verify that the fade/slide transitions are smooth and occur as expected. Check that content from the outgoing page does not overlap with the incoming page during the transition.",
+        "status": "pending",
+        "dependencies": [
+          "1",
+          "2"
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement SEO and Meta Tag Strategy",
+        "description": "Enhance search engine visibility and social media sharing by integrating React Helmet for dynamic meta tags, creating sitemap.xml and robots.txt, and implementing JSON-LD structured data.",
+        "details": "1. **Install Dependencies:** Add `react-helmet-async`, the recommended library for managing document head changes. Run `npm install react-helmet-async`.\n\n2. **Configure Helmet Provider:** In your main application entry point, likely `src/index.js` or `src/main.jsx`, wrap your `<App />` component with the `HelmetProvider`. Example: `import { HelmetProvider } from 'react-helmet-async'; ... root.render(<React.StrictMode><HelmetProvider><App /></HelmetProvider></React.StrictMode>);`\n\n3. **Create a Reusable SEO Component:** Develop a new component `src/components/SEO/SEO.jsx`. This component will accept props like `title`, `description`, `name`, `type`, and `imageUrl`. It will use the `Helmet` component from `react-helmet-async` to render:\n   - `<title>`\n   - `<meta name='description' ... />`\n   - Open Graph tags (`og:title`, `og:description`, `og:type`, `og:image`, `og:url`)\n   - Twitter Card tags (`twitter:creator`, `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`)\n\n4. **Integrate SEO Component:** Import and use the `<SEO />` component at the top level of each page component (e.g., in `src/pages/HomePage/HomePage.jsx`, `src/pages/ComplianceChecker/ComplianceChecker.jsx`), passing page-specific data.\n\n5. **Create `robots.txt`:** In the `public/` directory, create a `robots.txt` file. Add rules to guide search engine crawlers. Start with a basic configuration:\n   ```\n   User-agent: *\n   Allow: /\n   Sitemap: https://www.yourdomain.com/sitemap.xml\n   ```\n\n6. **Generate `sitemap.xml`:** Install a sitemap generator: `npm install react-router-sitemap -D`. Create a script `scripts/generate-sitemap.js` that imports your React Router routes configuration, generates the sitemap XML, and saves it to `public/sitemap.xml`. Add a command to `package.json` to run this script post-build, e.g., `\"postbuild\": \"node ./scripts/generate-sitemap.js\"`.\n\n7. **Implement JSON-LD Structured Data:** Enhance the `<SEO>` component to accept a `structuredData` prop. When provided, render a `<script type=\"application/ld+json\">` tag inside the `<Helmet>` component. The content should be `JSON.stringify(structuredData)`. This can be used for `BreadcrumbList`, `WebSite`, or other relevant schemas.\n\n8. **Review HTML Semantics:** Audit the main layout components (e.g., `App.jsx`, shared layout wrappers) to ensure proper use of semantic HTML5 tags like `<header>`, `<nav>`, `<main>`, and `<footer>` to improve the document outline for accessibility and crawlers.",
+        "testStrategy": "1. **Meta Tag DOM Verification:** For a given page rendered with React Testing Library, query the `document.head` to assert that the `<title>` element's `textContent` matches the title prop passed to `<SEO />`. Similarly, verify that `<meta>` tags for description, Open Graph, and Twitter have the correct `content` attributes.\n\n2. **Static File Validation:** After running a production build (`npm run build`), inspect the output directory (`build` or `dist`) to confirm that `robots.txt` and `sitemap.xml` are present and contain the expected content. Validate the `sitemap.xml` format using an online XML validator.\n\n3. **Third-Party Tool Validation:** Deploy the changes to a staging environment and use external tools to verify the implementation. Use Google's Rich Results Test to check for structured data issues, and use the Facebook Sharing Debugger and Twitter Card Validator to preview how URLs will appear when shared.\n\n4. **Lighthouse Audit:** Run a Lighthouse audit in Chrome DevTools on key pages. Check the SEO score and review the report for any issues related to meta tags, crawlability, or semantic structure.",
+        "status": "pending",
+        "dependencies": [
+          "1",
+          "3"
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Application-Wide Accessibility (A11Y) Enhancements",
+        "description": "Improve application accessibility by adding ARIA labels, ensuring keyboard navigability, checking color contrast, implementing skip links, and adding descriptive alt text, following WCAG 2.1 AA guidelines.",
+        "details": "1. **Install Dev Dependencies:** Add `axe-core` for automated accessibility testing in the development and test environments. Run `npm install --save-dev axe-core @axe-core/react`.\n2. **Integrate Axe:** In `src/main.jsx`, conditionally import and run `@axe-core/react` to log accessibility violations to the console during development. This provides immediate feedback.\n3. **Implement Skip Link:** Create a new component `src/components/SkipToContent.jsx`. This component should render an `<a>` tag that is visually hidden until focused, allowing keyboard users to bypass navigation. Place it at the top of `App.jsx` and ensure your main content area has a corresponding `id='main-content'`.\n4. **ARIA & Semantic HTML:**\n   - Audit all interactive elements. For Material-UI `<IconButton>`s without visible text, add a descriptive `aria-label` prop.\n   - Review all `<img>` tags. Provide descriptive `alt` text that conveys the image's purpose. For purely decorative images, use an empty `alt=\"\"`.\n   - Ensure form elements like `<TextField>` are correctly associated with a `<label>`.\n5. **Color Contrast:** Use browser developer tools to audit color combinations throughout the app. Adjust text and background colors in the global Material-UI theme file to meet WCAG 2.1 Level AA contrast ratio (4.5:1 for normal text, 3:1 for large text).\n6. **Visible Focus:** In the MUI theme, customize the global focus style to ensure it's highly visible on all interactive elements (Buttons, Links, Inputs). Example for a component override: `MuiButton: { styleOverrides: { root: { '&:focus-visible': { outline: '2px solid #yourBrandFocusColor' } } } }`.\n7. **Keyboard Navigation:** Manually test and ensure all interactive elements are reachable and operable via the keyboard (`Tab`, `Shift+Tab`, `Enter`, `Space`). Verify that modals trap focus and can be closed with the `Escape` key.\n8. **Reduced Motion:** Utilize the `usePrefersReducedMotion` hook from `framer-motion` (introduced in Task 3). Wrap animations, especially page transitions, in a condition to disable them if the user has this preference enabled. `const shouldReduceMotion = usePrefersReducedMotion(); <motion.div animate={!shouldReduceMotion && 'enter'} ... />`.",
+        "testStrategy": "1. **Automated Axe Testing:** Integrate `axe-core` into your Jest/React Testing Library setup. Create a test utility that renders components and runs `axe()` on the output, asserting zero critical or serious violations.\n2. **Manual Keyboard Audit:** Perform a full site navigation using only the keyboard. Verify that focus order is logical, all interactive elements are focusable and operable, and modals correctly trap focus and respond to the `Escape` key.\n3. **Screen Reader Verification:** Use NVDA (Windows) or VoiceOver (macOS) to navigate key user flows. Confirm that all controls are clearly announced (leveraging `aria-label`), images have their `alt` text read, and dynamic updates (like error messages from Task 2) are announced via ARIA live regions.\n4. **Visual Focus Check:** Manually `Tab` through every page and confirm that a prominent, consistent focus indicator appears on every single interactive element.\n5. **Reduced Motion Test:** Enable the 'Emulate CSS media feature prefers-reduced-motion' option in browser developer tools. Refresh the application and confirm that major animations and transitions (like those from Task 3) are disabled or significantly simplified.",
+        "status": "pending",
+        "dependencies": [
+          "1",
+          "2",
+          "3"
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Application-Wide Performance Optimizations",
+        "description": "Enhance application performance by implementing route-based code splitting, lazy loading for heavy components, bundle analysis, image optimization, and strategic memoization to reduce initial load times and improve runtime responsiveness.",
+        "details": "1. **Bundle Analysis Setup**: Install `rollup-plugin-visualizer` (`npm install --save-dev rollup-plugin-visualizer`). In `vite.config.js`, import it and add `visualizer()` to the `plugins` array. This will generate a `stats.html` file on build, providing a visual map of the JS bundle to identify large modules.\n2. **Route-Based Code Splitting**: In the main routing file (likely `src/App.jsx`), refactor static page imports to use `React.lazy`. For example, change `import ComplianceChecker from './pages/ComplianceChecker/ComplianceChecker'` to `const ComplianceChecker = React.lazy(() => import('./pages/ComplianceChecker/ComplianceChecker'))`. Wrap your `<Routes>` component with `<React.Suspense>`, using a loading component from Task 2 as the `fallback`. Example: `<Suspense fallback={<PageLoader />}><Routes>...</Routes></Suspense>`.\n3. **Image Optimization**: Audit static images in `src/assets`. Convert large or numerous PNG/JPG files to the modern WebP format using an online tool or a build script. For images rendered within components, apply the native `loading=\"lazy\"` attribute to defer loading of off-screen images.\n4. **Strategic Memoization**: Use the React DevTools Profiler to identify components that re-render unnecessarily. Apply `React.memo` to functional components that render the same result given the same props. Use the `useMemo` hook to memoize the results of expensive calculations within components, and `useCallback` to memoize functions passed as props to memoized children.\n5. **List Virtualization**: For components rendering long lists of data, such as a flight data table, implement virtualization. Install `react-window` (`npm install react-window`) and use its `FixedSizeList` component to render only the rows currently visible in the viewport, significantly improving rendering performance for large datasets.",
+        "testStrategy": "1. **Bundle Verification**: After running `npm run build`, open the generated `dist/stats.html`. Verify that new chunks have been created for each lazy-loaded route and analyze their relative sizes. Compare with a pre-optimization build to confirm size reduction and proper chunking.\n2. **Network Tab Analysis**: Open the browser's Network tab with 'Disable cache' checked. Upon initial load, verify that only the main app chunks are loaded. Navigate to a lazy-loaded route and assert that a new JavaScript chunk is fetched at that moment.\n3. **Lighthouse Audit**: Run a Lighthouse performance audit in Chrome DevTools before and after the optimizations. Record the scores for 'Performance', 'First Contentful Paint', and 'Time to Interactive', and assert a measurable improvement.\n4. **Profiler Verification**: Use the React DevTools Profiler to record an interaction that causes a state update. In the profiler results, confirm that components wrapped with `React.memo` show '(did not render)' when their props have not changed, validating that unnecessary renders were prevented.\n5. **UI Testing**: Manually navigate through the application, especially on slower network conditions (throttled in DevTools). Confirm that the `Suspense` fallback UI appears correctly during route transitions and that there is no perceived degradation in user experience.",
+        "status": "pending",
+        "dependencies": [
+          "1",
+          "2",
+          "3"
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Standardize Design System with Tailwind CSS and Reusable Components",
+        "description": "Consolidate styles by defining a standardized design system in `tailwind.config.js`. Create a library of reusable base components (Button, Input, Card, etc.) to ensure visual consistency and streamline future development.",
+        "details": "1. **Configure `tailwind.config.js`**: Edit the `tailwind.config.js` file. In the `theme.extend` object, define the application's design tokens. Create a semantic color palette (e.g., `primary`, `secondary`, `destructive`, `background`), a typography scale with `fontSize` and `fontWeight` hierarchies, and a standardized spacing system. This centralizes design decisions and moves away from hardcoded magic values.\n2. **Create Base Component Library**: Create a new directory `src/components/ui`. Inside, develop the core reusable components.\n   - **`Button.jsx`**: Create a flexible Button component accepting `variant` (`primary`, `secondary`, `destructive`, `ghost`) and `size` (`sm`, `md`, `lg`) props. Use a utility like `cva` (Class Variance Authority) to manage class combinations for variants.\n   - **`Input.jsx`**: Develop a styled Input component that applies consistent styling for borders, padding, and focus states, while forwarding all standard input props.\n   - **`Card.jsx`**: Build a composite `Card` component with sub-components like `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, and `CardFooter` for structured content layout.\n   - **`Badge.jsx`**: Create a `Badge` component with color variants for displaying statuses or tags.\n   - **`Modal.jsx`**: Implement a `Modal` component using `ReactDOM.createPortal` for proper stacking. It should manage open/close state and provide slots for title, content, and actions.\n3. **Refactor Existing UI**: Begin replacing ad-hoc Tailwind classes and any inconsistent UI elements in pages like `src/pages/ComplianceChecker/ComplianceChecker.jsx` with the new standardized components from `src/components/ui`.\n4. **Documentation**: Create a `DESIGN_SYSTEM.md` file in the project root to document the color palette, typography scale, spacing units, and provide usage examples for each new component.",
+        "testStrategy": "1. **Component Unit Testing**: For each new component in `src/components/ui`, write tests using React Testing Library. For the `Button` component, render it with different `variant` and `size` props and assert that the correct Tailwind CSS classes are applied. Test that `onClick` handlers are fired correctly. For the `Input`, test that `onChange` callbacks are invoked on user input.\n2. **Visual Regression Testing**: Integrate Storybook to create isolated stories for each component and its variants. Use an addon like Chromatic to capture visual snapshots, preventing unintended UI changes in pull requests.\n3. **Accessibility (A11Y) Audit**: As components are built, use the `axe-core` testing utility (from Task 5) to run accessibility checks on each component's story, ensuring they are accessible from the ground up (e.g., buttons have `type` attributes, inputs are linked to labels).\n4. **Manual Refactoring Verification**: After refactoring an existing page to use the new components, manually perform a smoke test to confirm all functionality is preserved and the new styling is applied correctly across different screen sizes.",
+        "status": "pending",
+        "dependencies": [
+          "1"
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Comprehensive Codebase Cleanup and Refactoring",
+        "description": "Perform a full codebase cleanup by removing obsolete files and console logs, standardizing import orders, deleting unused commented code, and ensuring consistent code formatting with Prettier.",
+        "details": "1. **Remove Console Logs**: In `src/services/complianceService.ts`, remove the `console.error` statements on or around lines 84, 120, and 133. These are located in error handling blocks and should be removed to prevent logging sensitive error data in production environments. If a formal logging utility (e.g., Sentry, LogRocket) is planned, replace them accordingly; otherwise, remove them.\n2. **Delete Obsolete Files**: Search the entire project for files with `.backup`, `.old`, and `.tsx.old` extensions and delete them. This includes files like `src/components/HeroCarousel/HeroCarousel.tsx.old` and `src/pages/Dashboard/EmbraerDashboard.backup`.\n3. **Standardize Import Order**: Enforce a consistent import order across all `.js`, `.jsx`, `.ts`, and `.tsx` files. Configure the `eslint-plugin-import` rule in your `.eslintrc` file to follow the convention: 1. React imports, 2. External library imports, 3. Absolute path imports (`@/` or `src/`), 4. Relative path imports. Run `npm run lint -- --fix` to apply the changes.\n4. **Remove Unused Code**: Manually search for and delete all commented-out code blocks that are no longer necessary. Pay close attention to large blocks commented with `/* ... */` and sequential single-line comments `//` that represent dead code.\n5. **Apply Code Formatting**: Run the project's Prettier command, `npm run format`, to format the entire codebase. This ensures all files adhere to a consistent style defined in the project's Prettier configuration.\n6. **Review Folder Structure**: As a final step, perform a brief review of the `src` directory. If any components or services are clearly misplaced, consider reorganizing them into more logical folders to improve project clarity and maintainability. This is an opportunistic goal, not a primary requirement.",
+        "testStrategy": "1. **Static Analysis CI Pass**: All pull request checks for linting (`npm run lint`) and formatting must pass. The code review should confirm the removal of specified console logs, obsolete files, and commented code, as well as correctly ordered imports.\n2. **Successful Build**: After applying all changes, run `npm run build`. The command must complete without any new errors, confirming that the refactoring has not introduced any build-time issues.\n3. **Runtime Smoke Test**: Run the application locally using `npm run dev`. Navigate through all primary user flows, with a specific focus on the Compliance Checker feature, to ensure that its functionality remains unchanged and no runtime errors appear in the browser console. Verify that API calls still handle errors gracefully without logging to the console.",
+        "status": "pending",
+        "dependencies": [
+          "1",
+          "2",
+          "7"
+        ],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Update Phenom Jet Images on the Frontend",
+        "description": "Locate and replace the current images for the Phenom 300, Phenom 500, and Phenom 600 jets with new, high-quality versions within the `EmbraerDashboard` and `AircraftCard` components.",
+        "details": "1. **Locate Image and Data Sources**: Investigate the codebase, specifically within the `src/` directory, to find where the aircraft data is defined. This is likely a mock data file (e.g., `src/data/aircraftData.js` or similar) that exports an array of aircraft objects used by the `EmbraerDashboard` component.\n2. **Add New Assets**: Place the new high-quality images for the Phenom 300, 500, and 600 into the `public/assets/images/` directory. Ensure the filenames are descriptive (e.g., `phenom-300-hq.jpg`, `phenom-500-hq.jpg`, `phenom-600-hq.jpg`).\n3. **Optimize Images**: Before committing the new images, optimize them for the web to ensure they do not negatively impact performance, following the principles established in Task #6. Use tools like TinyPNG or ImageOptim to reduce file size without significant quality loss.\n4. **Update Data Source**: Modify the aircraft data file identified in step 1. Find the objects corresponding to the 'Phenom 300', 'Phenom 500', and 'Phenom 600' and update their respective `imageUrl` properties to point to the new paths (e.g., `/assets/images/phenom-300-hq.jpg`).\n5. **Verify `alt` Text**: While updating the image URLs in the `AircraftCard` component or its data source, ensure that the `alt` attribute for each image provides a descriptive text (e.g., \"Embraer Phenom 300 jet on a runway\"), adhering to the accessibility standards from Task #5.\n<info added on 2025-10-15T13:47:40.740Z>\n```json\n\"Initial analysis indicates the following locations for the current images:\\n1. In `src/components/Hero/HeroCarousel.tsx`, images for all three jets are referenced: `/planes/phenom300.png`, `/planes/phenom500.png`, and `/planes/phenom600.png`.\\n2. In `src/data/aircraftData.ts`, only the Phenom 300E is listed, with the image path `/planes/phenom300e.png`.\\n\\nNote: Data entries for the Phenom 500 and Phenom 600 are missing from `aircraftData.ts` and will need to be added to have them appear as `AircraftCard` components.\"\n```\n</info added on 2025-10-15T13:47:40.740Z>\n<info added on 2025-10-15T13:54:13.298Z>\n```json\n\"User has clarified the requirements. The scope is updated to use the provided images for the Phenom 300E, Praetor 500, and Praetor 600.\\n\\nThis modifies the original plan:\\n1. Update the existing 'Phenom 300E' entry in `src/data/aircraftData.ts` with its new image.\\n2. The previously mentioned 'Phenom 500' and 'Phenom 600' will be replaced by 'Praetor 500' and 'Praetor 600'.\\n3. Add new data entries for 'Praetor 500' and 'Praetor 600' to `src/data/aircraftData.ts` to enable their display as `AircraftCard` components.\\n4. Update the image references in `src/components/Hero/HeroCarousel.tsx` from `phenom500.png`/`phenom600.png` to the new Praetor 500/600 image paths.\"\n```\n</info added on 2025-10-15T13:54:13.298Z>\n<info added on 2025-10-15T23:56:34.795Z>\nProgress update pushed to the `main` branch (latest commit 771a19a).\n- Commit `89056f6` completes the work for subtasks #2, #3, and #4:\n  - The `HeroCarousel` background bleed issue is fixed.\n  - The `TechStackInfographic` integration is complete.\n  - The `GitHubMetrics` component has been updated for a single developer.\n- Commit `e7e84aa` contains CI workflow fixes.\n\nStatus: 3 of 4 subtasks are now complete. The only remaining item is Subtask #1, which is pending the user providing the three new aircraft images.\n</info added on 2025-10-15T23:56:34.795Z>",
+        "testStrategy": "1. **Visual Confirmation**: Run the application locally (`npm run dev`) and navigate to the page displaying the aircraft (likely the `EmbraerDashboard`). Visually confirm that the new, high-quality images for the Phenom 300, 500, and 600 are rendering correctly within their `AircraftCard` components.\n2. **Browser DevTools Inspection**: Right-click on one of the updated images and select 'Inspect'. In the Elements panel, verify that the `<img>` tag's `src` attribute points to the new image URL in the `public/assets/images/` directory. Also, confirm the `alt` attribute contains descriptive text.\n3. **Regression Check**: Quickly browse other aircraft cards on the page to ensure that their images have not been inadvertently changed or broken.\n4. **Lighthouse Audit**: Run a Lighthouse report in Chrome DevTools on the page with the updated images. Check the 'Performance' and 'Accessibility' scores to ensure the new images are properly sized and have the required `alt` text, confirming no new issues have been introduced.",
+        "status": "in-progress",
+        "dependencies": [
+          "2",
+          "5",
+          "6",
+          "7"
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add and Optimize New Jet Images for Phenom and Praetor",
+            "description": "Place the new, high-quality images for the Phenom 300E, Praetor 500, and Praetor 600 into the project's assets directory and run them through an optimization tool to reduce file size for web performance.",
+            "dependencies": [],
+            "details": "Add the three new jet images to the `public/assets/images/` directory. Use a web-based tool like TinyPNG or a local tool like ImageOptim to compress the images, ensuring they are optimized for fast loading times without significant quality degradation.\n<info added on 2025-10-15T13:59:44.538Z>\n{\n  \"update\": \"Image details:\\n- Phenom 300E: white with black side details\\n- Praetor 500: white with black details\\n- Praetor 600: larger, white with black details\\n\\nAction Items:\\n1. Save the three new images to the `/public/planes/` directory.\\n2. Name the files as follows: `phenom300e-new.png`, `praetor500-new.png`, and `praetor600-new.png`.\\n3. Optimize the new images with a tool like TinyPNG.\\n4. Update the image path references in the code to point to these new files.\"\n}\n</info added on 2025-10-15T13:59:44.538Z>",
+            "status": "pending",
+            "testStrategy": "Check that the three new image files exist in the `public/assets/images/` directory. Inspect their file sizes to confirm they have been optimized (e.g., under 500KB each).",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Fix Hero Carousel Background Bleed Issue",
+            "description": "Resolve the visual bug in the `HeroCarousel.tsx` component where the final slide incorrectly shows the page's background instead of the designated carousel background.",
+            "dependencies": [],
+            "details": "Inspect the styling (`.scss` or `sx` props) and structure of the `HeroCarousel.tsx` component. The issue is likely caused by an incorrect height calculation, slide indexing, or a background property not being applied to the final slide container. Adjust the CSS or component logic to ensure a consistent background across all carousel slides.",
+            "status": "done",
+            "testStrategy": "Run the application and navigate to the page with the hero carousel. Cycle through all slides and confirm that the background of the last slide is identical to the others and does not show the underlying page background.",
+            "parentId": "undefined",
+            "updatedAt": "2025-10-15T14:00:51.839Z"
+          },
+          {
+            "id": 3,
+            "title": "Integrate the TechStackInfographic Component",
+            "description": "Add the `TechStackInfographic` component into the main dashboard page to display the project's technology stack.",
+            "dependencies": [],
+            "details": "Edit the `EmbraerDashboard.tsx` file (or the primary layout component). Import `TechStackInfographic` from `src/components/TechStackInfographic/TechStackInfographic.tsx`. Place the `<TechStackInfographic />` element in the desired location within the page's JSX structure, likely below the hero section or alongside the GitHub metrics.",
+            "status": "done",
+            "testStrategy": "Launch the application and go to the main dashboard. Visually verify that the TechStackInfographic component is rendered correctly and appears in its intended position in the layout.",
+            "parentId": "undefined",
+            "updatedAt": "2025-10-15T13:57:36.570Z"
+          },
+          {
+            "id": 4,
+            "title": "Refactor GitHubMetrics Component for a Single Developer",
+            "description": "Modify the `GitHubMetrics` component to fetch and display data for a single developer, changing it from its current multi-developer configuration.",
+            "dependencies": [],
+            "details": "In the `src/components/GitHubMetrics/GitHubMetrics.tsx` file, locate the data source for developers (e.g., a hardcoded array of usernames). Update this source to contain only a single developer's username. Ensure any related logic, such as loops or mapping functions, correctly handles a single entry without errors.",
+            "status": "done",
+            "testStrategy": "Load the page containing the `GitHubMetrics` component. Confirm that the component renders without errors and displays the metrics (commits, etc.) for only the one specified developer. Check that the UI layout adapts cleanly to the single-developer view.",
+            "updatedAt": "2025-10-15T13:57:08.331Z",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2025-10-15T14:00:51.839Z"
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2025-10-15T14:00:51.849Z",
+      "taskCount": 9,
+      "completedCount": 0,
+      "tags": [
+        "frontend-bugs"
+      ],
+      "created": "2025-10-15T23:56:14.827Z",
+      "description": "Tasks for frontend-bugs context"
     }
   }
 }
