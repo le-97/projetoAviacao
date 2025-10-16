@@ -134,7 +134,7 @@ export function ComplianceChecker() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="bg-white rounded-2xl shadow-2xl p-8 mb-8"
                 >
-                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* Aircraft Selection */}
                         <div>
                             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
@@ -235,7 +235,7 @@ export function ComplianceChecker() {
                                 </div>
 
                                 {/* Stats Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                                     <div className="bg-blue-50 rounded-xl p-4">
                                         <FileCheck className="w-6 h-6 text-blue-600 mb-2" />
                                         <div className="text-2xl font-bold text-blue-600">{report.total_checks}</div>
