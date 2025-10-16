@@ -138,7 +138,99 @@
         "status": "pending",
         "dependencies": [],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Audit and Adjust Grid System for Mobile Breakpoints",
+            "description": "Traverse all pages and components using Material-UI's Grid system and update breakpoint props to ensure single-column layouts on small screens.",
+            "dependencies": [],
+            "details": "Identify all <Grid container> and <Grid item> usages, especially in src/pages. Update <Grid item> components to use xs={12} for mobile and appropriate md/lg/xl values for larger screens. Use Tailwind's sm, md, lg classes where applicable for custom layouts. Ensure layouts collapse to a single column below the md breakpoint.",
+            "status": "pending",
+            "testStrategy": "Use browser dev tools to emulate mobile devices and verify that all grids collapse to a single column below the md breakpoint. Check for layout consistency and absence of horizontal scrolling."
+          },
+          {
+            "id": 2,
+            "title": "Implement Hamburger Menu for Mobile Navigation",
+            "description": "Refactor the main navigation to display a hamburger menu and drawer on mobile viewports, hiding desktop links.",
+            "dependencies": [
+              1
+            ],
+            "details": "In src/components/Navbar/Navbar.js (or equivalent), use @mui/material/useMediaQuery or Tailwind's responsive utilities to detect mobile screens. Conditionally render an IconButton with MenuIcon that toggles a Drawer containing navigation links. Hide standard navigation links on mobile.",
+            "status": "pending",
+            "testStrategy": "Manually test on mobile and desktop widths. Confirm hamburger menu appears on mobile, toggles the drawer, and navigation links are accessible. Use keyboard navigation to ensure accessibility."
+          },
+          {
+            "id": 3,
+            "title": "Optimize Hero Carousel for Mobile Devices",
+            "description": "Adjust the hero carousel's layout, typography, and controls for optimal mobile usability and appearance.",
+            "dependencies": [
+              1
+            ],
+            "details": "In src/components/HeroCarousel/HeroCarousel.js, use the sx prop, Tailwind classes, or media queries to reduce font sizes, ensure images scale responsively, and resize/simplify navigation controls for touch. Remove or minimize non-essential overlays on small screens.",
+            "status": "pending",
+            "testStrategy": "Test the carousel on various mobile devices and emulators. Verify text is readable, images are not distorted, and controls are easily tappable."
+          },
+          {
+            "id": 4,
+            "title": "Enforce Minimum Touch Target Sizes Across UI",
+            "description": "Ensure all interactive elements meet the 44x44px minimum touch target size for accessibility.",
+            "dependencies": [
+              1
+            ],
+            "details": "Audit all buttons, icon buttons, and links. Apply global styles or update the MUI theme (e.g., in theme.js) to set minWidth and minHeight for MuiButton and MuiIconButton. Manually adjust custom clickable components as needed.",
+            "status": "pending",
+            "testStrategy": "Use browser dev tools to inspect element sizes. Run accessibility audits (e.g., Lighthouse, axe-core) to confirm touch targets meet minimum requirements."
+          },
+          {
+            "id": 5,
+            "title": "Integrate and Configure Viewport Meta Tag",
+            "description": "Ensure the viewport meta tag is present and correctly configured for mobile scaling and layout.",
+            "dependencies": [],
+            "details": "In the main HTML template (e.g., index.html), add or verify <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> is present. This ensures proper scaling and prevents layout issues on mobile devices.",
+            "status": "pending",
+            "testStrategy": "Inspect the rendered HTML in browser dev tools. Confirm the viewport meta tag is present and mobile layouts scale correctly."
+          },
+          {
+            "id": 6,
+            "title": "Implement Responsive Images and Media",
+            "description": "Update images and media assets to use responsive techniques for optimal loading and display on mobile devices.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use srcSet, sizes, or Tailwind responsive classes for <img> tags and background images. Ensure images do not overflow containers and are optimized for different screen sizes. Consider using modern formats (e.g., WebP) for performance.",
+            "status": "pending",
+            "testStrategy": "Test image loading and display on various devices and screen sizes. Use browser network tools to verify appropriate image sizes are loaded."
+          },
+          {
+            "id": 7,
+            "title": "Conduct Mobile Performance Optimization",
+            "description": "Optimize performance for mobile users by minimizing bundle size, deferring non-critical resources, and leveraging Tailwind and Vite best practices.",
+            "dependencies": [
+              1,
+              6
+            ],
+            "details": "Analyze bundle with Vite's analyzer. Implement code splitting and lazy loading for heavy components. Use Tailwind's purge feature to remove unused CSS. Optimize images and defer non-critical scripts.",
+            "status": "pending",
+            "testStrategy": "Run Lighthouse or WebPageTest on mobile emulation. Check for improvements in load time, bundle size, and performance scores."
+          },
+          {
+            "id": 8,
+            "title": "Comprehensive Mobile Responsiveness and UX Testing",
+            "description": "Perform thorough manual and automated testing of the application's mobile responsiveness and UX enhancements.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "details": "Test all major flows on real devices and emulators. Use browser dev tools, accessibility audits, and user testing to validate grid layouts, navigation, carousel, touch targets, and performance. Document and fix any issues found.",
+            "status": "pending",
+            "testStrategy": "Use device labs, browser emulators, and automated tools (Lighthouse, axe-core) to verify all acceptance criteria. Collect user feedback if possible."
+          }
+        ]
       },
       {
         "id": 2,
