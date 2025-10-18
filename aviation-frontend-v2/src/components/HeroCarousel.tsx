@@ -45,6 +45,9 @@ export const HeroCarousel = memo(function HeroCarousel() {
         phenom300: "/planes/phenom300.png",
         phenom500: "/planes/phenom500.png",
         phenom600: "/planes/phenom600.png",
+        "phenom-300e": "/planes/phenom300e.png",
+        "praetor-500": "/planes/praetor500.png",
+        "praetor-600": "/planes/praetor600.png",
     };
     const modelLower = (currentAircraft?.model || "").toLowerCase();
     const includesOverride = modelLower.includes("phenom 300")
@@ -53,7 +56,13 @@ export const HeroCarousel = memo(function HeroCarousel() {
             ? "/planes/phenom500.png"
             : modelLower.includes("phenom 600")
                 ? "/planes/phenom600.png"
-                : undefined;
+                : modelLower.includes("phenom 300e")
+                    ? "/planes/phenom300e.png"
+                    : modelLower.includes("praetor 500")
+                        ? "/planes/praetor500.png"
+                        : modelLower.includes("praetor 600")
+                            ? "/planes/praetor600.png"
+                            : undefined;
 
     const resolvedImage =
         includesOverride ||
