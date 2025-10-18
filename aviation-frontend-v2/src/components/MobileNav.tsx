@@ -1,8 +1,8 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { PlaneIcon } from '../icons/PlaneIcon';
-import { X } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { PlaneIcon } from "./icons/PlaneIcon";
+import { X } from "lucide-react";
 
 interface NavLink {
   label: string;
@@ -11,9 +11,9 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: 'Dashboard', path: '/', icon: '🏠' },
-  { label: 'Verificar Conformidade', path: '/compliance', icon: '✓' },
-  { label: 'Sobre', path: '/about', icon: 'ℹ️' },
+  { label: "Dashboard", path: "/", icon: "🏠" },
+  { label: "Verificar Conformidade", path: "/compliance", icon: "✓" },
+  { label: "Sobre", path: "/about", icon: "ℹ️" },
 ];
 
 export const MobileNav = () => {
@@ -28,13 +28,24 @@ export const MobileNav = () => {
   // Prevenir scroll quando menu aberto
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
+  }, [isOpen]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   return (
@@ -42,10 +53,14 @@ export const MobileNav = () => {
       {/* Botão de Toggle - Visível apenas em mobile */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 right-4 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg md:hidden hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="fixed top-4 right-4 z-50 p-4 bg-blue-600 text-white rounded-full shadow-lg md:hidden hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-95 transition-transform"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        aria-label={isOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
+        aria-label={
+          isOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"
+        }
+        aria-expanded={isOpen}
+        aria-controls="mobile-navigation-menu"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -82,6 +97,7 @@ export const MobileNav = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
             onClick={() => setIsOpen(false)}
+            aria-hidden="true"
           />
         )}
       </AnimatePresence>
@@ -90,63 +106,75 @@ export const MobileNav = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.nav
-            initial={{ x: '100%' }}
+            id="mobile-navigation-menu"
+            role="navigation"
+            aria-label="Menu de navegação principal"
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            exit={{ x: "100%" }}
             transition={{
-              type: 'spring',
+              type: "spring",
               stiffness: 300,
               damping: 30,
             }}
-            className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 shadow-2xl z-40 md:hidden"
+            className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 shadow-2xl z-40 md:hidden"
           >
-            <div className="h-full flex flex-col p-6 pt-20">
+            <div className="h-full flex flex-col p-4 pt-20">
               {/* Header do Menu */}
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="mb-8"
+                className="mb-6"
               >
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <h2 className="text-xl font-bold text-white mb-2">
                   ✈️ Navegação
                 </h2>
-                <div className="h-1 w-16 bg-blue-300 rounded-full" />
+                <div className="h-1 w-12 bg-blue-300 rounded-full" />
               </motion.div>
 
               {/* Links de Navegação */}
-              <ul className="flex-grow space-y-2">
+              <ul className="flex-grow space-y-1" role="list">
                 {navLinks.map((link, index) => {
                   const isActive = location.pathname === link.path;
-                  
+
                   return (
                     <motion.li
                       key={link.path}
                       initial={{ opacity: 0, x: 50 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 + index * 0.05 }}
+                      role="listitem"
                     >
                       <Link
                         to={link.path}
                         className={`
-                          flex items-center gap-4 px-4 py-4 rounded-lg
-                          transition-all duration-200
+                          flex items-center gap-3 px-3 py-3 rounded-lg
+                          transition-all duration-300 min-h-[48px] transform
                           ${
                             isActive
-                              ? 'bg-white/20 text-white font-semibold shadow-lg'
-                              : 'text-blue-100 hover:bg-white/10 hover:text-white'
+                              ? "bg-white/20 text-white font-semibold shadow-lg scale-105"
+                              : "text-blue-100 hover:bg-white/10 hover:text-white hover:scale-102"
                           }
                         `}
+                        aria-current={isActive ? "page" : undefined}
                       >
-                        <span className="text-2xl">{link.icon}</span>
-                        <span className="text-lg">{link.label}</span>
-                        
+                        <span className="text-xl" aria-hidden="true">
+                          {link.icon}
+                        </span>
+                        <span className="text-base">{link.label}</span>
+
                         {/* Indicador de página ativa */}
                         {isActive && (
                           <motion.div
                             layoutId="activeIndicator"
                             className="ml-auto w-2 h-2 bg-white rounded-full"
-                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            }}
+                            aria-hidden="true"
                           />
                         )}
                       </Link>
@@ -160,9 +188,9 @@ export const MobileNav = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="mt-auto pt-6 border-t border-blue-400/30"
+                className="mt-auto pt-4 border-t border-blue-400/30"
               >
-                <p className="text-blue-200 text-sm text-center">
+                <p className="text-blue-200 text-xs text-center">
                   Embraer Aviation System
                 </p>
                 <p className="text-blue-300 text-xs text-center mt-1">

@@ -52,7 +52,9 @@
   "paths": {
     "/": {
       "get": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "summary": "Root health check",
         "description": "Basic health check endpoint for service status",
         "operationId": "read_root",
@@ -94,7 +96,469 @@
     },
     "/health": {
       "get": {
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
+        "summary": "Basic health check",
+        "description": "Basic health check endpoint",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-10-01T12:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/detailed": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Detailed health check",
+        "description": "Detailed health check with all components",
+        "operationId": "detailed_health_check",
+        "responses": {
+          "200": {
+            "description": "Detailed health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Readiness check",
+        "description": "Kubernetes readiness probe endpoint",
+        "operationId": "readiness_check",
+        "responses": {
+          "200": {
+            "description": "Service is ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ready"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service not ready"
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Liveness check",
+        "description": "Kubernetes liveness probe endpoint",
+        "operationId": "liveness_check",
+        "responses": {
+          "200": {
+            "description": "Service is alive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "alive"
+                    },
+                    "uptime": {
+                      "type": "number",
+                      "example": 3600
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "Monitoring"
+        ],
+        "summary": "Get application metrics",
+        "description": "Get application metrics (requires authentication)",
+        "operationId": "get_metrics",
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "http_requests": {
+                      "type": "object",
+                      "description": "HTTP request metrics"
+                    },
+                    "http_errors": {
+                      "type": "object",
+                      "description": "HTTP error metrics"
+                    },
+                    "request_duration": {
+                      "type": "object",
+                      "description": "Request duration metrics"
+                    },
+                    "database_queries": {
+                      "type": "object",
+                      "description": "Database query metrics"
+                    },
+                    "compliance_checks": {
+                      "type": "object",
+                      "description": "Compliance check metrics"
+                    },
+                    "system_cpu": {
+                      "type": "object",
+                      "description": "System CPU metrics"
+                    },
+                    "system_memory": {
+                      "type": "object",
+                      "description": "System memory metrics"
+                    },
+                    "uptime_seconds": {
+                      "type": "number",
+                      "description": "System uptime in seconds"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/metrics/alerts": {
+      "get": {
+        "tags": [
+          "Monitoring"
+        ],
+        "summary": "Get active alerts",
+        "description": "Get active alerts and alert history",
+        "operationId": "get_alerts",
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active alerts and history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "active_alerts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of active alert names"
+                    },
+                    "alert_history": {
+                      "type": "array",
+                      "description": "Last 50 alerts"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login and get JWT token",
+        "description": "Login and get JWT token",
+        "operationId": "login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string",
+                      "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "example": "bearer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/auth/api-key": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Create API key",
+        "description": "Create a new API key (requires authentication)",
+        "operationId": "create_api_key",
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "my-api-key"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "api_key": {
+                      "type": "string",
+                      "example": "ak_1234567890abcdef"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "my-api-key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/security/blacklist": {
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Blacklist IP",
+        "description": "Add IP to blacklist (requires authentication)",
+        "operationId": "blacklist_ip",
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ip"
+                ],
+                "properties": {
+                  "ip": {
+                    "type": "string",
+                    "example": "192.168.1.100"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP blacklisted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "IP 192.168.1.100 blacklisted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/security/blacklist/{ip}": {
+      "delete": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Remove IP from blacklist",
+        "description": "Remove IP from blacklist (requires authentication)",
+        "operationId": "remove_from_blacklist",
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "192.168.1.100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "IP removed from blacklist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "IP 192.168.1.100 removed from blacklist"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
         "summary": "Detailed health check",
         "description": "Comprehensive health check with service and cache information",
         "operationId": "health_check",
@@ -112,9 +576,11 @@
         }
       }
     },
-    "/compliance/check/{model}/{country}": {
+    "/api/v1/compliance/check/{model}/{country}": {
       "get": {
-        "tags": ["Compliance"],
+        "tags": [
+          "Compliance"
+        ],
         "summary": "Check aircraft compliance",
         "description": "Check compliance for an aircraft model in a specific country.\nThis endpoint provides comprehensive compliance validation against\nregulatory authorities.",
         "operationId": "check_compliance",
@@ -126,7 +592,21 @@
             "description": "Aircraft model identifier",
             "schema": {
               "type": "string",
-              "enum": ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320", "Phenom-300E", "C-390"]
+              "enum": [
+                "E175",
+                "E175-E1",
+                "E175-E2",
+                "E190",
+                "E190-E1",
+                "E190-E2",
+                "E195",
+                "E195-E1",
+                "E195-E2",
+                "737",
+                "A320",
+                "Phenom-300E",
+                "C-390"
+              ]
             },
             "example": "E175-E2"
           },
@@ -137,7 +617,11 @@
             "description": "Country/region for compliance check",
             "schema": {
               "type": "string",
-              "enum": ["USA", "BRAZIL", "EUROPE"]
+              "enum": [
+                "USA",
+                "BRAZIL",
+                "EUROPE"
+              ]
             },
             "example": "USA"
           }
@@ -176,21 +660,135 @@
         }
       }
     },
-    "/compliance/models": {
+    "/api/v1/compliance/check-compliance": {
       "get": {
-        "tags": ["Compliance"],
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Check aircraft compliance (Legacy)",
+        "description": "Legacy endpoint with enhanced database support",
+        "operationId": "check_compliance_legacy",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "required": true,
+            "description": "Aircraft model to check compliance for",
+            "schema": {
+              "type": "string",
+              "pattern": "^(E170|E175|E175-E1|E175-E2|E190|E190-E1|E190-E2|E195|E195-E1|E195-E2|Phenom-100EX|Phenom-300E|Praetor-500|Praetor-600|C-390|KC-390|A-29|EMB-203|737|A320)$",
+              "examples": [
+                "E175",
+                "E175-E2",
+                "E190",
+                "E195",
+                "Phenom-300E",
+                "C-390"
+              ]
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": true,
+            "description": "Country/region to check compliance against",
+            "schema": {
+              "type": "string",
+              "pattern": "^(USA|BRAZIL|EUROPE|usa|brazil|europe)$",
+              "examples": [
+                "USA",
+                "BRAZIL",
+                "EUROPE"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compliance check completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplianceReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/models": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
         "summary": "Get supported aircraft models",
         "description": "Retrieve list of all supported aircraft models with details",
-        "operationId": "get_models",
+        "operationId": "get_supported_models",
         "responses": {
           "200": {
             "description": "List of supported aircraft models",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AircraftModel"
+                  "type": "object",
+                  "properties": {
+                    "models": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of supported models"
+                    },
+                    "countries": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of supported countries"
+                    },
+                    "database_models": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Models from database"
+                    },
+                    "database_countries": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Countries from database"
+                    },
+                    "total_aircraft_in_db": {
+                      "type": "integer",
+                      "description": "Total aircraft in database"
+                    },
+                    "total_authorities_in_db": {
+                      "type": "integer",
+                      "description": "Total authorities in database"
+                    }
                   }
                 }
               }
@@ -199,9 +797,99 @@
         }
       }
     },
-    "/compliance/authorities": {
+    "/api/v1/compliance/requirements/{model}/{country}": {
       "get": {
-        "tags": ["Compliance"],
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Get applicable regulations",
+        "description": "Get applicable regulations for an aircraft model and country from database",
+        "operationId": "get_requirements",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "description": "Aircraft model",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "E175",
+                "E175-E1",
+                "E175-E2",
+                "E190",
+                "E190-E1",
+                "E190-E2",
+                "E195",
+                "E195-E1",
+                "E195-E2",
+                "737",
+                "A320"
+              ]
+            },
+            "example": "E175"
+          },
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Country/region",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USA",
+                "BRAZIL",
+                "EUROPE",
+                "UK",
+                "CANADA"
+              ]
+            },
+            "example": "USA"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Applicable regulations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "model": {
+                      "type": "string",
+                      "example": "E175"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "USA"
+                    },
+                    "total_regulations": {
+                      "type": "integer",
+                      "example": 25
+                    },
+                    "regulations": {
+                      "type": "array",
+                      "description": "List of applicable regulations"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/authorities": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
         "summary": "Get aviation authorities",
         "description": "Retrieve list of supported aviation regulatory authorities",
         "operationId": "get_authorities",
@@ -211,9 +899,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Authority"
+                  "type": "object",
+                  "properties": {
+                    "total_authorities": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "authorities": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "code": {
+                            "type": "string",
+                            "example": "FAA"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Federal Aviation Administration"
+                          },
+                          "country": {
+                            "type": "string",
+                            "example": "USA"
+                          },
+                          "website": {
+                            "type": "string",
+                            "example": "https://www.faa.gov"
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -222,19 +941,328 @@
         }
       }
     },
-    "/metrics": {
+    "/api/v1/compliance/aircraft": {
       "get": {
-        "tags": ["Monitoring"],
-        "summary": "Get system metrics",
-        "description": "Retrieve system performance metrics and statistics",
-        "operationId": "get_metrics",
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Get all aircraft models",
+        "description": "Get all aircraft models from database",
+        "operationId": "get_aircraft_models",
         "responses": {
           "200": {
-            "description": "System metrics",
+            "description": "List of aircraft models",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SystemMetrics"
+                  "type": "object",
+                  "properties": {
+                    "total_aircraft": {
+                      "type": "integer",
+                      "example": 15
+                    },
+                    "aircraft": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "manufacturer": {
+                            "type": "string",
+                            "example": "Embraer"
+                          },
+                          "model": {
+                            "type": "string",
+                            "example": "E175"
+                          },
+                          "variant": {
+                            "type": "string",
+                            "example": "E175-E2"
+                          },
+                          "type_certificate": {
+                            "type": "string",
+                            "example": "A41NM"
+                          },
+                          "max_seats": {
+                            "type": "integer",
+                            "example": 88
+                          },
+                          "max_weight_kg": {
+                            "type": "number",
+                            "example": 38790.0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/health": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Compliance service health check",
+        "description": "Health check endpoint with database connectivity test",
+        "operationId": "compliance_health_check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "enhanced_compliance"
+                    },
+                    "database": {
+                      "type": "string",
+                      "example": "connected"
+                    },
+                    "data_summary": {
+                      "type": "object",
+                      "properties": {
+                        "authorities": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "aircraft": {
+                          "type": "integer",
+                          "example": 15
+                        },
+                        "regulations": {
+                          "type": "integer",
+                          "example": 150
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Service unhealthy"
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/ai-analysis/{model}/{country}": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "AI-enhanced compliance analysis",
+        "description": "AI-enhanced compliance analysis using Hugging Face models",
+        "operationId": "ai_enhanced_compliance_analysis",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "description": "Aircraft model",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "E175",
+                "E175-E1",
+                "E175-E2",
+                "E190",
+                "E190-E1",
+                "E190-E2",
+                "E195",
+                "E195-E1",
+                "E195-E2",
+                "737",
+                "A320"
+              ]
+            },
+            "example": "E175"
+          },
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Target country",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USA",
+                "BRAZIL",
+                "EUROPE",
+                "UK",
+                "CANADA"
+              ]
+            },
+            "example": "USA"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AI-enhanced analysis completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Enhanced compliance report with AI insights"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "500": {
+            "description": "AI analysis failed"
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/gap-analysis/{model}/{origin_country}/{target_country}": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Regulatory gap analysis",
+        "description": "Comprehensive gap analysis between origin and target country regulations",
+        "operationId": "regulatory_gap_analysis",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "description": "Aircraft model",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "E175",
+                "E175-E1",
+                "E175-E2",
+                "E190",
+                "E190-E1",
+                "E190-E2",
+                "E195",
+                "E195-E1",
+                "E195-E2",
+                "737",
+                "A320"
+              ]
+            },
+            "example": "E175"
+          },
+          {
+            "name": "origin_country",
+            "in": "path",
+            "required": true,
+            "description": "Origin country",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BRAZIL",
+                "USA",
+                "EUROPE",
+                "UK",
+                "CANADA"
+              ]
+            },
+            "example": "BRAZIL"
+          },
+          {
+            "name": "target_country",
+            "in": "path",
+            "required": true,
+            "description": "Target country",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USA",
+                "BRAZIL",
+                "EUROPE",
+                "UK",
+                "CANADA"
+              ]
+            },
+            "example": "USA"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gap analysis completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Detailed gap analysis with action items and timelines"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "500": {
+            "description": "Gap analysis failed"
+          }
+        }
+      }
+    },
+    "/api/v1/compliance/": {
+      "get": {
+        "tags": [
+          "Compliance"
+        ],
+        "summary": "Compliance root endpoint",
+        "description": "Root endpoint with API information",
+        "operationId": "compliance_root",
+        "responses": {
+          "200": {
+            "description": "API information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": {
+                      "type": "string",
+                      "example": "Enhanced Aviation Compliance API"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "2.1.0"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Database-backed compliance checking with AI-enhanced analysis"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "endpoints": {
+                      "type": "object",
+                      "description": "Available endpoints"
+                    },
+                    "ai_capabilities": {
+                      "type": "object",
+                      "description": "AI capabilities information"
+                    }
+                  }
                 }
               }
             }
@@ -271,7 +1299,11 @@
           },
           "overall_status": {
             "type": "string",
-            "enum": ["COMPLIANT", "NON_COMPLIANT", "PARTIAL_COMPLIANCE"],
+            "enum": [
+              "COMPLIANT",
+              "NON_COMPLIANT",
+              "PARTIAL_COMPLIANCE"
+            ],
             "description": "Overall compliance status"
           },
           "total_checks": {
@@ -313,7 +1345,12 @@
           },
           "status": {
             "type": "string",
-            "enum": ["OK", "PENDING", "NON-COMPLIANT", "NON_COMPLIANT"],
+            "enum": [
+              "OK",
+              "PENDING",
+              "NON-COMPLIANT",
+              "NON_COMPLIANT"
+            ],
             "description": "Legacy status field - use overall_status instead",
             "example": "PENDING"
           },
@@ -353,12 +1390,22 @@
           },
           "status": {
             "type": "string",
-            "enum": ["COMPLIANT", "NON_COMPLIANT", "PARTIAL_COMPLIANCE", "NOT_APPLICABLE"],
+            "enum": [
+              "COMPLIANT",
+              "NON_COMPLIANT",
+              "PARTIAL_COMPLIANCE",
+              "NOT_APPLICABLE"
+            ],
             "description": "Compliance status for this check"
           },
           "severity": {
             "type": "string",
-            "enum": ["CRITICAL", "MAJOR", "MINOR", "INFO"],
+            "enum": [
+              "CRITICAL",
+              "MAJOR",
+              "MINOR",
+              "INFO"
+            ],
             "description": "Severity level of the check"
           },
           "findings": {
@@ -381,7 +1428,10 @@
       },
       "AircraftInfo": {
         "type": "object",
-        "required": ["manufacturer", "model"],
+        "required": [
+          "manufacturer",
+          "model"
+        ],
         "properties": {
           "manufacturer": {
             "type": "string",
@@ -418,7 +1468,12 @@
       },
       "AircraftModel": {
         "type": "object",
-        "required": ["id", "model", "manufacturer", "supported"],
+        "required": [
+          "id",
+          "model",
+          "manufacturer",
+          "supported"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -454,7 +1509,11 @@
       },
       "Authority": {
         "type": "object",
-        "required": ["code", "name", "country"],
+        "required": [
+          "code",
+          "name",
+          "country"
+        ],
         "properties": {
           "code": {
             "type": "string",
@@ -481,7 +1540,11 @@
       },
       "HealthStatus": {
         "type": "object",
-        "required": ["status", "service", "version"],
+        "required": [
+          "status",
+          "service",
+          "version"
+        ],
         "properties": {
           "status": {
             "type": "string",
@@ -500,14 +1563,30 @@
             "items": {
               "type": "string"
             },
-            "example": ["E175", "E175-E1", "E175-E2", "E190", "E190-E1", "E190-E2", "E195", "E195-E1", "E195-E2", "737", "A320"]
+            "example": [
+              "E175",
+              "E175-E1",
+              "E175-E2",
+              "E190",
+              "E190-E1",
+              "E190-E2",
+              "E195",
+              "E195-E1",
+              "E195-E2",
+              "737",
+              "A320"
+            ]
           },
           "supported_countries": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "example": ["BRAZIL", "USA", "EUROPE"]
+            "example": [
+              "BRAZIL",
+              "USA",
+              "EUROPE"
+            ]
           },
           "database": {
             "type": "string",
@@ -544,7 +1623,10 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["error", "message"],
+        "required": [
+          "error",
+          "message"
+        ],
         "properties": {
           "error": {
             "type": "string",
