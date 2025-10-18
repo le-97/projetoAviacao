@@ -22,7 +22,7 @@ correlation_id_var: ContextVar[str] = ContextVar('correlation_id', default='')
 class StructuredFormatter(logging.Formatter):
     """Custom formatter that outputs structured JSON logs."""
     
-    def __init__(self, service_name: str = "compliance-microservice", version: str = "1.0.0"):
+    def __init__(self, service_name: str = "compliance-microservice", version: str = "2.0.0"):
         super().__init__()
         self.service_name = service_name
         self.version = version

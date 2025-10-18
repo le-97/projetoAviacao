@@ -36,7 +36,7 @@ class TestStructuredLogging:
         """Test structured formatter initialization."""
         formatter = StructuredFormatter()
         assert formatter.service_name == "compliance-microservice"
-        assert formatter.version == "1.0.0"
+        assert formatter.version == "2.0.0"
 
     def test_structured_formatter_custom_values(self):
         """Test structured formatter with custom values."""
